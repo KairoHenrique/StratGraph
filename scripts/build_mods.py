@@ -208,7 +208,7 @@ def compile_celeste_mod(routes_json: Path) -> Path | None:
         f"/reference:{xna_gfx}",
         str(cs_file),
     ]
-    res = subprocess.run(cmd, capture_output=True, text=True, check=False)
+    res = subprocess.run(cmd, capture_output=True, text=True, errors="replace", check=False)
     if res.returncode != 0:
         raise RuntimeError(f"Erro ao compilar mod do Celeste:\n{res.stdout}\n{res.stderr}")
 
@@ -249,7 +249,7 @@ def compile_cuphead_mod(routes_json: Path) -> Path | None:
         *[f"/reference:{r}" for r in refs],
         str(cs_file),
     ]
-    res = subprocess.run(cmd, capture_output=True, text=True, check=False)
+    res = subprocess.run(cmd, capture_output=True, text=True, errors="replace", check=False)
     if res.returncode != 0:
         raise RuntimeError(f"Erro ao compilar mod do Cuphead:\n{res.stdout}\n{res.stderr}")
 
@@ -304,10 +304,12 @@ class Program
 
         if (mode == "cuphead")
         {
-            var initMethod = modAsm.MainModule
-                .GetType("StratGraph.CupheadMod.StratGraphCupheadOverlay")
-                .Methods.First(m => m.Name == "Init");
-            var initRef = asm.MainModule.ImportReference(initMethod);
+            var overlayType = modAsm.MainModule.GetType("StratGraph.CupheadMod.StratGraphCupheadOverlay");
+            var initRef = asm.MainModule.ImportReference(overlayType.Methods.First(m => m.Name == "Init"));
+            var filterAxisRef = asm.MainModule.ImportReference(overlayType.Methods.First(m => m.Name == "FilterAxisInt"));
+            var beforeMotorRef = asm.MainModule.ImportReference(overlayType.Methods.First(m => m.Name == "BeforeMotorHandleInput"));
+            var afterWeaponRef = asm.MainModule.ImportReference(overlayType.Methods.First(m => m.Name == "AfterWeaponHandleFiring"));
+
             var slType = asm.MainModule.GetType("SceneLoader");
             var awake = slType.Methods.First(m => m.Name == "Awake");
             var il = awake.Body.GetILProcessor();
@@ -320,19 +322,65 @@ class Program
                 var il2 = chInit.Body.GetILProcessor();
                 il2.InsertBefore(chInit.Body.Instructions[0], il2.Create(OpCodes.Call, initRef));
             }
+
+            var piType = asm.MainModule.GetType("PlayerInput");
+            var getAxisInt = piType?.Methods.FirstOrDefault(m => m.Name == "GetAxisInt");
+            if (getAxisInt != null && getAxisInt.HasBody)
+            {
+                var ilAxis = getAxisInt.Body.GetILProcessor();
+                var rets = getAxisInt.Body.Instructions.Where(i => i.OpCode == OpCodes.Ret).ToList();
+                foreach (var r in rets)
+                {
+                    ilAxis.InsertBefore(r, ilAxis.Create(OpCodes.Ldarg_1));
+                    ilAxis.InsertBefore(r, ilAxis.Create(OpCodes.Call, filterAxisRef));
+                }
+            }
+
+            var lpmType = asm.MainModule.GetType("LevelPlayerMotor");
+            var handleInput = lpmType?.Methods.FirstOrDefault(m => m.Name == "HandleInput");
+            if (handleInput != null && handleInput.HasBody)
+            {
+                var ilMotor = handleInput.Body.GetILProcessor();
+                var first = handleInput.Body.Instructions[0];
+                ilMotor.InsertBefore(first, ilMotor.Create(OpCodes.Ldarg_0));
+                ilMotor.InsertBefore(first, ilMotor.Create(OpCodes.Call, beforeMotorRef));
+            }
+
+            var lpwmType = asm.MainModule.GetType("LevelPlayerWeaponManager");
+            var handleWeapon = lpwmType?.Methods.FirstOrDefault(m => m.Name == "HandleWeaponFiring");
+            if (handleWeapon != null && handleWeapon.HasBody)
+            {
+                var ilWeap = handleWeapon.Body.GetILProcessor();
+                var rets = handleWeapon.Body.Instructions.Where(i => i.OpCode == OpCodes.Ret).ToList();
+                foreach (var r in rets)
+                {
+                    ilWeap.InsertBefore(r, ilWeap.Create(OpCodes.Ldarg_0));
+                    ilWeap.InsertBefore(r, ilWeap.Create(OpCodes.Call, afterWeaponRef));
+                }
+            }
         }
         else if (mode == "celeste")
         {
-            var attachMethod = modAsm.MainModule
-                .GetType("Celeste.Mod.StratGraph.StratGraphHudEntity")
-                .Methods.First(m => m.Name == "AttachToLevel");
-            var attachRef = asm.MainModule.ImportReference(attachMethod);
+            var hudType = modAsm.MainModule.GetType("Celeste.Mod.StratGraph.StratGraphHudEntity");
+            var attachRef = asm.MainModule.ImportReference(hudType.Methods.First(m => m.Name == "AttachToLevel"));
+            var beforePlRef = asm.MainModule.ImportReference(hudType.Methods.First(m => m.Name == "BeforePlayerUpdate"));
+
             var lvlType = asm.MainModule.GetType("Celeste.Level");
             var begin = lvlType.Methods.First(m => m.Name == "Begin");
             var il = begin.Body.GetILProcessor();
             var retInstr = begin.Body.Instructions.Last();
             il.InsertBefore(retInstr, il.Create(OpCodes.Ldarg_0));
             il.InsertBefore(retInstr, il.Create(OpCodes.Call, attachRef));
+
+            var plType = asm.MainModule.GetType("Celeste.Player");
+            var plUpdate = plType?.Methods.FirstOrDefault(m => m.Name == "Update");
+            if (plUpdate != null && plUpdate.HasBody)
+            {
+                var ilPl = plUpdate.Body.GetILProcessor();
+                var first = plUpdate.Body.Instructions[0];
+                ilPl.InsertBefore(first, ilPl.Create(OpCodes.Ldarg_0));
+                ilPl.InsertBefore(first, ilPl.Create(OpCodes.Call, beforePlRef));
+            }
         }
 
         asm.Write(dstAssembly);

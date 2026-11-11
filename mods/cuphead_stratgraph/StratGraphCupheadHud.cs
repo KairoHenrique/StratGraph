@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -45,6 +46,19 @@ namespace StratGraph.CupheadMod
         private bool _armedLayerActive;
         private string _lastSlug = "";
 
+        private int _tasMoveX;
+        private int _tasMoveY;
+        private float _tasJumpCooldown;
+        private float _tasDashCooldown;
+        private float _tasParryCooldown;
+        private float _tasStuckTimer;
+        private Vector2 _lastPlayerPos;
+
+        private static MethodInfo _bufferInputMethod;
+        private static MethodInfo _startBasicMethod;
+        private static FieldInfo _basicField;
+        private static FieldInfo _firingField;
+
         public static void Init()
         {
             if (_instance != null)
@@ -55,6 +69,39 @@ namespace StratGraph.CupheadMod
             GameObject go = new GameObject("StratGraphCupheadHudObject");
             DontDestroyOnLoad(go);
             _instance = go.AddComponent<StratGraphCupheadOverlay>();
+        }
+
+        public static int FilterAxisInt(int originalValue, int axis)
+        {
+            if (_instance == null || !_instance._tasBotActive)
+            {
+                return originalValue;
+            }
+            if (axis == 0)
+            {
+                return _instance._tasMoveX;
+            }
+            if (axis == 1)
+            {
+                return _instance._tasMoveY;
+            }
+            return originalValue;
+        }
+
+        public static void BeforeMotorHandleInput(LevelPlayerMotor motor)
+        {
+            if (_instance != null && motor != null)
+            {
+                _instance.DriveCupheadMotor(motor);
+            }
+        }
+
+        public static void AfterWeaponHandleFiring(LevelPlayerWeaponManager wm)
+        {
+            if (_instance != null && wm != null)
+            {
+                _instance.DriveCupheadWeapons(wm);
+            }
         }
 
         private void Awake()
@@ -183,14 +230,44 @@ namespace StratGraph.CupheadMod
             {
                 _tasBotActive = !_tasBotActive;
                 _currentWaypointIndex = -1;
+                _tasStuckTimer = 0f;
+                _tasMoveX = 0;
+                _tasMoveY = 0;
             }
             if (Input.GetKeyDown(KeyCode.F6))
             {
                 _useBfsRoute = !_useBfsRoute;
                 _currentWaypointIndex = -1;
+                _tasStuckTimer = 0f;
             }
+        }
 
-            if (!_tasBotActive)
+        private void TriggerBufferedInput(LevelPlayerMotor motor, int bufferedType)
+        {
+            try
+            {
+                if (_bufferInputMethod == null)
+                {
+                    _bufferInputMethod = typeof(LevelPlayerMotor).GetMethod(
+                        "BufferInput",
+                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public
+                    );
+                }
+                if (_bufferInputMethod != null)
+                {
+                    Type enumType = _bufferInputMethod.GetParameters()[0].ParameterType;
+                    object enumVal = Enum.ToObject(enumType, bufferedType);
+                    _bufferInputMethod.Invoke(motor, new object[] { enumVal });
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private void DriveCupheadMotor(LevelPlayerMotor motor)
+        {
+            if (!_tasBotActive || motor == null || motor.transform == null)
             {
                 return;
             }
@@ -208,13 +285,7 @@ namespace StratGraph.CupheadMod
                 return;
             }
 
-            AbstractPlayerController player = PlayerManager.Current;
-            if (player == null || player.transform == null)
-            {
-                return;
-            }
-
-            Vector2 current = new Vector2(player.transform.position.x, player.transform.position.y);
+            Vector2 current = new Vector2(motor.transform.position.x, motor.transform.position.y);
             if (_currentWaypointIndex < 0 || _currentWaypointIndex >= waypoints.Count)
             {
                 int bestIdx = 0;
@@ -231,20 +302,114 @@ namespace StratGraph.CupheadMod
                 _currentWaypointIndex = bestIdx;
             }
 
+            while (_currentWaypointIndex < waypoints.Count - 1 &&
+                   Mathf.Abs(waypoints[_currentWaypointIndex].x - current.x) <= 55f &&
+                   Mathf.Abs(waypoints[_currentWaypointIndex].y - current.y) <= 130f)
+            {
+                _currentWaypointIndex++;
+                _tasStuckTimer = 0f;
+            }
+
             Vector2 target = waypoints[_currentWaypointIndex];
             Vector2 delta = target - current;
-            float dist = delta.magnitude;
+            float dt = Time.fixedDeltaTime > 0f ? Time.fixedDeltaTime : 0.016f;
 
-            float stepPx = 420f * Time.deltaTime;
-            if (dist <= Mathf.Max(18f, stepPx))
+            if (_tasJumpCooldown > 0f) _tasJumpCooldown -= dt;
+            if (_tasDashCooldown > 0f) _tasDashCooldown -= dt;
+            if (_tasParryCooldown > 0f) _tasParryCooldown -= dt;
+
+            if ((current - _lastPlayerPos).sqrMagnitude < 4f)
             {
-                player.transform.position = new Vector3(target.x, target.y, player.transform.position.z);
-                _currentWaypointIndex++;
+                _tasStuckTimer += dt;
             }
             else
             {
-                Vector2 nextPos = current + delta.normalized * stepPx;
-                player.transform.position = new Vector3(nextPos.x, nextPos.y, player.transform.position.z);
+                _tasStuckTimer = Mathf.Max(0f, _tasStuckTimer - dt * 0.5f);
+            }
+            _lastPlayerPos = current;
+
+            // 1. Eixos direcionais reais do controle (lidos por HandleWalking e HandleLooking)
+            _tasMoveX = Mathf.Abs(delta.x) > 12f ? (delta.x >= 0f ? 1 : -1) : 1;
+            _tasMoveY = delta.y > 90f ? 1 : 0;
+
+            // 2. Pulo real do Cuphead (BufferInput(BufferedInput.Jump = 0))
+            if (motor.Grounded && _tasJumpCooldown <= 0f &&
+                (delta.y > 22f || _tasStuckTimer > 0.14f || Mathf.Abs(delta.x) > 180f))
+            {
+                TriggerBufferedInput(motor, 0);
+                _tasJumpCooldown = 0.28f;
+            }
+
+            // 3. Parry real no ar (BufferInput(BufferedInput.Jump = 0) quando fora do chão)
+            if (!motor.Grounded && _tasParryCooldown <= 0f && delta.y > 35f)
+            {
+                TriggerBufferedInput(motor, 0);
+                _tasParryCooldown = 0.24f;
+            }
+
+            // 4. Dash real no ar ou no chão (BufferInput(BufferedInput.Dash = 1))
+            if (!motor.Dashing && _tasDashCooldown <= 0f &&
+                (Mathf.Abs(delta.x) > 140f || (!motor.Grounded && Mathf.Abs(delta.x) > 75f)))
+            {
+                TriggerBufferedInput(motor, 1);
+                _tasDashCooldown = 0.48f;
+            }
+
+            // 5. Impulso de trampolim físico real do motor se travar num obstáculo alto ou fosso
+            if (_tasStuckTimer > 0.32f || current.y < -320f)
+            {
+                motor.OnTrampolineKnockUp(-1.18f);
+                _tasStuckTimer = 0.05f;
+            }
+        }
+
+        private void DriveCupheadWeapons(LevelPlayerWeaponManager wm)
+        {
+            if (!_tasBotActive || wm == null)
+            {
+                return;
+            }
+            try
+            {
+                if (_startBasicMethod == null)
+                {
+                    _startBasicMethod = typeof(LevelPlayerWeaponManager).GetMethod(
+                        "StartBasic",
+                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public
+                    );
+                }
+                if (_basicField == null)
+                {
+                    _basicField = typeof(LevelPlayerWeaponManager).GetField(
+                        "basic",
+                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public
+                    );
+                }
+                if (_startBasicMethod != null)
+                {
+                    _startBasicMethod.Invoke(wm, null);
+                }
+                if (_basicField != null)
+                {
+                    object basicState = _basicField.GetValue(wm);
+                    if (basicState != null)
+                    {
+                        if (_firingField == null)
+                        {
+                            _firingField = basicState.GetType().GetField(
+                                "firing",
+                                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
+                            );
+                        }
+                        if (_firingField != null)
+                        {
+                            _firingField.SetValue(basicState, true);
+                        }
+                    }
+                }
+            }
+            catch
+            {
             }
         }
 

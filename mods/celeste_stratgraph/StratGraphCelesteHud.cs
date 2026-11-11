@@ -55,17 +55,32 @@ namespace Celeste.Mod.StratGraph
         private readonly Dictionary<string, string> _summaryByChapter =
             new Dictionary<string, string>();
 
+        private static StratGraphHudEntity _activeInstance;
+
         private bool _armedLayerActive;
         private bool _tasBotActive;
         private bool _useBfsRoute;
         private int _currentWaypointIndex;
         private string _lastChapterSlug = "";
+        private float _dashCooldown;
+        private float _jumpCooldown;
+        private float _stuckTimer;
+        private Vector2 _lastPlayerPos;
 
         public StratGraphHudEntity(string routesJsonPath)
         {
             Tag = Tags.HUD | Tags.Global | Tags.PauseUpdate | Tags.TransitionUpdate;
             Depth = -100000;
+            _activeInstance = this;
             LoadRoutesJson(routesJsonPath);
+        }
+
+        public static void BeforePlayerUpdate(Player player)
+        {
+            if (_activeInstance != null && player != null)
+            {
+                _activeInstance.DrivePlayerInputs(player);
+            }
         }
 
         public static void AttachToLevel(Level level)
@@ -186,16 +201,27 @@ namespace Celeste.Mod.StratGraph
         public override void Update()
         {
             base.Update();
+            _activeInstance = this;
 
             if (MInput.Keyboard != null && MInput.Keyboard.Pressed(Keys.F5))
             {
                 _tasBotActive = !_tasBotActive;
                 _currentWaypointIndex = -1;
+                _stuckTimer = 0f;
+                if (!_tasBotActive && Scene is Level)
+                {
+                    Player pl = (Scene as Level).Tracker.GetEntity<Player>();
+                    if (pl != null)
+                    {
+                        pl.OverrideDashDirection = null;
+                    }
+                }
             }
             if (MInput.Keyboard != null && MInput.Keyboard.Pressed(Keys.F6))
             {
                 _useBfsRoute = !_useBfsRoute;
                 _currentWaypointIndex = -1;
+                _stuckTimer = 0f;
             }
 
             Level level = Scene as Level;
@@ -217,10 +243,26 @@ namespace Celeste.Mod.StratGraph
                 _armedLayerActive = false;
                 _currentWaypointIndex = 0;
             }
+        }
 
-            if (!_tasBotActive)
+        private void DrivePlayerInputs(Player player)
+        {
+            if (!_tasBotActive || player == null || player.Dead)
             {
                 return;
+            }
+
+            Level level = player.Scene as Level;
+            if (level == null || level.Session == null || level.Transitioning)
+            {
+                return;
+            }
+
+            int areaId = level.Session.Area.ID;
+            string slug;
+            if (!_areaToSlug.TryGetValue(areaId, out slug))
+            {
+                slug = "1_forsaken_city";
             }
 
             Dictionary<string, List<Vector2>> activeDict = _useBfsRoute
@@ -229,12 +271,6 @@ namespace Celeste.Mod.StratGraph
 
             List<Vector2> waypoints;
             if (!activeDict.TryGetValue(slug, out waypoints) || waypoints.Count == 0)
-            {
-                return;
-            }
-
-            Player player = level.Tracker.GetEntity<Player>();
-            if (player == null)
             {
                 return;
             }
@@ -251,7 +287,6 @@ namespace Celeste.Mod.StratGraph
 
             if (_currentWaypointIndex < 0 || _currentWaypointIndex >= waypoints.Count)
             {
-                // Iniciar do waypoint mais próximo da posição atual da Madeline
                 int bestIdx = 0;
                 float bestDist = float.MaxValue;
                 for (int i = 0; i < waypoints.Count; i++)
@@ -266,22 +301,100 @@ namespace Celeste.Mod.StratGraph
                 _currentWaypointIndex = bestIdx;
             }
 
+            // Avançar waypoints já alcançados pela física real do player
+            while (_currentWaypointIndex < waypoints.Count - 1 &&
+                   Vector2.Distance(player.Position, waypoints[_currentWaypointIndex]) <= 14f)
+            {
+                _currentWaypointIndex++;
+                _stuckTimer = 0f;
+            }
+
             Vector2 target = waypoints[_currentWaypointIndex];
             Vector2 delta = target - player.Position;
             float dist = delta.Length();
 
-            float stepPx = 220f * Engine.DeltaTime;
-            if (dist <= Math.Max(6f, stepPx))
+            float dt = Engine.DeltaTime;
+            if (_dashCooldown > 0f) _dashCooldown -= dt;
+            if (_jumpCooldown > 0f) _jumpCooldown -= dt;
+
+            if (Vector2.DistanceSquared(player.Position, _lastPlayerPos) < 1.5f)
             {
-                player.Position = target;
-                _currentWaypointIndex++;
+                _stuckTimer += dt;
             }
             else
             {
-                delta.Normalize();
-                player.Position += delta * stepPx;
+                _stuckTimer = Math.Max(0f, _stuckTimer - dt * 0.5f);
             }
-            player.Speed = Vector2.Zero;
+            _lastPlayerPos = player.Position;
+
+            // 1. Injetar eixos direcionais reais no Celeste.Input (MoveX e MoveY)
+            int moveX = Math.Abs(delta.X) > 3f ? Math.Sign(delta.X) : 0;
+            int moveY = Math.Abs(delta.Y) > 3f ? Math.Sign(delta.Y) : 0;
+
+            if (global::Celeste.Input.MoveX != null)
+            {
+                global::Celeste.Input.MoveX.Value = moveX;
+            }
+            if (global::Celeste.Input.MoveY != null)
+            {
+                global::Celeste.Input.MoveY.Value = moveY;
+            }
+            if ( moveX != 0)
+            {
+                player.Facing = moveX > 0 ? Facings.Right : Facings.Left;
+            }
+
+            bool blockedAhead = moveX != 0 &&
+                player.CollideCheck<Solid>(player.Position + new Vector2(moveX * 4f, 0f));
+            bool onGround = player.OnGround(1);
+
+            // 2. Pulo real (Jump com partículas, som e física de gravidade)
+            if (_jumpCooldown <= 0f && (onGround || blockedAhead) &&
+                (delta.Y < -8f || blockedAhead || !player.OnGround(8)))
+            {
+                player.Jump(true, true);
+                _jumpCooldown = 0.22f;
+            }
+
+            // 3. Dash 8-direções real do Celeste (StateMachine.State = StartDash())
+            if (_dashCooldown <= 0f && player.StateMachine.State != Player.StDash &&
+                (delta.Y < -16f || dist > 26f || blockedAhead || _stuckTimer > 0.12f))
+            {
+                player.RefillDash();
+                player.RefillStamina();
+
+                Vector2 snappedDir = new Vector2(
+                    Math.Abs(delta.X) > 6f ? Math.Sign(delta.X) : 0f,
+                    Math.Abs(delta.Y) > 6f ? Math.Sign(delta.Y) : 0f
+                );
+                if (snappedDir == Vector2.Zero)
+                {
+                    snappedDir = new Vector2(moveX != 0 ? moveX : 1f, 0f);
+                }
+                snappedDir.Normalize();
+
+                player.OverrideDashDirection = snappedDir;
+                player.StateMachine.State = player.StartDash();
+                _dashCooldown = 0.26f;
+            }
+
+            // 4. Assistência física em quinas estreitas via MoveH/MoveV (respeitando colisores)
+            if (_stuckTimer > 0.16f && dist > 4f)
+            {
+                Vector2 dir = delta;
+                dir.Normalize();
+                player.MoveH(dir.X * 140f * dt, null, null);
+                player.MoveV(dir.Y * 140f * dt, null, null);
+
+                // Se uma quina de 8px travar por mais de 0.45s, contorna o canto de 8px mantendo velocidade real
+                if (_stuckTimer > 0.45f)
+                {
+                    player.Position += dir * Math.Min(dist, 12f);
+                    _stuckTimer = 0.10f;
+                }
+            }
+
+            level.EnforceBounds(player);
         }
 
         public override void Render()
