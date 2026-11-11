@@ -24,6 +24,7 @@ from src.loader import load_graph_from_csv
 from src.preprocessing import contract_dead_ends
 
 ALPHA_DEFAULT = 0.05
+ALPHA_GRID = (0.0, 0.02, 0.05, 0.10, 0.25, 0.50)
 REPEATS = 5
 
 
@@ -32,6 +33,10 @@ def evaluate_dataset(category: str, name: str, dataset_dir: Path, alpha: float =
     raw_graph = load_graph_from_csv(dataset_dir)
     v_orig = len(raw_graph.vertices)
     e_orig = sum(len(v) for v in raw_graph.adjacency.values())
+
+    # Ablação sem contração de becos (--no-contract)
+    layered_no_contract = build_layered_graph(raw_graph, alpha=alpha)
+    dijk_no_contract = run_dijkstra(layered_no_contract)
 
     contracted_graph = contract_dead_ends(raw_graph)
     contracted_count = sum(len(v) for v in contracted_graph.contracted_into.values())
@@ -88,9 +93,55 @@ def evaluate_dataset(category: str, name: str, dataset_dir: Path, alpha: float =
         "dijkstra_used_weapon": int(dijk_res.used_weapon),
         "dijkstra_states": dijk_res.visited_states,
         "dijkstra_time_ms": round(statistics.median(dijk_times), 4),
+        "no_contract_real_cost": round(dijk_no_contract.real_cost, 2),
+        "no_contract_eff_cost": round(dijk_no_contract.effective_cost, 2),
+        "no_contract_items": dijk_no_contract.collectibles_count,
+        "no_contract_value": round(dijk_no_contract.collectibles_total_value, 1),
+        "no_contract_states": dijk_no_contract.visited_states,
         "real_cost_saving_pct": cost_saving_pct,
         "eff_cost_saving_pct": eff_saving_pct,
     }
+
+
+def evaluate_alpha_sensitivity() -> list[dict[str, object]]:
+    """Executa análise de sensibilidade variando alpha em instâncias representativas."""
+    targets = [
+        ("celeste", "1_forsaken_city", Path("datasets/celeste/1_forsaken_city")),
+        ("celeste", "3_celestial_resort", Path("datasets/celeste/3_celestial_resort")),
+        ("celeste", "7_summit", Path("datasets/celeste/7_summit")),
+        ("cuphead", "1_1f_forest_follies", Path("datasets/cuphead/1_1f_forest_follies")),
+        ("cuphead", "2_2f_funhouse_frazzle", Path("datasets/cuphead/2_2f_funhouse_frazzle")),
+        ("synthetic", "v_0150", Path("datasets/synthetic/v_0150")),
+    ]
+    sens_rows: list[dict[str, object]] = []
+    for cat, name, ddir in targets:
+        if not ddir.exists():
+            continue
+        raw_graph = load_graph_from_csv(ddir)
+        contracted = contract_dead_ends(raw_graph)
+        for alpha in ALPHA_GRID:
+            layered_c = build_layered_graph(contracted, alpha=alpha)
+            layered_nc = build_layered_graph(raw_graph, alpha=alpha)
+            dijk_c = run_dijkstra(layered_c)
+            dijk_nc = run_dijkstra(layered_nc)
+            sens_rows.append(
+                {
+                    "category": cat,
+                    "dataset": name,
+                    "alpha": alpha,
+                    "contracted_real_cost": round(dijk_c.real_cost, 2),
+                    "contracted_eff_cost": round(dijk_c.effective_cost, 2),
+                    "contracted_items": dijk_c.collectibles_count,
+                    "contracted_value": round(dijk_c.collectibles_total_value, 1),
+                    "contracted_states": dijk_c.visited_states,
+                    "no_contract_real_cost": round(dijk_nc.real_cost, 2),
+                    "no_contract_eff_cost": round(dijk_nc.effective_cost, 2),
+                    "no_contract_items": dijk_nc.collectibles_count,
+                    "no_contract_value": round(dijk_nc.collectibles_total_value, 1),
+                    "no_contract_states": dijk_nc.visited_states,
+                }
+            )
+    return sens_rows
 
 
 def main() -> int:
@@ -109,10 +160,9 @@ def main() -> int:
                 rows.append(row)
                 print(
                     f"[{cat:9s}] {sub.name:22s} | V: {row['v_orig']:4d}->{row['v_after']:4d} "
-                    f"(-{row['reduction_pct']:4.1f}%) | BFS: {row['bfs_eff_cost']:7.2f} "
-                    f"({row['bfs_time_ms']:6.3f}ms) | Dijk: {row['dijkstra_eff_cost']:7.2f} "
-                    f"({row['dijkstra_time_ms']:6.3f}ms, -{row['eff_cost_saving_pct']:4.1f}%) | "
-                    f"DFS: {row['dfs_time_ms']:7.3f}ms ({row['dfs_states']} estados)"
+                    f"(-{row['reduction_pct']:4.1f}%) | Itens c/ contr.: {row['dijkstra_items']:3d} "
+                    f"vs s/ contr.: {row['no_contract_items']:3d} | Dijk: {row['dijkstra_eff_cost']:7.2f} "
+                    f"({row['dijkstra_time_ms']:6.3f}ms, -{row['eff_cost_saving_pct']:4.1f}%)"
                 )
 
     out_dir = Path("results")
@@ -129,7 +179,19 @@ def main() -> int:
         with json_path.open("w", encoding="utf-8") as f:
             json.dump(rows, f, ensure_ascii=False, indent=2)
 
-    print(f"\nResumo experimental exportado para: {csv_path} e {json_path}")
+    sens_rows = evaluate_alpha_sensitivity()
+    sens_csv = out_dir / "alpha_sensitivity.csv"
+    sens_json = out_dir / "alpha_sensitivity.json"
+    if sens_rows:
+        with sens_csv.open("w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=list(sens_rows[0].keys()))
+            writer.writeheader()
+            for r in sens_rows:
+                writer.writerow(r)
+        with sens_json.open("w", encoding="utf-8") as f:
+            json.dump(sens_rows, f, ensure_ascii=False, indent=2)
+
+    print(f"\nResumo experimental exportado para: {csv_path}, {json_path}, {sens_csv} e {sens_json}")
     return 0
 
 

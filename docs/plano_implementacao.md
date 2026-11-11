@@ -9,9 +9,11 @@ Plano completo do projeto **StratGraph** (*Otimização de Rotas Estratégicas e
 - [x] **Fase 1 — Modelagem Matemática e Regras Finais**
 - [x] **Fase 2 — Loader, Pré-processamento e Grafo em Camadas**
 - [x] **Fase 3 — Algoritmos (`BFS`, `DFS Branch-and-Bound`, `Dijkstra`), Métricas e CLI**
-- [x] **Fase 4 (Código e Dados Locais) — Extratores Binários Oficiais (*Celeste* e *Cuphead*) e Benchmarks Sintéticos**
+- [x] **Fase 4 — Extratores Binários Oficiais (*Celeste* e *Cuphead*), Benchmarks Sintéticos e Publicação no Zenodo (`doi:10.5281/zenodo.24147071`)**
 - [x] **Fase 5 — Bateria Experimental, Fluxograma Obrigatório e Gráficos Científicos**
-- [ ] **Fase 4/6 (Publicação e Entrega Externa) — DOI Zenodo, Compilação Overleaf, Validação no Ubuntu 24.04 e Envio AVA**
+- [ ] **Fase 6 — Compilação do Artigo IEEE no Overleaf e Validação no Ubuntu 24.04**
+- [ ] **Fase 7 (Extras — Antes da Entrega Final) — Simulador Visual 2D, Overlay GPS e Mod de Teste *In-Game***
+- [ ] **Etapa Final (Última Coisa) — Envio do PDF no AVA (até 22/11/2026) e Pitch Oral (a partir de 25/11/2026)**
 
 ---
 
@@ -64,27 +66,41 @@ Plano completo do projeto **StratGraph** (*Otimização de Rotas Estratégicas e
 - [x] [src/algorithms.py](../src/algorithms.py): `run_bfs`, `run_dijkstra` e `run_dfs_branch_and_bound`.
 - [x] [src/metrics.py](../src/metrics.py) e [src/main.py](../src/main.py): tabela comparativa no terminal (Linux/Windows) exibindo custo real, peso efetivo, coletáveis únicos, uso da camada armada, estados visitados, tempo (`ms`) e rotas, além de exportação `--output-csv` e `--output-json`.
 
-### Fase 4 — Datasets Reais (*Celeste*, *Cuphead*), Sintéticos e Zenodo (Parcialmente Concluída)
+### Fase 4 — Datasets Reais (*Celeste*, *Cuphead*), Sintéticos e Zenodo (Concluída)
 - [x] ***Celeste* ([scripts/extract_celeste_maps.py](../scripts/extract_celeste_maps.py)):** extração direta dos arquivos binários oficiais `BinaryPacker` (`.bin`) da instalação Steam local (`D:\SteamLibrary\steamapps\common\Celeste\Content\Maps\`), gerando todos os **8 capítulos principais** em `datasets/celeste/` (`1_forsaken_city` a `9_core`) com conectividade filtrada por passagens livres em `<solids>`, coletáveis e obstáculos reais.
 - [x] ***Cuphead* ([scripts/extract_cuphead_maps.py](../scripts/extract_cuphead_maps.py)):** extração direta das cenas binárias Unity `SerializedFile` v17 (`level41` a `level46`) da instalação Steam local (`D:\SteamLibrary\steamapps\common\Cuphead\Cuphead_Data\`), gerando todas as **6 fases *Run-and-Gun*** em `datasets/cuphead/` (`1_1f_forest_follies` a `3_2f_rugged_ridge`) com setores, plataformas, *spawners* de inimigos e as 5 moedas douradas (`Level_Coin`).
 - [x] **Sintéticos ([scripts/generate_benchmarks.py](../scripts/generate_benchmarks.py)):** geração determinística (`seed=42`) em `datasets/synthetic/` com $V \in \{15, 30, 60, 150, 500, 1500, 5000\}$ (20% em becos sem saída).
-- [ ] **Publicação externa (Zenodo / Mendeley Data):** empacotar `datasets/` no Zenodo ou Mendeley Data e substituir o placeholder `TODO` de `dataset_zenodo` em [article/references.bib](../article/references.bib).
+- [x] **Publicação externa (Zenodo):** dataset publicado oficialmente em https://zenodo.org/records/24147071 com DOI permanente `10.5281/zenodo.24147071` (https://doi.org/10.5281/zenodo.24147071), devidamente citado em `dataset_zenodo` de [article/references.bib](../article/references.bib).
 
-### Fase 5 — Experimentos, Figuras e Fluxograma Obrigatório (Concluída no Escopo Principal)
-- [x] **Bateria experimental ([scripts/run_experiments.py](../scripts/run_experiments.py)):** executada nos 21 datasets (8 *Celeste*, 6 *Cuphead*, 7 sintéticos) com $\alpha = 0{,}05$, mediana de 5 repetições e *timeout* de 150 ms no DFS B&B, exportando `results/benchmark_summary.csv` e `results/benchmark_summary.json`.
+### Fase 5 — Experimentos, Figuras e Fluxograma Obrigatório (Concluída)
+- [x] **Bateria experimental ([scripts/run_experiments.py](../scripts/run_experiments.py)):** executada nos 21 datasets (8 *Celeste*, 6 *Cuphead*, 7 sintéticos) com $\alpha = 0{,}05$, ablação `--no-contract`, mediana de 5 repetições e *timeout* de 150 ms no DFS B&B, exportando `results/benchmark_summary.csv` e `results/benchmark_summary.json`.
+- [x] **Sensibilidade de $\alpha$ e ablação `--no-contract` ([scripts/run_experiments.py](../scripts/run_experiments.py)):** executada para $\alpha \in \{0.0, 0.02, 0.05, 0.10, 0.25, 0.50\}$, exportando `results/alpha_sensitivity.csv` e `results/alpha_sensitivity.json`.
 - [x] **Figuras e fluxograma ([scripts/plot_results.py](../scripts/plot_results.py)):** gerados em `.pdf` e `.png` dentro de `article/figures/`:
   1. `fluxograma_proposta.pdf` / `.png` (**fluxograma obrigatório** da metodologia);
   2. `comparacao_custos.pdf` / `.png` (BFS vs. Dijkstra em *Celeste* e *Cuphead*);
   3. `escalabilidade_tempo.pdf` / `.png` (tempo mediano em ms × $|V|$ em escala log-log);
-  4. `contracao_becos.pdf` / `.png` (redução de vértices $|V| \to |V'|$).
-- [ ] *(Opcional / se desejar ampliar a Seção de Resultados)*: adicionar análise de sensibilidade variando $\alpha \in \{0.0, 0.25, 0.5, 1.0, 2.0\}$ e comparativo explícito com/sem `--no-contract` em `scripts/run_experiments.py`.
+  4. `contracao_becos.pdf` / `.png` (redução de vértices $|V| \to |V'|$);
+  5. `sensibilidade_alpha.pdf` / `.png` (curva de itens coletados e peso efetivo vs. $\alpha$ com e sem contração).
 
-### Fase 6 — Artigo IEEE, Validação Final e Pitch (Em Andamento)
-- [x] Rascunho completo preenchido em [article/main.tex](../article/main.tex) com as 3 tabelas experimentais reais (`tab:celeste`, `tab:cuphead`, `tab:sinteticos`), todas as figuras e citações em [article/references.bib](../article/references.bib).
-- [ ] Inserir o link/DOI definitivo do dataset (Zenodo/Mendeley) em [article/references.bib](../article/references.bib) (`dataset_zenodo`).
-- [ ] Compilar o PDF no **Overleaf** (*IEEE Conference Template*), conferir se o resumo possui no máximo 250 palavras e validar todas as referências no Google Scholar (`scholar.google.com`).
+### Fase 6 — Artigo IEEE e Pacotes de Entrega (Código/LaTeX Prontos)
+- [x] Artigo completo em [article/main.tex](../article/main.tex) com as 3 tabelas experimentais reais (`tab:celeste`, `tab:cuphead`, `tab:sinteticos`) 100% sincronizadas com `results/benchmark_summary.csv`, análise de sensibilidade de $\alpha$ e ablação `--no-contract` (`fig:sensibilidade`), resumo verificado (217 palavras, limite de 250) e DOI publicado `10.5281/zenodo.24147071` em [article/references.bib](../article/references.bib).
+- [x] Script empacotador [scripts/package_deliverables.py](../scripts/package_deliverables.py) gerando `results/stratgraph_overleaf.zip` (pronto para upload no Overleaf) e `results/stratgraph_datasets_zenodo.zip` (publicado no Zenodo em https://zenodo.org/records/24147071).
+- [ ] Subir `results/stratgraph_overleaf.zip` no **Overleaf**, validar referências no Google Scholar (`scholar.google.com`) e compilar o PDF.
 - [ ] Testar a execução final via terminal em **Linux (Ubuntu 24.04)**.
-- [ ] Submeter o **PDF final no AVA** até **22/11/2026** e ensaiar o **Pitch oral de 10 minutos sem slides** (a partir de **25/11/2026**).
+
+### Fase 7 — Simulador Visual 2D, Overlay GPS e Mod de Teste *In-Game* (Extras — Após Zenodo/Artigo Técnico)
+> **Ordem de execução:** concluir o restante técnico/extras antes do envio final do AVA e Pitch.
+
+* **Decisão técnica sobre teclado/controle virtual por cima do jogo:**
+  * Automação "cega" via teclado ou controle virtual para zerar *Celeste* ou *Cuphead* sozinha **não é confiável sem mod/leitura de memória ou visão computacional a 60 FPS**: qualquer dessincronização de 1 frame (~16 ms), morte em espinhos ou aleatoriedade de inimigos quebra a macro, além de fugir do escopo de Teoria dos Grafos.
+* **Extensões visuais e de teste planejadas como extra (em ordem de complexidade):**
+  - [ ] **Simulador Visual Interativo 2D (`scripts/simulate_route.py`):** usando os dados geométricos reais já extraídos dos binários de *Celeste* (salas, matriz `<solids>`, espinhos, morangos e sala `ARMA`) e *Cuphead* (setores, plataformas, inimigos e 5 moedas `Level_Coin`), gera uma interface HTML5 Canvas autocontida (Python padrão -> abre no navegador no Windows e no Ubuntu 24.04) para assistir passo a passo **BFS ($L_0$)** vs. **Dijkstra em Camadas ($L_0 \to L_1$)** percorrendo o mapa real, destacando os becos contraídos e a troca de camada na arma.
+  - [ ] **Modo Co-piloto / Overlay "GPS" sem Mod (`tkinter`, opcional no Windows):** janela leve sempre-no-topo por cima do jogo na Steam exibindo a sala atual, o próximo destino da rota ótima (`lvl_6 -> lvl_6z [ARMA] -> ...`) e o estado da camada (`L0`/`L1`) com avanço manual via atalho de teclado enquanto o jogador controla o personagem.
+  - [ ] **Mod de Teste *In-Game* (Extra avançado para Steam/Windows):** criação de um mod leve em C#/.NET (via **Everest** para *Celeste* e/ou **BepInEx** para *Cuphead*) que lê o arquivo JSON exportado pelo StratGraph (`--output-json`) para desenhar o indicador de sala/próximo destino e status da camada (`L0`/`L1`) diretamente no HUD dentro do próprio jogo em execução.
+
+### Etapa Final (Última Coisa a Fazer)
+- [ ] Revisar/gerar o **PDF final no Overleaf** e enviar no **AVA até 22/11/2026**.
+- [ ] Preparar e ensaiar o **Pitch oral de 10 minutos sem slides** (a partir de **25/11/2026**).
 
 ---
 

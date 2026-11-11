@@ -190,14 +190,17 @@ def test_synthetic_scalability_benchmarks() -> None:
 
 
 def test_results_and_figures_exist() -> None:
-    """Garante que o resumo experimental e todas as figuras do artigo IEEE foram gerados."""
+    """Garante que o resumo experimental, sensibilidade e todas as figuras do artigo IEEE foram gerados."""
     assert Path("results/benchmark_summary.csv").is_file()
     assert Path("results/benchmark_summary.json").is_file()
+    assert Path("results/alpha_sensitivity.csv").is_file()
+    assert Path("results/alpha_sensitivity.json").is_file()
     for fig_name in (
         "fluxograma_proposta",
         "comparacao_custos",
         "escalabilidade_tempo",
         "contracao_becos",
+        "sensibilidade_alpha",
     ):
         assert Path(f"article/figures/{fig_name}.pdf").is_file()
         assert Path(f"article/figures/{fig_name}.png").is_file()

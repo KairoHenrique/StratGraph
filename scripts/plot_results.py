@@ -181,6 +181,43 @@ def generate_all_figures(
         generated.append(p)
     plt.close(fig)
 
+    # 5. Sensibilidade do Parâmetro Alpha e Ablação --no-contract
+    sens_path = summary_path.parent / "alpha_sensitivity.json"
+    if sens_path.exists():
+        sens_rows = json.loads(sens_path.read_text(encoding="utf-8"))
+        v150 = [r for r in sens_rows if r["dataset"] == "v_0150"]
+        if v150:
+            alphas = [float(r["alpha"]) for r in v150]
+            c_items = [int(r["contracted_items"]) for r in v150]
+            nc_items = [int(r["no_contract_items"]) for r in v150]
+            c_eff = [float(r["contracted_eff_cost"]) for r in v150]
+            nc_eff = [float(r["no_contract_eff_cost"]) for r in v150]
+
+            fig, (ax_l, ax_r) = plt.subplots(1, 2, figsize=(7.0, 2.55), constrained_layout=True)
+
+            ax_l.plot(alphas, c_items, marker="o", linewidth=1.6, color="#2b8cbe", label="Com Contração (Padrão)")
+            ax_l.plot(alphas, nc_items, marker="s", linestyle="--", linewidth=1.6, color="#e34a33", label="Sem Contração (--no-contract)")
+            ax_l.set_ylim(2, 46)
+            ax_l.set_xlabel("Parâmetro α (Peso dos Coletáveis)")
+            ax_l.set_ylabel("Itens Coletados na Rota")
+            ax_l.set_title("(a) Coleta de Itens vs. α (v_0150)")
+            ax_l.grid(True, linestyle="--", alpha=0.5)
+            ax_l.legend(loc="lower right", fontsize=7.2)
+
+            ax_r.plot(alphas, c_eff, marker="o", linewidth=1.6, color="#2b8cbe", label="Com Contração (Padrão)")
+            ax_r.plot(alphas, nc_eff, marker="s", linestyle="--", linewidth=1.6, color="#e34a33", label="Sem Contração (--no-contract)")
+            ax_r.set_xlabel("Parâmetro α (Peso dos Coletáveis)")
+            ax_r.set_ylabel("Peso Efetivo Total")
+            ax_r.set_title("(b) Peso Efetivo vs. α (v_0150)")
+            ax_r.grid(True, linestyle="--", alpha=0.5)
+            ax_r.legend(loc="upper right", fontsize=7.2)
+
+            for ext in ("pdf", "png"):
+                p = out_dir / f"sensibilidade_alpha.{ext}"
+                fig.savefig(p, dpi=300)
+                generated.append(p)
+            plt.close(fig)
+
     return generated
 
 

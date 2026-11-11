@@ -3,6 +3,10 @@
 Otimização de rotas estratégicas em mapas de jogos digitais modelados como **Dígrafos Ponderados Expandidos em Camadas**, equilibrando tempo/dificuldade de travessia, desvio estratégico para obtenção de arma (*power-up*) e coleta de itens.
 
 > Trabalho Final da disciplina **Estruturas em Árvores e Teoria dos Grafos** (Prof. Michel Pires da Silva — UFCI-MG).
+>
+> * **Autores:** Heitor Henrique Zonho, Kairo Henrique Ferreira Martins e Michel Pires da Silva
+> * **Repositório Oficial (GitHub):** https://github.com/KairoHenrique/StratGraph
+> * **Dataset Oficial Publicado (Zenodo):** https://doi.org/10.5281/zenodo.24147071 (`https://zenodo.org/records/24147071`)
 
 ## Estrutura do Repositório
 

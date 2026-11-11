@@ -12,8 +12,8 @@ Esta pasta armazena o rascunho estruturado em LaTeX compatível com o **IEEE Con
 
 ## Checklist Antes da Submissão (AVA — 22/11/2026)
 
-1. Confirmar a ordem dos autores alunos em `main.tex` (por contribuição decrescente, ou alfabética se igualitária), mantendo **Michel Pires da Silva** obrigatoriamente por último.
-2. Inserir o link/DOI real do dataset após o upload no **Zenodo** ou **Mendeley Data** em `references.bib`.
-3. Verificar todas as referências no **Google Scholar** (`scholar.google.com`) e garantir que cada item de `references.bib` esteja citado com `\cite{...}` no corpo do texto.
+1. Ordem dos autores alunos em `main.tex` configurada em ordem alfabética (`Heitor Henrique Zonho`, `Kairo Henrique Ferreira Martins`), mantendo **Michel Pires da Silva** obrigatoriamente por último.
+2. Link e DOI oficial do dataset publicado no **Zenodo** (`10.5281/zenodo.24147071` — https://zenodo.org/records/24147071) já inseridos em `references.bib` (`dataset_zenodo`).
+3. Importar `results/stratgraph_overleaf.zip` no Overleaf, verificar referências no **Google Scholar** (`scholar.google.com`) e compilar o PDF.
 4. Submeter **apenas o PDF final** compilado no AVA.
 

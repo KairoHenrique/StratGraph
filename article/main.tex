@@ -115,28 +115,29 @@ A Figura~\ref{fig:contracao} apresenta o impacto do pr\'e-processamento de contr
 \label{fig:contracao}
 \end{figure}
 
-As Tabelas~\ref{tab:celeste} e~\ref{tab:cuphead} consolidam os resultados comparativos nos 8 cap\'itulos de \textit{Celeste} e nas 6 fases \textit{Run-and-Gun} de \textit{Cuphead}, ilustrados visualmente na Figura~\ref{fig:custos}. Em todas as 14 fases reais, o BFS seguiu a linha direta de menor n\'umero de saltos na camada desarmada ($L_0$), sofrendo penalidades severas nos trechos finais de alta densidade de obst\'aculos. Em contrapartida, o Dijkstra em camadas identificou automaticamente o desvio estrat\'egico at\'e a sala de \textit{power-up}/arma, migrando para a camada $L_1$ e reduzindo o peso efetivo total entre 44,3\% e 73,7\% em \textit{Celeste} e entre 60,6\% e 72,5\% em \textit{Cuphead}. Em \textit{Cuphead}, al\'em de ativar o santu\'ario de \textit{parry}, o Dijkstra capturou todas as 5 moedas douradas e b\^onus elevados (6 itens, valor 81,0) contra apenas 4 itens do BFS.
+As Tabelas~\ref{tab:celeste} e~\ref{tab:cuphead} consolidam os resultados comparativos nos 8 cap\'itulos de \textit{Celeste} e nas 6 fases \textit{Run-and-Gun} de \textit{Cuphead}, ilustrados visualmente na Figura~\ref{fig:custos}. Em todas as 14 fases reais, o BFS seguiu a linha direta de menor n\'umero de saltos na camada desarmada ($L_0$), sofrendo penalidades severas nos trechos finais de alta densidade de obst\'aculos. Em contrapartida, o Dijkstra em camadas identificou automaticamente o desvio estrat\'egico at\'e a sala de \textit{power-up}/arma, migrando para a camada $L_1$ e reduzindo o peso efetivo total entre 44,3\% e 73,7\% em \textit{Celeste} e entre 60,6\% e 72,5\% em \textit{Cuphead}. Al\'em disso, a compara\c{c}\~ao entre a execu\c{c}\~ao padr\~ao (com contra\c{c}\~ao) e a flag \texttt{--no-contract} evidencia o duplo papel de \texttt{contract\_dead\_ends}: sem contra\c{c}\~ao, algoritmos de caminho m\'inimo n\~ao entram em alcovas sem sa\'ida por somarem peso positivo sem avan\c{c}ar ao destino, capturando apenas 11 itens em \textit{Forsaken City} (contra 18 com contra\c{c}\~ao) e 2 itens em \textit{Forest Follies} (contra 6 com contra\c{c}\~ao).
 
 \begin{table}[htbp]
 \caption{Desempenho Comparativo nos 8 Cap\'itulos Oficiais de \textit{Celeste} ($\alpha = 0{,}05$)}
 \label{tab:celeste}
 \centering
 \scriptsize
-\setlength{\tabcolsep}{3.2pt}
+\setlength{\tabcolsep}{2.8pt}
 \begin{tabular}{lrrrrrrrr}
 \toprule
-\textbf{Cap\'itulo} & $|V|$ & $|V'|$ & \textbf{BFS} & \textbf{Dijk.} & \textbf{Red.} & \textbf{Itens} & \textbf{Tempo} & \textbf{Tempo} \\
- & & & \textbf{Efet.} & \textbf{Efet.} & \textbf{(\%)} & \textbf{Dijk.} & \textbf{Dijk.} & \textbf{DFS} \\
+\textbf{Cap\'itulo} & $|V|$ & $|V'|$ & \textbf{BFS} & \textbf{Dijk.} & \textbf{Red.} & \textbf{Itens Dijk.} & \textbf{Tempo} & \textbf{Tempo} \\
+ & & & \textbf{Efet.} & \textbf{Efet.} & \textbf{(\%)} & \textbf{(C / NC)} & \textbf{Dijk.} & \textbf{DFS} \\
 \midrule
-1-Forsaken City    & 38 & 29 &   631,7 &  351,8 & 44,3\% &  4 & 0,08ms & 0,11ms \\
-2-Old Site         & 33 & 28 &   255,1 &  134,0 & 47,5\% &  5 & 0,07ms & 0,12ms \\
-3-Celestial Resort & 65 & 63 & 3.045,3 &  997,3 & 67,3\% &  7 & 0,20ms & 6,19ms \\
-4-Golden Ridge     & 49 & 43 & 1.389,5 &  591,7 & 57,4\% &  9 & 0,11ms & 0,15ms \\
-5-Mirror Temple    & 45 & 33 & 1.315,0 &  675,3 & 48,6\% &  7 & 0,08ms & 0,14ms \\
-6-Reflection       & 63 & 63 & 8.059,8 & 2.117,6 & 73,7\% &  1 & 0,16ms & 5,37ms \\
-7-The Summit       & 97 & 85 & 14.663,9 & 4.144,6 & 71,7\% & 12 & 0,20ms & 0,90ms \\
-9-Core             & 39 & 36 & 1.213,8 &  650,3 & 46,4\% &  2 & 0,09ms & 0,14ms \\
+1-Forsaken City    & 38 & 29 &   631,7 &  351,8 & 44,3\% & 18 / 11 & 0,07ms & 0,11ms \\
+2-Old Site         & 33 & 28 &   255,1 &  134,0 & 47,5\% &  3 / 1  & 0,07ms & 0,12ms \\
+3-Celestial Resort & 65 & 63 & 3.045,3 &  997,3 & 67,3\% &  9 / 9  & 0,19ms & 6,19ms \\
+4-Golden Ridge     & 49 & 43 & 1.389,5 &  591,7 & 57,4\% & 22 / 18 & 0,11ms & 0,15ms \\
+5-Mirror Temple    & 45 & 33 & 1.315,0 &  675,3 & 48,6\% &  7 / 2  & 0,08ms & 0,14ms \\
+6-Reflection       & 63 & 63 & 8.059,8 & 2.117,6 & 73,7\% &  1 / 1  & 0,16ms & 5,36ms \\
+7-The Summit       & 97 & 85 & 14.663,9 & 4.144,6 & 71,7\% & 29 / 20 & 0,20ms & 0,90ms \\
+9-Core             & 39 & 36 & 1.213,8 &  650,3 & 46,4\% &  7 / 4  & 0,09ms & 0,14ms \\
 \bottomrule
+\multicolumn{9}{l}{\tiny C = Com contra\c{c}\~ao de becos (padr\~ao); NC = Sem contra\c{c}\~ao (\texttt{--no-contract}).}
 \end{tabular}
 \end{table}
 
@@ -145,19 +146,20 @@ As Tabelas~\ref{tab:celeste} e~\ref{tab:cuphead} consolidam os resultados compar
 \label{tab:cuphead}
 \centering
 \scriptsize
-\setlength{\tabcolsep}{3.2pt}
+\setlength{\tabcolsep}{2.8pt}
 \begin{tabular}{lrrrrrrrr}
 \toprule
 \textbf{Fase (\textit{Isle})} & $|V|$ & $|V'|$ & \textbf{BFS} & \textbf{Dijk.} & \textbf{Red.} & \textbf{Itens} & \textbf{Tempo} & \textbf{Tempo} \\
- & & & \textbf{Efet.} & \textbf{Efet.} & \textbf{(\%)} & \textbf{(B/D)} & \textbf{Dijk.} & \textbf{DFS} \\
+ & & & \textbf{Efet.} & \textbf{Efet.} & \textbf{(\%)} & \textbf{(B/D/NC)} & \textbf{Dijk.} & \textbf{DFS} \\
 \midrule
-1-1F Forest Follies  & 26 & 22 & 384,4 & 151,4 & 60,6\% & 4 / 6 & 0,06ms & 0,43ms \\
-1-2F Treetop Trouble & 26 & 22 & 661,6 & 210,0 & 68,3\% & 4 / 6 & 0,06ms & 0,60ms \\
-2-1F Funfair Fever   & 26 & 22 & 470,0 & 159,7 & 66,0\% & 4 / 6 & 0,06ms & 0,70ms \\
-2-2F Funhouse Frazz. & 26 & 22 & 876,1 & 255,1 & 70,9\% & 4 / 6 & 0,06ms & 0,60ms \\
-3-1F Perilous Piers  & 22 & 19 & 843,1 & 231,5 & 72,5\% & 3 / 5 & 0,04ms & 0,14ms \\
-3-2F Rugged Ridge    & 26 & 22 & 647,2 & 216,7 & 66,5\% & 4 / 6 & 0,06ms & 0,34ms \\
+1-1F Forest Follies  & 26 & 22 & 384,4 & 151,4 & 60,6\% & 4 / 6 / 2 & 0,06ms & 0,43ms \\
+1-2F Treetop Trouble & 26 & 22 & 661,6 & 210,0 & 68,3\% & 4 / 5 / 1 & 0,06ms & 0,60ms \\
+2-1F Funfair Fever   & 26 & 22 & 470,0 & 159,7 & 66,0\% & 4 / 6 / 2 & 0,06ms & 0,70ms \\
+2-2F Funhouse Frazz. & 26 & 22 & 876,1 & 255,1 & 70,9\% & 4 / 6 / 2 & 0,06ms & 0,60ms \\
+3-1F Perilous Piers  & 22 & 19 & 843,1 & 231,5 & 72,5\% & 3 / 5 / 2 & 0,04ms & 0,13ms \\
+3-2F Rugged Ridge    & 26 & 22 & 647,2 & 216,7 & 66,5\% & 4 / 6 / 2 & 0,06ms & 0,33ms \\
 \bottomrule
+\multicolumn{9}{l}{\tiny Itens (B/D/NC): BFS / Dijkstra com contra\c{c}\~ao / Dijkstra \texttt{--no-contract}.}
 \end{tabular}
 \end{table}
 
@@ -168,25 +170,34 @@ As Tabelas~\ref{tab:celeste} e~\ref{tab:cuphead} consolidam os resultados compar
 \label{fig:custos}
 \end{figure*}
 
-Para avaliar o comportamento assint\'otico, a Tabela~\ref{tab:sinteticos} e a Figura~\ref{fig:escalabilidade} reportam o desempenho nos benchmarks sint\'eticos de $|V|=15$ a $|V|=5.000$. Observa-se que o DFS \textit{Branch-and-Bound}, embora encontre a mesma solu\c{c}\~ao \'otima do Dijkstra at\'e $|V|=30$ (explorando 943 estados em 1,80~ms), sofre explos\~ao combinat\'oria a partir de $|V|=60$ devido \`a ramifica\c{c}\~ao de atalhos, atingindo o \textit{timeout} de 150~ms com mais de 65.000 estados visitados. Por outro lado, o Dijkstra em camadas escala quase linearmente conforme a cota te\'orica $O((V+E)\log V)$, solucionando o grafo de 5.000 salas (8.000 estados em camadas ap\'os contra\c{c}\~ao) em apenas 13,12~ms.
+A Figura~\ref{fig:sensibilidade} apresenta o estudo de sensibilidade do hiperpar\^ametro $\alpha \in \{0{,}00, 0{,}02, 0{,}05, 0{,}10, 0{,}25, 0{,}50\}$ combinado \`a abla\c{c}\~ao de \texttt{--no-contract} na inst\^ancia \texttt{v\_0150}. Conforme $\alpha$ cresce de $0{,}00$ para $0{,}50$, o Dijkstra com contra\c{c}\~ao passa de 30 para 43 itens coletados (valor acumulado de $274{,}4$ para $402{,}6$), desviando progressivamente para rotas secund\'arias ricas em recompensas. A partir de $\alpha \ge 0{,}08$, o ganho dos colet\'aveis contra\'idos supera o custo de ida e volta das alcovas, tornando o peso efetivo global inferior ao da vers\~ao sem contra\c{c}\~ao.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\columnwidth]{figures/sensibilidade_alpha.pdf}
+\caption{An\'alise de sensibilidade do par\^ametro $\alpha$ e abla\c{c}\~ao de contra\c{c}\~ao (\texttt{--no-contract}) em \texttt{v\_0150}: (a) total de itens coletados e (b) peso efetivo total.}
+\label{fig:sensibilidade}
+\end{figure}
+
+Para avaliar o comportamento assint\'otico, a Tabela~\ref{tab:sinteticos} e a Figura~\ref{fig:escalabilidade} reportam o desempenho nos benchmarks sint\'eticos de $|V|=15$ a $|V|=5.000$. Observa-se que o DFS \textit{Branch-and-Bound}, embora encontre a mesma solu\c{c}\~ao \'otima do Dijkstra at\'e $|V|=30$ (explorando 943 estados em 1,80~ms), sofre explos\~ao combinat\'oria a partir de $|V|=60$ devido \`a ramifica\c{c}\~ao de atalhos, atingindo o \textit{timeout} de 150~ms com mais de 65.000 estados visitados. Por outro lado, o Dijkstra em camadas escala quase linearmente conforme a cota te\'orica $O((V+E)\log V)$, solucionando o grafo de 5.000 salas (8.000 estados em camadas ap\'os contra\c{c}\~ao) em apenas 13,37~ms e expandindo 5.238 estados (contra 6.535 estados sem contra\c{c}\~ao).
 
 \begin{table}[htbp]
 \caption{Escalabilidade Assint\'otica nos Grafos Sint\'eticos ($\alpha = 0{,}05$)}
 \label{tab:sinteticos}
 \centering
 \scriptsize
-\setlength{\tabcolsep}{3.2pt}
+\setlength{\tabcolsep}{3.0pt}
 \begin{tabular}{rrrrrrr}
 \toprule
 $|V|$ \textbf{Orig.} & $|V'|$ \textbf{Contr.} & \textbf{BFS (ms)} & \textbf{Dijkstra (ms)} & \textbf{DFS B\&B (ms)} & \textbf{Estados Dijk.} & \textbf{Estados DFS} \\
 \midrule
-  15 &   12 &  0,02 &  0,04 &   0,15 &    18 &     84 \\
-  30 &   24 &  0,04 &  0,06 &   1,80 &    37 &    943 \\
-  60 &   48 &  0,09 &  0,14 & 150,09* &    73 & 77.440 \\
- 150 &  120 &  0,22 &  0,34 & 150,14* &   186 & 65.216 \\
- 500 &  400 &  0,72 &  1,07 & 150,27* &   631 & 73.536 \\
-1500 & 1200 &  2,59 &  3,50 & 150,77* & 1.896 & 72.960 \\
-5000 & 4000 & 10,07 & 13,12 & 153,00* & 6.331 & 65.600 \\
+  15 &   12 &  0,02 &  0,03 &   0,15 &    19 &     84 \\
+  30 &   24 &  0,03 &  0,06 &   1,80 &    32 &    943 \\
+  60 &   48 &  0,09 &  0,14 & 150,09* &    68 & 77.440 \\
+ 150 &  120 &  0,22 &  0,31 & 150,14* &   163 & 65.216 \\
+ 500 &  400 &  0,72 &  1,06 & 150,27* &   527 & 73.536 \\
+1500 & 1200 &  2,59 &  4,15 & 150,77* & 1.578 & 72.960 \\
+5000 & 4000 & 10,07 & 13,37 & 153,00* & 5.238 & 65.600 \\
 \bottomrule
 \multicolumn{7}{l}{\tiny *Execu\c{c}\~ao interrompida pelo limite de seguran\c{c}a (\textit{timeout} de 150~ms).}
 \end{tabular}

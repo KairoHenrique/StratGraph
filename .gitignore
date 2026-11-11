@@ -11,6 +11,7 @@ env/
 # Saídas geradas localmente (manter estrutura)
 results/*.csv
 results/*.json
+results/*.zip
 !results/.gitkeep
 
 # LaTeX temporários (caso compile artigo localmente)
