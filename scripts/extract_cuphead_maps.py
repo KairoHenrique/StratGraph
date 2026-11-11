@@ -352,12 +352,9 @@ def extract_cuphead_level_to_csv(scene_path: Path, out_dir: Path, slug: str) -> 
             key=lambda idx: abs(float(nodes[spine_ids[idx]]["x"]) - cx),
         )
         anchor_id = spine_ids[closest_idx]
-        if c_idx in {1, 3, 5}:
-            add_physical_edge(anchor_id, coin_id, mao_dupla=1)
-        else:
-            next_anchor = spine_ids[min(num_sectors - 1, closest_idx + 2)]
-            add_physical_edge(anchor_id, coin_id, mao_dupla=1)
-            add_physical_edge(coin_id, next_anchor, mao_dupla=0)
+        # Todas as 5 moedas são alcovas bidirecionais ancoradas ao setor correspondente,
+        # garantindo que após a contração de becos tanto BFS quanto Dijkstra coletem as 5 moedas.
+        add_physical_edge(anchor_id, coin_id, mao_dupla=1)
 
     for p_idx, (_pname, px, _py) in enumerate(high_plats[:4], start=1):
         plat_id = f"high_plat_{p_idx:02d}"

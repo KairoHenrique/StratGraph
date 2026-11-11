@@ -75,29 +75,41 @@ def export_mod_routes_json(alpha: float = 0.05) -> Path:
             if not strat_rooms or strat_rooms[-1] != node.room_id:
                 strat_rooms.append(node.room_id)
 
+        bfs_rooms: list[str] = []
+        for node in bfs_res.path:
+            if not bfs_rooms or bfs_rooms[-1] != node.room_id:
+                bfs_rooms.append(node.room_id)
+
         contracted_pairs = [
             f"{parent}:{','.join(children)}"
             for parent, children in sorted(con_g.contracted_into.items())
             if children
         ]
 
-        # Construir a sequência física completa de waypoints TAS (x,y) ao longo da rota ótima
+        # Construir a sequência física completa de waypoints TAS (x,y) para StratGraph e para BFS (ambos coletando os becos contraídos)
         wpts_file = ds_dir / "waypoints.json"
         tas_points: list[str] = []
+        bfs_points: list[str] = []
         if wpts_file.is_file():
             wdata = json.loads(wpts_file.read_text(encoding="utf-8"))
             edge_wpts = wdata.get("edges", {})
-            for idx_r in range(len(strat_rooms) - 1):
-                u_rm = strat_rooms[idx_r]
-                v_rm = strat_rooms[idx_r + 1]
-                for pt in edge_wpts.get(f"{u_rm}->{v_rm}", []):
-                    tas_points.append(f"{pt[0]},{pt[1]}")
-                # Incluir ida e volta física aos becos contraídos de v_rm
-                for ch_rm in con_g.contracted_into.get(v_rm, []):
-                    for pt in edge_wpts.get(f"{v_rm}->{ch_rm}", []):
-                        tas_points.append(f"{pt[0]},{pt[1]}")
-                    for pt in edge_wpts.get(f"{ch_rm}->{v_rm}", []):
-                        tas_points.append(f"{pt[0]},{pt[1]}")
+
+            def build_route_wpts(r_list: list[str]) -> list[str]:
+                pts_out: list[str] = []
+                for idx_r in range(len(r_list) - 1):
+                    u_rm = r_list[idx_r]
+                    v_rm = r_list[idx_r + 1]
+                    for pt in edge_wpts.get(f"{u_rm}->{v_rm}", []):
+                        pts_out.append(f"{pt[0]},{pt[1]}")
+                    for ch_rm in con_g.contracted_into.get(v_rm, []):
+                        for pt in edge_wpts.get(f"{v_rm}->{ch_rm}", []):
+                            pts_out.append(f"{pt[0]},{pt[1]}")
+                        for pt in edge_wpts.get(f"{ch_rm}->{v_rm}", []):
+                            pts_out.append(f"{pt[0]},{pt[1]}")
+                return pts_out
+
+            tas_points = build_route_wpts(strat_rooms)
+            bfs_points = build_route_wpts(bfs_rooms)
 
         hud_summary = (
             f"StratGraph: Custo Real={strat_res.real_cost:.1f}, w={strat_res.effective_cost:.1f}, "
@@ -108,8 +120,10 @@ def export_mod_routes_json(alpha: float = 0.05) -> Path:
         payload[key] = {
             "weapon_room": weapon_room,
             "strat_rooms": strat_rooms,
+            "bfs_rooms": bfs_rooms,
             "contracted_text": ";".join(contracted_pairs),
             "tas_waypoints_flat": ";".join(tas_points),
+            "bfs_waypoints_flat": ";".join(bfs_points),
             "hud_summary": hud_summary,
             "strat_real_cost": round(strat_res.real_cost, 2),
             "strat_effective_cost": round(strat_res.effective_cost, 2),

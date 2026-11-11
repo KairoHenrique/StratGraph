@@ -43,6 +43,9 @@ namespace Celeste.Mod.StratGraph
         private readonly Dictionary<string, List<Vector2>> _tasWaypointsByChapter =
             new Dictionary<string, List<Vector2>>();
 
+        private readonly Dictionary<string, List<Vector2>> _bfsWaypointsByChapter =
+            new Dictionary<string, List<Vector2>>();
+
         private readonly Dictionary<string, string> _weaponRoomByChapter =
             new Dictionary<string, string>();
 
@@ -54,6 +57,7 @@ namespace Celeste.Mod.StratGraph
 
         private bool _armedLayerActive;
         private bool _tasBotActive;
+        private bool _useBfsRoute;
         private int _currentWaypointIndex;
         private string _lastChapterSlug = "";
 
@@ -138,24 +142,35 @@ namespace Celeste.Mod.StratGraph
                 Match wptsMatch = Regex.Match(block, "\"tas_waypoints_flat\"\\s*:\\s*\"([^\"]*)\"");
                 if (wptsMatch.Success)
                 {
-                    List<Vector2> pts = new List<Vector2>();
-                    string[] pairs = wptsMatch.Groups[1].Value.Split(';');
-                    foreach (string p in pairs)
-                    {
-                        string[] xy = p.Split(',');
-                        if (xy.Length == 2)
-                        {
-                            float wx, wy;
-                            if (float.TryParse(xy[0], NumberStyles.Float, CultureInfo.InvariantCulture, out wx) &&
-                                float.TryParse(xy[1], NumberStyles.Float, CultureInfo.InvariantCulture, out wy))
-                            {
-                                pts.Add(new Vector2(wx, wy));
-                            }
-                        }
-                    }
-                    _tasWaypointsByChapter[slug] = pts;
+                    _tasWaypointsByChapter[slug] = ParseWaypointsString(wptsMatch.Groups[1].Value);
+                }
+
+                Match bfsWptsMatch = Regex.Match(block, "\"bfs_waypoints_flat\"\\s*:\\s*\"([^\"]*)\"");
+                if (bfsWptsMatch.Success)
+                {
+                    _bfsWaypointsByChapter[slug] = ParseWaypointsString(bfsWptsMatch.Groups[1].Value);
                 }
             }
+        }
+
+        private List<Vector2> ParseWaypointsString(string rawPts)
+        {
+            List<Vector2> pts = new List<Vector2>();
+            string[] pairs = rawPts.Split(';');
+            foreach (string p in pairs)
+            {
+                string[] xy = p.Split(',');
+                if (xy.Length == 2)
+                {
+                    float wx, wy;
+                    if (float.TryParse(xy[0], NumberStyles.Float, CultureInfo.InvariantCulture, out wx) &&
+                        float.TryParse(xy[1], NumberStyles.Float, CultureInfo.InvariantCulture, out wy))
+                    {
+                        pts.Add(new Vector2(wx, wy));
+                    }
+                }
+            }
+            return pts;
         }
 
         public override void Update()
@@ -165,6 +180,11 @@ namespace Celeste.Mod.StratGraph
             if (MInput.Keyboard != null && MInput.Keyboard.Pressed(Keys.F5))
             {
                 _tasBotActive = !_tasBotActive;
+            }
+            if (MInput.Keyboard != null && MInput.Keyboard.Pressed(Keys.F6))
+            {
+                _useBfsRoute = !_useBfsRoute;
+                _currentWaypointIndex = 0;
             }
 
             Level level = Scene as Level;
@@ -192,8 +212,12 @@ namespace Celeste.Mod.StratGraph
                 return;
             }
 
+            Dictionary<string, List<Vector2>> activeDict = _useBfsRoute
+                ? _bfsWaypointsByChapter
+                : _tasWaypointsByChapter;
+
             List<Vector2> waypoints;
-            if (!_tasWaypointsByChapter.TryGetValue(slug, out waypoints) || waypoints.Count == 0)
+            if (!activeDict.TryGetValue(slug, out waypoints) || waypoints.Count == 0)
             {
                 return;
             }
@@ -256,11 +280,16 @@ namespace Celeste.Mod.StratGraph
                 _armedLayerActive = true;
             }
 
-            Color accent = _armedLayerActive ? new Color(0, 255, 136) : new Color(0, 229, 255);
+            Color accent = _useBfsRoute
+                ? new Color(255, 92, 119)
+                : (_armedLayerActive ? new Color(0, 255, 136) : new Color(0, 229, 255));
 
             // 1. Desenhar linha de trajetória física TAS sobre a sala atual (câmera 320x180 -> HUD 1920x1080 = 6x)
+            Dictionary<string, List<Vector2>> activeDict = _useBfsRoute
+                ? _bfsWaypointsByChapter
+                : _tasWaypointsByChapter;
             List<Vector2> wpts;
-            if (_tasWaypointsByChapter.TryGetValue(slug, out wpts) && wpts.Count > 1)
+            if (activeDict.TryGetValue(slug, out wpts) && wpts.Count > 1)
             {
                 Vector2 camPos = level.Camera.Position;
                 for (int i = 0; i < wpts.Count - 1; i++)
@@ -321,8 +350,8 @@ namespace Celeste.Mod.StratGraph
 
             Vector2 scale = new Vector2(0.45f, 0.45f);
             ActiveFont.DrawOutline(
-                "[StratGraph HUD + TAS] Cap.: " + slug + " | Sala: " + roomId +
-                " | [F5] Bot TAS: " + (_tasBotActive ? "ATIVO" : "DESATIVADO"),
+                "[StratGraph TAS] " + slug + " (" + roomId + ") | [F5] Bot: " +
+                (_tasBotActive ? "ON" : "OFF") + " | [F6] Rota: " + (_useBfsRoute ? "BFS (L0)" : "StratGraph (L0->L1)"),
                 new Vector2(boxX + 18f, boxY + 12f),
                 Vector2.Zero,
                 scale,

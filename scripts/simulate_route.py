@@ -36,7 +36,7 @@ from scripts.extract_cuphead_maps import (
     PLATFORM_KEYWORDS,
     parse_unity_scene_objects,
 )
-from src.algorithms import run_bfs, run_dijkstra
+from src.algorithms import run_bfs, run_dfs_branch_and_bound, run_dijkstra
 from src.layered_graph import build_layered_graph, compute_effective_weight
 from src.loader import load_graph_from_csv
 from src.models import GameGraph, RouteResult
@@ -470,6 +470,7 @@ def build_map_simulation_payload(
     layered_contracted = build_layered_graph(contracted_graph, alpha=alpha)
 
     bfs_res = run_bfs(layered_contracted)
+    dfs_res = run_dfs_branch_and_bound(layered_contracted, timeout_seconds=0.15)
     dijk_no_contract = run_dijkstra(layered_raw)
     stratgraph_res = run_dijkstra(layered_contracted)
 
@@ -546,17 +547,27 @@ def build_map_simulation_payload(
         "edges": edges_payload,
         "routes": {
             "bfs": {
-                "name": "BFS (Baseline Cego L0)",
+                "name": "BFS (Com Contração — Coleta Itens em L0)",
                 "real_cost": round(bfs_res.real_cost, 2),
                 "eff_cost": round(bfs_res.effective_cost, 2),
                 "items": bfs_res.collectibles_count,
                 "used_weapon": bfs_res.used_weapon,
                 "steps": _build_step_telemetry(
-                    raw_graph, contracted_graph, bfs_res, alpha, waypoints_data, geom, False
+                    raw_graph, contracted_graph, bfs_res, alpha, waypoints_data, geom, True
+                ),
+            },
+            "dfs": {
+                "name": "DFS Branch-and-Bound (Com Contração)",
+                "real_cost": round(dfs_res.real_cost, 2),
+                "eff_cost": round(dfs_res.effective_cost, 2),
+                "items": dfs_res.collectibles_count,
+                "used_weapon": dfs_res.used_weapon,
+                "steps": _build_step_telemetry(
+                    raw_graph, contracted_graph, dfs_res, alpha, waypoints_data, geom, True
                 ),
             },
             "no_contract": {
-                "name": "Dijkstra (--no-contract)",
+                "name": "Dijkstra (--no-contract — Sem Contração)",
                 "real_cost": round(dijk_no_contract.real_cost, 2),
                 "eff_cost": round(dijk_no_contract.effective_cost, 2),
                 "items": dijk_no_contract.collectibles_count,

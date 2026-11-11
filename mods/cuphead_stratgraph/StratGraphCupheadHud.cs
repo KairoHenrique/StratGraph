@@ -29,6 +29,9 @@ namespace StratGraph.CupheadMod
         private readonly Dictionary<string, List<Vector2>> _tasWaypointsBySlug =
             new Dictionary<string, List<Vector2>>();
 
+        private readonly Dictionary<string, List<Vector2>> _bfsWaypointsBySlug =
+            new Dictionary<string, List<Vector2>>();
+
         private readonly Dictionary<string, Dictionary<string, string>> _contractedBySlug =
             new Dictionary<string, Dictionary<string, string>>();
 
@@ -37,6 +40,7 @@ namespace StratGraph.CupheadMod
 
         private bool _hudVisible = true;
         private bool _tasBotActive;
+        private bool _useBfsRoute;
         private int _currentWaypointIndex;
         private bool _armedLayerActive;
         private string _lastSlug = "";
@@ -126,24 +130,35 @@ namespace StratGraph.CupheadMod
                 Match wptsMatch = Regex.Match(block, "\"tas_waypoints_flat\"\\s*:\\s*\"([^\"]*)\"");
                 if (wptsMatch.Success)
                 {
-                    List<Vector2> pts = new List<Vector2>();
-                    string[] pairs = wptsMatch.Groups[1].Value.Split(';');
-                    foreach (string p in pairs)
-                    {
-                        string[] xy = p.Split(',');
-                        if (xy.Length == 2)
-                        {
-                            float wx, wy;
-                            if (float.TryParse(xy[0], NumberStyles.Float, CultureInfo.InvariantCulture, out wx) &&
-                                float.TryParse(xy[1], NumberStyles.Float, CultureInfo.InvariantCulture, out wy))
-                            {
-                                pts.Add(new Vector2(wx, wy));
-                            }
-                        }
-                    }
-                    _tasWaypointsBySlug[slug] = pts;
+                    _tasWaypointsBySlug[slug] = ParseWaypointsString(wptsMatch.Groups[1].Value);
+                }
+
+                Match bfsWptsMatch = Regex.Match(block, "\"bfs_waypoints_flat\"\\s*:\\s*\"([^\"]*)\"");
+                if (bfsWptsMatch.Success)
+                {
+                    _bfsWaypointsBySlug[slug] = ParseWaypointsString(bfsWptsMatch.Groups[1].Value);
                 }
             }
+        }
+
+        private List<Vector2> ParseWaypointsString(string rawPts)
+        {
+            List<Vector2> pts = new List<Vector2>();
+            string[] pairs = rawPts.Split(';');
+            foreach (string p in pairs)
+            {
+                string[] xy = p.Split(',');
+                if (xy.Length == 2)
+                {
+                    float wx, wy;
+                    if (float.TryParse(xy[0], NumberStyles.Float, CultureInfo.InvariantCulture, out wx) &&
+                        float.TryParse(xy[1], NumberStyles.Float, CultureInfo.InvariantCulture, out wy))
+                    {
+                        pts.Add(new Vector2(wx, wy));
+                    }
+                }
+            }
+            return pts;
         }
 
         private string ResolveCurrentSlug(string sceneName)
@@ -168,6 +183,11 @@ namespace StratGraph.CupheadMod
             {
                 _tasBotActive = !_tasBotActive;
             }
+            if (Input.GetKeyDown(KeyCode.F6))
+            {
+                _useBfsRoute = !_useBfsRoute;
+                _currentWaypointIndex = 0;
+            }
 
             if (!_tasBotActive)
             {
@@ -177,8 +197,12 @@ namespace StratGraph.CupheadMod
             string sceneName = SceneLoader.Exists ? (SceneLoader.SceneName ?? "Menu") : "Menu";
             string slug = ResolveCurrentSlug(sceneName);
 
+            Dictionary<string, List<Vector2>> activeDict = _useBfsRoute
+                ? _bfsWaypointsBySlug
+                : _tasWaypointsBySlug;
+
             List<Vector2> waypoints;
-            if (!_tasWaypointsBySlug.TryGetValue(slug, out waypoints) || waypoints.Count == 0)
+            if (!activeDict.TryGetValue(slug, out waypoints) || waypoints.Count == 0)
             {
                 return;
             }
@@ -283,11 +307,10 @@ namespace StratGraph.CupheadMod
             GUI.Label(
                 new Rect(30f, 24f, 660f, 24f),
                 string.Format(
-                    "[StratGraph HUD + TAS] Fase: {0} | Pos: ({1:F0}, {2:F0}) | [F5] Bot TAS: {3}",
+                    "[StratGraph TAS] {0} | [F5] Bot: {1} | [F6] Rota: {2}",
                     slug,
-                    playerPos.x,
-                    playerPos.y,
-                    _tasBotActive ? "ATIVO" : "DESATIVADO"
+                    _tasBotActive ? "ATIVO" : "OFF",
+                    _useBfsRoute ? "BFS (L0 + Coletáveis)" : "StratGraph (L0->L1 + Coletáveis)"
                 )
             );
             GUI.Label(
