@@ -17,7 +17,7 @@ Conforme o enunciado em [pratica (1).pdf](pratica%20(1).pdf):
 - [ ] **Código-Fonte (GitHub):** implementação completa, estruturada, comentada e compatível com Ubuntu 24.04 via terminal (e testada também no Windows).
 - [ ] **Base de Dados (Zenodo / Mendeley Data):** mapas tratados de *Celeste*, *Cuphead* e cenários sintéticos publicados com link/DOI.
 - [ ] **Artigo Científico (AVA / IEEE Conference Template):**
-  - [ ] Ordem de autoria: alunos primeiro (`Kairo Henrique Ferreira Martins`, `Heitor Henrique Zonho`) e **Michel Pires da Silva** como último autor obrigatório.
+  - [ ] Ordem de autoria: alunos em ordem alfabética (`Heitor Henrique Zonho`, `Kairo Henrique Ferreira Martins`) e **Michel Pires da Silva** como último autor obrigatório.
   - [ ] Resumo com até 250 palavras.
   - [ ] Introdução com técnica do funil e parágrafo de roteiro.
   - [ ] Referencial teórico apenas com referências científicas validadas (`scholar.google.com`).

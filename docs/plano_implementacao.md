@@ -7,12 +7,11 @@ Plano completo do projeto **StratGraph** (*Otimização de Rotas Estratégicas e
 ## 1. Identidade, Equipe e Entregáveis
 
 * **Nome do software / pesquisa:** **StratGraph** ([KairoHenrique/StratGraph](https://github.com/KairoHenrique/StratGraph)).
-* **Autores e ordem oficial no artigo:**
-  1. `Kairo Henrique Ferreira Martins` (UFCI-MG)
-  2. `Heitor Henrique Zonho` (UFCI-MG)
+* **Autores e ordem oficial no artigo (ordem alfabética):**
+  1. `Heitor Henrique Zonho` (UFCI-MG)
+  2. `Kairo Henrique Ferreira Martins` (UFCI-MG)
   3. `Michel Pires da Silva` (UFCI-MG — **último autor obrigatório**)
-  *(Nota: confirmar entre a equipe se a contribuição é igualitária — caso seja, a Seção 3.1 pede ordem alfabética: Heitor antes de Kairo).*
-* **Licenciamento:** **MIT License** em [LICENSE](../LICENSE) com os dois autores alunos (`Copyright (c) 2026 Kairo Henrique Ferreira Martins, Heitor Henrique Zonho`).
+* **Licenciamento:** **MIT License** em [LICENSE](../LICENSE) com os dois autores alunos (`Copyright (c) 2026 Heitor Henrique Zonho, Kairo Henrique Ferreira Martins`).
 * **Compatibilidade Multiplataforma (Linux Ubuntu 24.04 e Windows):**
   * Núcleo `src/` em **Python 3.12 usando exclusivamente a biblioteca padrão** (`csv`, `heapq`, `collections`, `argparse`, `pathlib`, `time`, `dataclasses`, `json`) — roda nativamente no Ubuntu 24.04 (`python3`) e no Windows (`python`) sem compilação ou pacotes extras.
   * Todos os caminhos tratados com `pathlib.Path`, leitura/escrita CSV com `encoding="utf-8"` e `newline=""`, e saída de terminal protegida para UTF-8 no Windows (`sys.stdout.reconfigure`).
