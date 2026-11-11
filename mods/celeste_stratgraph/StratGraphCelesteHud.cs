@@ -275,14 +275,13 @@ namespace Celeste.Mod.StratGraph
                 return;
             }
 
+            // Regras reais do jogo: sem invencibilidade, sem stamina infinita, 1 dash (padrão).
+            // Desfaz qualquer assist que versões anteriores do mod tenham gravado no save.
             if (SaveData.Instance != null)
             {
-                SaveData.Instance.Assists.Invincible = true;
-                SaveData.Instance.Assists.InfiniteStamina = true;
-                if (_armedLayerActive && !_useBfsRoute)
-                {
-                    SaveData.Instance.Assists.DashMode = Assists.DashModes.Two;
-                }
+                SaveData.Instance.Assists.Invincible = false;
+                SaveData.Instance.Assists.InfiniteStamina = false;
+                SaveData.Instance.Assists.DashMode = Assists.DashModes.Normal;
             }
 
             if (_currentWaypointIndex < 0 || _currentWaypointIndex >= waypoints.Count)
@@ -317,20 +316,9 @@ namespace Celeste.Mod.StratGraph
             if (_dashCooldown > 0f) _dashCooldown -= dt;
             if (_jumpCooldown > 0f) _jumpCooldown -= dt;
 
-            if (Vector2.DistanceSquared(player.Position, _lastPlayerPos) < 1.5f)
-            {
-                _stuckTimer += dt;
-            }
-            else
-            {
-                _stuckTimer = Math.Max(0f, _stuckTimer - dt * 0.5f);
-            }
-            _lastPlayerPos = player.Position;
-
-            // 1. Injetar eixos direcionais reais no Celeste.Input (MoveX e MoveY)
+            // 1. Direcional real (MoveX / MoveY), lido pela própria máquina de estados do Player
             int moveX = Math.Abs(delta.X) > 3f ? Math.Sign(delta.X) : 0;
             int moveY = Math.Abs(delta.Y) > 3f ? Math.Sign(delta.Y) : 0;
-
             if (global::Celeste.Input.MoveX != null)
             {
                 global::Celeste.Input.MoveX.Value = moveX;
@@ -339,30 +327,22 @@ namespace Celeste.Mod.StratGraph
             {
                 global::Celeste.Input.MoveY.Value = moveY;
             }
-            if ( moveX != 0)
-            {
-                player.Facing = moveX > 0 ? Facings.Right : Facings.Left;
-            }
 
-            bool blockedAhead = moveX != 0 &&
-                player.CollideCheck<Solid>(player.Position + new Vector2(moveX * 4f, 0f));
             bool onGround = player.OnGround(1);
+            bool inNormalState = player.StateMachine.State == Player.StNormal;
 
-            // 2. Pulo real (Jump com partículas, som e física de gravidade)
-            if (_jumpCooldown <= 0f && (onGround || blockedAhead) &&
-                (delta.Y < -8f || blockedAhead || !player.OnGround(8)))
+            // 2. Pulo: somente com os pés no chão (sem pulo no ar)
+            if (inNormalState && onGround && _jumpCooldown <= 0f && delta.Y < -8f)
             {
                 player.Jump(true, true);
                 _jumpCooldown = 0.22f;
             }
 
-            // 3. Dash 8-direções real do Celeste (StateMachine.State = StartDash())
-            if (_dashCooldown <= 0f && player.StateMachine.State != Player.StDash &&
-                (delta.Y < -16f || dist > 26f || blockedAhead || _stuckTimer > 0.12f))
+            // 3. Dash: somente se o jogo disser que há dash disponível (player.CanDash).
+            //    StartDash() consome o dash pelas regras do jogo; recarga só ao tocar o chão/refill real.
+            if (inNormalState && !onGround && _dashCooldown <= 0f && player.CanDash &&
+                (delta.Y < -24f || Math.Abs(delta.X) > 40f))
             {
-                player.RefillDash();
-                player.RefillStamina();
-
                 Vector2 snappedDir = new Vector2(
                     Math.Abs(delta.X) > 6f ? Math.Sign(delta.X) : 0f,
                     Math.Abs(delta.Y) > 6f ? Math.Sign(delta.Y) : 0f
@@ -372,29 +352,10 @@ namespace Celeste.Mod.StratGraph
                     snappedDir = new Vector2(moveX != 0 ? moveX : 1f, 0f);
                 }
                 snappedDir.Normalize();
-
                 player.OverrideDashDirection = snappedDir;
                 player.StateMachine.State = player.StartDash();
-                _dashCooldown = 0.26f;
+                _dashCooldown = 0.3f;
             }
-
-            // 4. Assistência física em quinas estreitas via MoveH/MoveV (respeitando colisores)
-            if (_stuckTimer > 0.16f && dist > 4f)
-            {
-                Vector2 dir = delta;
-                dir.Normalize();
-                player.MoveH(dir.X * 140f * dt, null, null);
-                player.MoveV(dir.Y * 140f * dt, null, null);
-
-                // Se uma quina de 8px travar por mais de 0.45s, contorna o canto de 8px mantendo velocidade real
-                if (_stuckTimer > 0.45f)
-                {
-                    player.Position += dir * Math.Min(dist, 12f);
-                    _stuckTimer = 0.10f;
-                }
-            }
-
-            level.EnforceBounds(player);
         }
 
         public override void Render()

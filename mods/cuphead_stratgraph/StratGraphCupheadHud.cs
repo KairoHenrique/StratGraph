@@ -355,12 +355,7 @@ namespace StratGraph.CupheadMod
                 _tasDashCooldown = 0.48f;
             }
 
-            // 5. Impulso de trampolim físico real do motor se travar num obstáculo alto ou fosso
-            if (_tasStuckTimer > 0.32f || current.y < -320f)
-            {
-                motor.OnTrampolineKnockUp(-1.18f);
-                _tasStuckTimer = 0.05f;
-            }
+            // Sem impulsos artificiais: se o bot errar, o jogo aplica dano/morte normalmente.
         }
 
         private void DriveCupheadWeapons(LevelPlayerWeaponManager wm)

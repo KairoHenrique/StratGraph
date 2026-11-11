@@ -325,6 +325,12 @@ def _astar_tile_path(
             nr, nc = r + dr, c + dc
             if not (0 <= nr < ht and 0 <= nc < wt):
                 continue
+            # Blocos sólidos `<solids>` são intransponíveis: o player real não atravessa paredes
+            if not grid[nr][nc]:
+                continue
+            # Diagonal não pode "cortar" quina de bloco sólido
+            if dr != 0 and dc != 0 and (not grid[r + dr][c] or not grid[r][c + dc]):
+                continue
             # Custo combina distância física, suporte de plataforma e desvio de espinhos
             tile_c = step_cost[nr][nc] * move_mult + hazard_map[nr][nc] * 0.35
             ng = cur_g + tile_c
