@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Saídas geradas localmente (manter estrutura)
+results/*.csv
+results/*.json
+!results/.gitkeep
+
+# LaTeX temporários (caso compile artigo localmente)
+article/*.aux
+article/*.bbl
+article/*.blg
+article/*.log
+article/*.out
+article/*.toc
+article/*.synctex.gz
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+

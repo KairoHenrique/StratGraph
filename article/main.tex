@@ -1,0 +1,128 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{StratGraph: Otimiza\c{c}\~ao de Rotas Estrat\'egicas em Jogos Digitais via Grafo Ponderado Expandido em Camadas}
+
+% REGRA DE AUTORIA (pratica (1).pdf):
+% 1) Primeiros autores: alunos ordenados decrescentemente por contribuicao (ou alfabetica se igualitaria).
+% 2) Ultimo autor obrigatorio: Michel Pires da Silva.
+\author{
+\IEEEauthorblockN{Kairo Henrique Ferreira Martins\IEEEauthorrefmark{1},
+Heitor Henrique Zonho\IEEEauthorrefmark{1},
+Michel Pires da Silva\IEEEauthorrefmark{1}}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}Engenharia de Computa\c{c}\~ao --- Universidade Federal de Ci\^encia e Inova\c{c}\~ao de Minas Gerais (UFCI-MG)\\
+Divin\'opolis, Brasil\\
+% Opcional no template IEEE: adicionar emails de contato abaixo
+% \{email1, email2\}@exemplo.br
+}
+}
+
+\maketitle
+
+\begin{abstract}
+% MAXIMO DE 250 PALAVRAS — responder diretamente:
+% (1) Qual o problema? (2) Ha solucoes, quais? (3) Como foi modelado? (4) Principal resultado?
+A busca por rotas \'otimas em jogos digitais de plataforma e a\c{c}\~ao envolve mais do que minimizar a dist\^ancia espacial, exigindo o equil\'ibrio entre tempo de travessia, desvio t\'atico para aquisi\c{c}\~ao de armas ou \textit{power-ups} e coleta de itens opcionais. Algoritmos cl\'assicos de caminho m\'inimo em grafos est\'aticos n\~ao suportam a altera\c{c}\~ao din\^amica de custos ap\'os a coleta de melhorias sem comprometer a otimalidade ou gerar ciclos negativos com recompensas. Para solucionar esse problema, este trabalho modela mapas reais de jogos --- com estudos de caso inspirados em \textit{Celeste} e \textit{Cuphead}, al\'em de cen\'arios sint\'eticos --- como um d\'igrafo ponderado expandido em duas camadas de estado (sem e com arma/\textit{power-up}), combinando contra\c{c}\~ao de becos sem sa\'ida e uma fun\c{c}\~ao de peso efetivo estritamente positiva. A abordagem principal baseada no algoritmo de Dijkstra em camadas \'e comparada experimentalmente com a Busca em Largura (BFS) e com uma busca exata por \textit{Branch-and-Bound} em profundidade (DFS). [TODO: inserir aqui o principal resultado quantitativo obtido nos experimentos de custo, coleta e escalabilidade.]
+\end{abstract}
+
+\begin{IEEEkeywords}
+Teoria dos grafos, grafo em camadas, caminho m\'inimo, planejamento de rotas em jogos, algoritmo de Dijkstra.
+\end{IEEEkeywords}
+
+% ============================================================================
+\section{Introdu\c{c}\~ao}
+% TECNICA DO FUNIL:
+% 1. Cenario macro -> 2. Problema especifico -> 3. Relevancia real ->
+% 4. Motivacao do grupo -> 5. Objetivos -> 6. Paragrafo de roteiro.
+% ============================================================================
+
+O planejamento automatizado de trajet\'orias desempenha um papel central na intelig\^encia artificial aplicada a jogos digitais, tanto para o comportamento de agentes quanto para a an\'alise de n\'iveis e otimiza\c{c}\~ao de rotas em \textit{speedrunning}. Em muitos g\^eneros, como jogos de plataforma de precis\~ao e \textit{run-and-gun}, o custo de atravessar um trecho depende diretamente do estado atual do jogador.
+
+Especificamente, a obten\c{c}\~ao de uma arma ou \textit{power-up} em uma sala intermedi\'aria pode reduzir drasticamente a dificuldade dos obst\'aculos seguintes, enquanto desvios para itens colet\'aveis oferecem recompensas adicionais ao custo de maior tempo de percurso. Essa interdepend\^encia faz com que algoritmos tradicionais sobre grafos est\'aticos escolham rotas sub\'otimas quando ignoram mudan\c{c}as de estado ou falhem diante de pesos negativos.
+
+Diante da relev\^ancia pr\'atica de modelar progress\~ao de n\'ivel de forma agn\'ostica \`a f\'isica espec\'ifica de cada motor de jogo, a motiva\c{c}\~ao deste trabalho \'e propor uma formula\c{c}\~ao geral baseada em teoria dos grafos aplic\'avel a m\'ultiplos t\'itulos, validada inicialmente em mapas inspirados em \textit{Celeste} e \textit{Cuphead}. Os objetivos principais desta pesquisa s\~ao: (i) formalizar a modelagem por d\'igrafo ponderado em camadas com contra\c{c}\~ao de becos sem sa\'ida e pesos estritamente positivos; (ii) implementar e comparar em ambiente Linux a Busca em Largura (BFS), o DFS com poda (\textit{Branch-and-Bound}) e o algoritmo de Dijkstra em camadas; e (iii) avaliar escalabilidade e qualidade das rotas geradas. O c\'odigo-fonte e os conjuntos de dados tratados est\~ao dispon\'iveis publicamente em \cite{repo_codigo} e \cite{dataset_zenodo}.
+
+% Paragrafo de roteiro:
+O restante deste artigo est\'a organizado da seguinte forma. A Se\c{c}\~ao~\ref{sec:referencial} apresenta os fundamentos te\'oricos e os trabalhos relacionados da literatura. A Se\c{c}\~ao~\ref{sec:metodologia} detalha a origem dos dados, a modelagem matem\'atica e o fluxo completo da solu\c{c}\~ao proposta. A Se\c{c}\~ao~\ref{sec:resultados} discute os resultados experimentais de desempenho, qualidade de rota e escalabilidade. Por fim, a Se\c{c}\~ao~\ref{sec:conclusao} sintetiza as contribui\c{c}\~oes, limita\c{c}\~oes e dire\c{c}\~oes para pesquisas futuras, buscando demonstrar o ganho computacional da abordagem em camadas frente \`a explos\~ao combinat\'oria da busca exata.
+
+% ============================================================================
+\section{Referencial Te\'orico}
+\label{sec:referencial}
+% ============================================================================
+
+A busca de caminhos m\'inimos em grafos ponderados com pesos n\~ao negativos tem como base cl\'assica o algoritmo de Dijkstra~\cite{dijkstra1959}, cuja an\'alise de complexidade $O((V + E)\log V)$ com fila de prioridade e os fundamentos de buscas em largura (BFS) e profundidade (DFS) s\~ao consolidados em~\cite{cormen2022}.
+
+No dom\'inio espec\'ifico de jogos digitais, quando a travessia ou o custo de arestas depende da posse pr\'evia de itens ou ferramentas, o problema \'e estudado sob a \'otica de \textit{Inventory-Aware Pathfinding}. Aversa et al.~\cite{aversa2016} demonstram que a combina\c{c}\~ao entre navega\c{c}\~ao espacial e estado de invent\'ario sofre crescimento exponencial, propondo m\'etodos de pr\'e-processamento e poda sobre espa\c{c}os de estados aumentados.
+
+De forma complementar, o equil\'ibrio entre minimizar o custo do trajeto e maximizar a coleta de itens de pontua\c{c}\~ao aproxima-se da classe de problemas de roteamento com pr\^emios, como o \textit{Prize-Collecting Traveling Salesman Problem}~\cite{balas1989} e o \textit{Orienteering Problem}~\cite{vansteenwegen2011}. Este trabalho combina essas duas vertentes em uma formula\c{c}\~ao trat\'avel por camadas e peso efetivo positivo.
+
+% ============================================================================
+\section{Metodologia}
+\label{sec:metodologia}
+% ============================================================================
+
+\subsection{Origem e Estrutura dos Dados}
+Os dados utilizados nesta pesquisa consistem em grafos de n\'iveis modelados a partir de dois arquivos padronizados (\texttt{vertices.csv} e \texttt{arestas.csv}), disponibilizados no reposit\'orio cient\'ifico~\cite{dataset_zenodo}. [TODO: detalhar aqui os mapas mapeados de Celeste, Cuphead e o gerador sint\'etico de escalabilidade.]
+
+\subsection{Modelagem em D\'igrafo e Grafo em Camadas}
+O mapa \'e representado como um d\'igrafo ponderado $G = (V, E, w)$, onde cada v\'ertice $v \in V$ corresponde a uma sala ou plataforma segura e cada aresta direcionada $(u, v) \in E$ abstrai a mec\^anica de movimento entre elas. Caminho de m\~ao dupla gera o par oposto $(u, v)$ e $(v, u)$.
+
+Na etapa de pr\'e-processamento, becos sem sa\'ida contendo colet\'aveis podem ser contra\'idos na sala adjacente. Em seguida, para representar a posse de arma ou \textit{power-up} sem altera\c{c}\~ao din\^amica de pesos durante a execu\c{c}\~ao, cada sala $u$ \'e duplicada nos estados $(u, 0)$ (sem arma) e $(u, 1)$ (com arma), interligados por uma aresta de custo zero $(u_{\text{arma}}, 0) \to (u_{\text{arma}}, 1)$ nos v\'ertices que concedem o equipamento.
+
+Para atrair a busca em dire\c{c}\~ao aos colet\'aveis preservando pesos estritamente positivos ($w > 0$), adota-se a fun\c{c}\~ao de peso efetivo:
+\begin{equation}
+w(u, v, k) = \frac{\text{TempoBase}(u, v) + \text{Dificuldade}(u, v, k)}{1 + \alpha \cdot \text{ValorColetavel}(v)}
+\label{eq:peso_efetivo}
+\end{equation}
+onde $k \in \{0, 1\}$ indica a camada e $\alpha > 0$ controla a relev\^ancia dos colet\'aveis.
+
+\subsection{Algoritmos Propostos e Fluxograma}
+[TODO: descrever passo a passo BFS, DFS Branch-and-Bound e Dijkstra no grafo em camadas.]
+
+A Figura~\ref{fig:fluxograma} apresenta o fluxo completo da solu\c{c}\~ao proposta, desde a leitura dos arquivos CSV at\'e a compara\c{c}\~ao final de m\'etricas.
+
+\begin{figure}[htbp]
+\centering
+% Descomentar quando a figura fluxograma_proposta.pdf/png for gerada em article/figures/
+% \includegraphics[width=\columnwidth]{figures/fluxograma_proposta.pdf}
+\fbox{\parbox{0.9\columnwidth}{\centering\vspace{1.2cm}
+[TODO: Inserir figura obrigat\'oria do fluxograma da metodologia em \texttt{figures/fluxograma\_proposta.pdf}]
+\vspace{1.2cm}}}
+\caption{Fluxograma completo do pipeline proposto, da ingest\~ao dos dados \`a an\'alise comparativa das rotas.}
+\label{fig:fluxograma}
+\end{figure}
+
+% ============================================================================
+\section{Resultados e Discuss\~ao}
+\label{sec:resultados}
+% ============================================================================
+
+[TODO: Apresentar tabelas comparativas nos cen\'arios de \textit{Celeste} e \textit{Cuphead}, gr\'aficos de tempo de execu\c{c}\~ao (ms) em fun\c{c}\~ao de $|V|$ e $|E|$, an\'alise de sensibilidade de $\alpha$ e discuss\~ao cr\'itica sobre gargalos e comportamento assint\'otico.]
+
+% ============================================================================
+\section{Conclus\~ao e Pr\'oximas Etapas}
+\label{sec:conclusao}
+% ============================================================================
+
+[TODO: Sintetizar as contribui\c{c}\~oes da modelagem em camadas, relatar limita\c{c}\~oes enfrentadas (ex.: abstra\c{c}\~ao sem f\'isica cont\'inua, expans\~ao para m\'ultiplas armas) e propor trabalhos futuros.]
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
+

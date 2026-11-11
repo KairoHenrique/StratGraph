@@ -1,0 +1,8 @@
+id_sala,tipo_sala,valor_coletavel,possui_arma
+S0,INICIO,0,0
+S1,COMUM,0,0
+S2,COLETAVEL,5,0
+S3,ARMA,0,1
+S4,COMUM,0,0
+S5,FIM,0,0
+
