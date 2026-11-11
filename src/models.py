@@ -36,12 +36,15 @@ class Edge:
     two_way: bool = False
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class LayeredNode:
     """Nó no grafo expandido em camadas: (id_sala, camada_arma)."""
 
     room_id: str
     layer: int  # 0 = sem arma/power-up, 1 = com arma/power-up
+
+    def __str__(self) -> str:
+        return f"({self.room_id}, L{self.layer})"
 
 
 @dataclass(frozen=True)
@@ -52,6 +55,8 @@ class LayeredEdge:
     destination: LayeredNode
     effective_weight: float
     real_cost: float
+    base_time: float = 0.0
+    difficulty: float = 0.0
     is_weapon_transition: bool = False
 
 
@@ -63,6 +68,8 @@ class GameGraph:
     adjacency: dict[str, list[Edge]] = field(default_factory=dict)
     start_id: str = ""
     goal_id: str = ""
+    contracted_into: dict[str, list[str]] = field(default_factory=dict)
+    original_collectibles: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass
@@ -77,7 +84,13 @@ class RouteResult:
     collectibles_count: int = 0
     collectibles_total_value: float = 0.0
     collected_room_ids: set[str] = field(default_factory=set)
+    used_weapon: bool = False
     visited_states: int = 0
     elapsed_ms: float = 0.0
     timed_out: bool = False
 
+    def format_path(self) -> str:
+        """Retorna a sequência legível de nós percorridos."""
+        if not self.path:
+            return "N/A"
+        return " -> ".join(str(node) for node in self.path)

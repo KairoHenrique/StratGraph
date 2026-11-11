@@ -4,6 +4,17 @@ Plano completo do projeto **StratGraph** (*Otimização de Rotas Estratégicas e
 
 ---
 
+## Status Geral do Projeto
+
+- [x] **Fase 1 — Modelagem Matemática e Regras Finais**
+- [x] **Fase 2 — Loader, Pré-processamento e Grafo em Camadas**
+- [x] **Fase 3 — Algoritmos (`BFS`, `DFS Branch-and-Bound`, `Dijkstra`), Métricas e CLI**
+- [x] **Fase 4 (Código e Dados Locais) — Extratores Binários Oficiais (*Celeste* e *Cuphead*) e Benchmarks Sintéticos**
+- [x] **Fase 5 — Bateria Experimental, Fluxograma Obrigatório e Gráficos Científicos**
+- [ ] **Fase 4/6 (Publicação e Entrega Externa) — DOI Zenodo, Compilação Overleaf, Validação no Ubuntu 24.04 e Envio AVA**
+
+---
+
 ## 1. Identidade, Equipe e Entregáveis
 
 * **Nome do software / pesquisa:** **StratGraph** ([KairoHenrique/StratGraph](https://github.com/KairoHenrique/StratGraph)).
@@ -13,7 +24,7 @@ Plano completo do projeto **StratGraph** (*Otimização de Rotas Estratégicas e
   3. `Michel Pires da Silva` (UFCI-MG — **último autor obrigatório**)
 * **Licenciamento:** **MIT License** em [LICENSE](../LICENSE) com os dois autores alunos (`Copyright (c) 2026 Heitor Henrique Zonho, Kairo Henrique Ferreira Martins`).
 * **Compatibilidade Multiplataforma (Linux Ubuntu 24.04 e Windows):**
-  * Núcleo `src/` em **Python 3.12 usando exclusivamente a biblioteca padrão** (`csv`, `heapq`, `collections`, `argparse`, `pathlib`, `time`, `dataclasses`, `json`) — roda nativamente no Ubuntu 24.04 (`python3`) e no Windows (`python`) sem compilação ou pacotes extras.
+  * Núcleo `src/` em **Python 3.12 usando exclusivamente a biblioteca padrão** (`argparse`, `collections`, `csv`, `dataclasses`, `heapq`, `json`, `math`, `pathlib`, `sys`, `time`) — roda nativamente no Ubuntu 24.04 (`python3`) e no Windows (`python`) sem compilação ou pacotes externos em produção.
   * Todos os caminhos tratados com `pathlib.Path`, leitura/escrita CSV com `encoding="utf-8"` e `newline=""`, e saída de terminal protegida para UTF-8 no Windows (`sys.stdout.reconfigure`).
 
 ---
@@ -23,58 +34,63 @@ Plano completo do projeto **StratGraph** (*Otimização de Rotas Estratégicas e
 * Raiz: [README.md](../README.md), [LICENSE](../LICENSE), [requirements-dev.txt](../requirements-dev.txt), [.gitignore](../.gitignore).
 * Documentação (`docs/`): [INDICE.md](INDICE.md), [arquitetura_e_modelagem.md](arquitetura_e_modelagem.md), [execucao_linux_windows.md](execucao_linux_windows.md), [plano_implementacao.md](plano_implementacao.md), [pratica (1).pdf](pratica%20(1).pdf).
 * Código principal (`src/`): [models.py](../src/models.py), [loader.py](../src/loader.py), [preprocessing.py](../src/preprocessing.py), [layered_graph.py](../src/layered_graph.py), [algorithms.py](../src/algorithms.py), [metrics.py](../src/metrics.py), [main.py](../src/main.py).
-* Datasets (`datasets/`): [ESQUEMA_DATASET.md](../datasets/ESQUEMA_DATASET.md), `sample_toy/`, `celeste/`, `cuphead/`, `synthetic/`.
-* Scripts e testes: [generate_benchmarks.py](../scripts/generate_benchmarks.py), [run_experiments.py](../scripts/run_experiments.py), [plot_results.py](../scripts/plot_results.py), [test_pipeline.py](../tests/test_pipeline.py).
-* Artigo IEEE (`article/`): [main.tex](../article/main.tex), [references.bib](../article/references.bib), [GUIA_OVERLEAF.md](../article/GUIA_OVERLEAF.md), `figures/`.
+* Datasets (`datasets/`): [ESQUEMA_DATASET.md](../datasets/ESQUEMA_DATASET.md), `sample_toy/`, `celeste/` (8 capítulos oficiais), `cuphead/` (6 fases *Run-and-Gun*), `synthetic/` (7 instâncias `v_0015` a `v_5000`).
+* Scripts e testes: [extract_celeste_maps.py](../scripts/extract_celeste_maps.py), [extract_cuphead_maps.py](../scripts/extract_cuphead_maps.py), [generate_benchmarks.py](../scripts/generate_benchmarks.py), [run_experiments.py](../scripts/run_experiments.py), [plot_results.py](../scripts/plot_results.py), [test_pipeline.py](../tests/test_pipeline.py).
+* Artigo IEEE (`article/`): [main.tex](../article/main.tex), [references.bib](../article/references.bib), [GUIA_OVERLEAF.md](../article/GUIA_OVERLEAF.md), `figures/` (`fluxograma_proposta`, `comparacao_custos`, `escalabilidade_tempo`, `contracao_becos` em `.pdf` e `.png`).
 
 ---
 
-## 3. Fases de Execução
+## 3. Fases de Execução (Detalhamento do Progresso)
 
-### Fase 1 — Fechamento da Modelagem (Regras Finais)
-1. **Contração de becos sem saída (`src/preprocessing.py`):**
-   * Contrair sala `COLETAVEL` (sem `possui_arma`) conectada exclusivamente a um vizinho $B$ com ida e volta válidas, somando o tempo/dificuldade de ida e volta e transferindo o coletável para $B$.
-   * Manter a flag `--no-contract` para estudo de ablação nos experimentos.
-2. **Prevenção de dupla contagem entre camadas:**
-   * A contabilização de `collectibles_count` e `collectibles_total_value` em `RouteResult` usará o conjunto único `collected_room_ids` (`set` de `id_sala`), impedindo somar o mesmo item nas camadas `0` e `1`.
-3. **Papel distinto dos 3 algoritmos:**
-   * **BFS ($O(V + E)$):** *baseline* por menor número de transições (ignora pesos, arma e coletáveis).
-   * **DFS *Branch-and-Bound*:** busca exata com estado `(node, collected_frozenset)` rastreando itens já pegos sem dupla contagem, com poda por custo e `--bnb-timeout` para mapear o gargalo exponencial.
-   * **Dijkstra no Grafo em Camadas ($O((V + E)\log V)$):** solução principal escalável usando `heapq` sobre a função positiva:
-     $$w(u, v, k) = \frac{\text{TempoBase}(u, v) + \text{Dificuldade}(u, v, k)}{1 + \alpha \cdot \text{ValorColetavel}(v)}, \quad \alpha > 0$$
+### Fase 1 — Fechamento da Modelagem (Concluída)
+- [x] **Contração de becos sem saída ([src/preprocessing.py](../src/preprocessing.py)):**
+  * Implementada `contract_dead_ends` para fundir salas `COLETAVEL` originais (sem `possui_arma`) conectadas exclusivamente a um único vizinho bidirecional $B$ (não `INICIO`, `FIM` ou `ARMA`), somando custo de ida e volta às arestas de entrada de $B$, transferindo o valor do coletável e registrando auditoria em `contracted_into[B]`.
+  * Flag `--no-contract` implementada em [src/main.py](../src/main.py) para permitir ablação via CLI.
+- [x] **Prevenção de dupla contagem entre camadas ([src/algorithms.py](../src/algorithms.py)):**
+  * `evaluate_path` e `run_dfs_branch_and_bound` controlam salas já pontuadas (`seen_rooms_for_discount` / `seen_rooms`) e contabilizam itens únicos via `collected_room_ids` (`set`), incluindo salas contraídas via `contracted_into`.
+- [x] **Papel distinto dos 3 algoritmos:**
+  * **BFS ($O(V + E)$):** `run_bfs` como *baseline* de menor número de transições (ignora pesos e `ARMA`).
+  * **DFS *Branch-and-Bound*:** `run_dfs_branch_and_bound` com ordenação por menor peso efetivo, poda por limite superior (`best_eff_cost`), controle de `seen_rooms` e `--bnb-timeout` (`timeout_seconds`).
+  * **Dijkstra no Grafo em Camadas ($O((V + E)\log V)$):** `run_dijkstra` usando `heapq` sobre a função estritamente positiva:
+    $$w(u, v, k) = \frac{\text{TempoBase}(u, v) + \text{Dificuldade}(u, v, k)}{1 + \alpha \cdot \text{ValorColetavel}(v)}, \quad \alpha > 0$$
 
-### Fase 2 — Loader, Pré-processamento e Grafo em Camadas
-* Implementar `src/loader.py`: leitura UTF-8 de `vertices.csv` e `arestas.csv`, validação de tipos, existência de `INICIO` e `FIM`, integridade de vértices nas arestas e expansão de `mao_dupla = 1`.
-* Implementar `src/preprocessing.py`: `contract_dead_ends` preservando auditoria das salas contraídas.
-* Implementar `src/layered_graph.py`: `compute_effective_weight` e `build_layered_graph` criando camadas `0` e `1` e aresta de custo zero $(u_{\text{arma}}, 0) \to (u_{\text{arma}}, 1)$.
+### Fase 2 — Loader, Pré-processamento e Grafo em Camadas (Concluída)
+- [x] [src/models.py](../src/models.py): dataclasses `RoomType`, `Vertex`, `Edge`, `LayeredNode`, `LayeredEdge`, `GameGraph` e `RouteResult`.
+- [x] [src/loader.py](../src/loader.py): `load_graph_from_csv` com leitura UTF-8 de `vertices.csv` e `arestas.csv`, validação de tipos/valores, verificação de `INICIO`/`FIM` e expansão de `mao_dupla = 1`.
+- [x] [src/preprocessing.py](../src/preprocessing.py): `contract_dead_ends` preservando auditoria em `contracted_into` e `original_collectibles`.
+- [x] [src/layered_graph.py](../src/layered_graph.py): `compute_effective_weight` ($w > 0$) e `build_layered_graph` criando camadas `0` e `1` e transição de custo zero $(u_{\text{arma}}, 0) \to (u_{\text{arma}}, 1)$.
 
-### Fase 3 — Algoritmos, Métricas e CLI Multiplataforma
-* Implementar `src/algorithms.py`: `run_bfs`, `run_dfs_branch_and_bound` e `run_dijkstra`.
-* Implementar `src/metrics.py` e finalizar `src/main.py`: tabela comparativa no terminal (Linux/Windows) exibindo rota, custo real, peso efetivo, coletáveis únicos, estados visitados e tempo (`ms`), além de exportação opcional para CSV/JSON (`--output`).
+### Fase 3 — Algoritmos, Métricas e CLI Multiplataforma (Concluída)
+- [x] [src/algorithms.py](../src/algorithms.py): `run_bfs`, `run_dijkstra` e `run_dfs_branch_and_bound`.
+- [x] [src/metrics.py](../src/metrics.py) e [src/main.py](../src/main.py): tabela comparativa no terminal (Linux/Windows) exibindo custo real, peso efetivo, coletáveis únicos, uso da camada armada, estados visitados, tempo (`ms`) e rotas, além de exportação `--output-csv` e `--output-json`.
 
-### Fase 4 — Datasets Reais (*Celeste*, *Cuphead*), Sintéticos e Zenodo
-* Mapear **2 a 3 cenários reais de *Celeste*** em `datasets/celeste/` (salas, morangos como coletáveis, quedas unidirecionais e chaves/habilidades como `possui_arma=1`).
-* Mapear **2 a 3 fases *Run-and-Gun* de *Cuphead*** em `datasets/cuphead/` (rotas alta/baixa, moedas como coletáveis e arma/Super reduzindo `dificuldade_com_arma`).
-* Implementar `scripts/generate_benchmarks.py` gerando cenários determinísticos (`seed=42`) em `datasets/synthetic/` com $V \in \{15, 30, 60, 150, 500, 1500, 5000\}$.
-* Publicar o pacote `datasets/` no **Zenodo** ou **Mendeley Data** e inserir o link/DOI em `article/references.bib`.
+### Fase 4 — Datasets Reais (*Celeste*, *Cuphead*), Sintéticos e Zenodo (Parcialmente Concluída)
+- [x] ***Celeste* ([scripts/extract_celeste_maps.py](../scripts/extract_celeste_maps.py)):** extração direta dos arquivos binários oficiais `BinaryPacker` (`.bin`) da instalação Steam local (`D:\SteamLibrary\steamapps\common\Celeste\Content\Maps\`), gerando todos os **8 capítulos principais** em `datasets/celeste/` (`1_forsaken_city` a `9_core`) com conectividade filtrada por passagens livres em `<solids>`, coletáveis e obstáculos reais.
+- [x] ***Cuphead* ([scripts/extract_cuphead_maps.py](../scripts/extract_cuphead_maps.py)):** extração direta das cenas binárias Unity `SerializedFile` v17 (`level41` a `level46`) da instalação Steam local (`D:\SteamLibrary\steamapps\common\Cuphead\Cuphead_Data\`), gerando todas as **6 fases *Run-and-Gun*** em `datasets/cuphead/` (`1_1f_forest_follies` a `3_2f_rugged_ridge`) com setores, plataformas, *spawners* de inimigos e as 5 moedas douradas (`Level_Coin`).
+- [x] **Sintéticos ([scripts/generate_benchmarks.py](../scripts/generate_benchmarks.py)):** geração determinística (`seed=42`) em `datasets/synthetic/` com $V \in \{15, 30, 60, 150, 500, 1500, 5000\}$ (20% em becos sem saída).
+- [ ] **Publicação externa (Zenodo / Mendeley Data):** empacotar `datasets/` no Zenodo ou Mendeley Data e substituir o placeholder `TODO` de `dataset_zenodo` em [article/references.bib](../article/references.bib).
 
-### Fase 5 — Experimentos, Figuras e Fluxograma Obrigatório
-* Implementar `scripts/run_experiments.py`: rodar comparativo em *Celeste*, *Cuphead*, benchmarks de escalabilidade, sensibilidade de $\alpha \in \{0.0, 0.25, 0.5, 1.0, 2.0\}$ e comparação com/sem `--no-contract`.
-* Implementar `scripts/plot_results.py`: gerar em `article/figures/`:
-  1. **Fluxograma obrigatório** da metodologia (`fluxograma_proposta.pdf`).
-  2. Gráfico de escalabilidade (tempo em `ms` × $|V|$ em escala log).
-  3. Comparativo de custo real e coletáveis entre BFS, B&B e Dijkstra em *Celeste* e *Cuphead*.
-  4. Curva de sensibilidade do parâmetro $\alpha$.
+### Fase 5 — Experimentos, Figuras e Fluxograma Obrigatório (Concluída no Escopo Principal)
+- [x] **Bateria experimental ([scripts/run_experiments.py](../scripts/run_experiments.py)):** executada nos 21 datasets (8 *Celeste*, 6 *Cuphead*, 7 sintéticos) com $\alpha = 0{,}05$, mediana de 5 repetições e *timeout* de 150 ms no DFS B&B, exportando `results/benchmark_summary.csv` e `results/benchmark_summary.json`.
+- [x] **Figuras e fluxograma ([scripts/plot_results.py](../scripts/plot_results.py)):** gerados em `.pdf` e `.png` dentro de `article/figures/`:
+  1. `fluxograma_proposta.pdf` / `.png` (**fluxograma obrigatório** da metodologia);
+  2. `comparacao_custos.pdf` / `.png` (BFS vs. Dijkstra em *Celeste* e *Cuphead*);
+  3. `escalabilidade_tempo.pdf` / `.png` (tempo mediano em ms × $|V|$ em escala log-log);
+  4. `contracao_becos.pdf` / `.png` (redução de vértices $|V| \to |V'|$).
+- [ ] *(Opcional / se desejar ampliar a Seção de Resultados)*: adicionar análise de sensibilidade variando $\alpha \in \{0.0, 0.25, 0.5, 1.0, 2.0\}$ e comparativo explícito com/sem `--no-contract` em `scripts/run_experiments.py`.
 
-### Fase 6 — Artigo IEEE, Validação Final e Pitch
-* Completar `article/main.tex` e `article/references.bib`, compilar no Overleaf (**IEEE Conference Template**), validar todas as referências no Google Scholar (`scholar.google.com`) e garantir que `repo_codigo` e `dataset_zenodo` estejam citados no texto e nas referências.
-* Submeter apenas o **PDF final no AVA** até **22/11/2026** e ensaiar o **Pitch oral de 10 minutos sem slides** (a partir de **25/11/2026**).
+### Fase 6 — Artigo IEEE, Validação Final e Pitch (Em Andamento)
+- [x] Rascunho completo preenchido em [article/main.tex](../article/main.tex) com as 3 tabelas experimentais reais (`tab:celeste`, `tab:cuphead`, `tab:sinteticos`), todas as figuras e citações em [article/references.bib](../article/references.bib).
+- [ ] Inserir o link/DOI definitivo do dataset (Zenodo/Mendeley) em [article/references.bib](../article/references.bib) (`dataset_zenodo`).
+- [ ] Compilar o PDF no **Overleaf** (*IEEE Conference Template*), conferir se o resumo possui no máximo 250 palavras e validar todas as referências no Google Scholar (`scholar.google.com`).
+- [ ] Testar a execução final via terminal em **Linux (Ubuntu 24.04)**.
+- [ ] Submeter o **PDF final no AVA** até **22/11/2026** e ensaiar o **Pitch oral de 10 minutos sem slides** (a partir de **25/11/2026**).
 
 ---
 
 ## 4. Plano de Verificação
 
-* **Testes automatizados (`python -m pytest -v` / `python3 -m pytest -v`):**
-  * Validação de CSVs válidos/inválidos, contração de becos sem saída, positividade de $w(u, v, k)$ e regressão no `datasets/sample_toy` garantindo desvio de Dijkstra/B&B para a arma `S3` sem dupla contagem de `S2`.
-* **Validação multiplataforma:**
-  * Executar `python -m src.main --dataset datasets/sample_toy` no **Windows** e `python3 -m src.main --dataset datasets/sample_toy` no **Linux (Ubuntu 24.04)** usando apenas biblioteca padrão do Python 3.12.
+* **Testes automatizados executados (`python -m pytest -v` no Windows, Python 3.12.10):**
+  * [x] `tests/test_pipeline.py` com **10/10 testes aprovados**: modelos base, leitura CSV e contração de becos em `datasets/sample_toy`, positividade de $w(u, v, k)$, prevenção de dupla contagem entre camadas, execução via CLI (`--output-csv` e `--output-json`), validação dos **8 capítulos de *Celeste***, validação das **6 fases *Run-and-Gun* de *Cuphead***, validação dos **7 benchmarks sintéticos** (`v_0015` a `v_5000`) e existência dos resultados/figuras em `article/figures/`.
+* **Validação multiplataforma pendente:**
+  * [ ] Rodar `python3 -m src.main --dataset datasets/sample_toy` e `python3 -m pytest -v` nativamente no **Linux (Ubuntu 24.04)**.
