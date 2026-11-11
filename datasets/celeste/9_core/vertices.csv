@@ -8,11 +8,11 @@ lvl_a-01,COMUM,0.0,0
 lvl_a-02,COMUM,0.0,0
 lvl_a-03,COMUM,0.0,0
 lvl_b-00,COMUM,0.0,0
-lvl_b-01,ARMA,0.0,1
+lvl_b-01,COMUM,0.0,0
 lvl_b-02,COMUM,0.0,0
 lvl_b-03,COMUM,0.0,0
 lvl_b-04,COMUM,0.0,0
-lvl_b-05,COMUM,0.0,0
+lvl_b-05,ARMA,0.0,1
 lvl_b-06,COLETAVEL,5.0,0
 lvl_b-07,COMUM,0.0,0
 lvl_b-07b,COMUM,0.0,0
@@ -35,6 +35,6 @@ lvl_d-08,COMUM,0.0,0
 lvl_d-09,COMUM,0.0,0
 lvl_d-10,COMUM,0.0,0
 lvl_d-10b,COMUM,0.0,0
-lvl_d-10c,COMUM,0.0,0
+lvl_d-10c,FIM,0.0,0
 lvl_d-11,COLETAVEL,12.0,0
-lvl_space,FIM,15.0,0
+lvl_space,COLETAVEL,15.0,0

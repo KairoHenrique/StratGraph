@@ -74,6 +74,16 @@ namespace Celeste.Mod.StratGraph
             {
                 return;
             }
+            try
+            {
+                if (Engine.Instance != null && Engine.Instance.Window != null)
+                {
+                    Engine.Instance.Window.Title = "Celeste — [StratGraph TAS Mod Ativo | F5: Bot TAS | F6: Rota]";
+                }
+            }
+            catch
+            {
+            }
             string baseDir = AppDomain.CurrentDomain.BaseDirectory ?? ".";
             string jsonPath = Path.Combine(baseDir, "stratgraph_routes.json");
             level.Add(new StratGraphHudEntity(jsonPath));
@@ -180,11 +190,12 @@ namespace Celeste.Mod.StratGraph
             if (MInput.Keyboard != null && MInput.Keyboard.Pressed(Keys.F5))
             {
                 _tasBotActive = !_tasBotActive;
+                _currentWaypointIndex = -1;
             }
             if (MInput.Keyboard != null && MInput.Keyboard.Pressed(Keys.F6))
             {
                 _useBfsRoute = !_useBfsRoute;
-                _currentWaypointIndex = 0;
+                _currentWaypointIndex = -1;
             }
 
             Level level = Scene as Level;
@@ -228,9 +239,31 @@ namespace Celeste.Mod.StratGraph
                 return;
             }
 
-            if (_currentWaypointIndex >= waypoints.Count)
+            if (SaveData.Instance != null)
             {
-                _currentWaypointIndex = 0;
+                SaveData.Instance.Assists.Invincible = true;
+                SaveData.Instance.Assists.InfiniteStamina = true;
+                if (_armedLayerActive && !_useBfsRoute)
+                {
+                    SaveData.Instance.Assists.DashMode = Assists.DashModes.Two;
+                }
+            }
+
+            if (_currentWaypointIndex < 0 || _currentWaypointIndex >= waypoints.Count)
+            {
+                // Iniciar do waypoint mais próximo da posição atual da Madeline
+                int bestIdx = 0;
+                float bestDist = float.MaxValue;
+                for (int i = 0; i < waypoints.Count; i++)
+                {
+                    float d = Vector2.DistanceSquared(player.Position, waypoints[i]);
+                    if (d < bestDist)
+                    {
+                        bestDist = d;
+                        bestIdx = i;
+                    }
+                }
+                _currentWaypointIndex = bestIdx;
             }
 
             Vector2 target = waypoints[_currentWaypointIndex];

@@ -11,7 +11,7 @@ lvl_a-04,COLETAVEL,5.0,0
 lvl_a-05,COLETAVEL,5.0,0
 lvl_a-06,COLETAVEL,5.0,0
 lvl_a-07,COLETAVEL,5.0,0
-lvl_a-08,ARMA,0.0,1
+lvl_a-08,COMUM,0.0,0
 lvl_a-09,COMUM,0.0,0
 lvl_a-10,COMUM,0.0,0
 lvl_a-11,COLETAVEL,5.0,0
@@ -30,14 +30,14 @@ lvl_b-05,COLETAVEL,5.0,0
 lvl_b-06,COMUM,0.0,0
 lvl_b-07,COMUM,0.0,0
 lvl_b-08,COMUM,0.0,0
-lvl_b-09,COMUM,0.0,0
+lvl_b-09,ARMA,0.0,1
 lvl_b-10,COLETAVEL,5.0,0
 lvl_b-11,COMUM,0.0,0
 lvl_b-12,COLETAVEL,5.0,0
 lvl_b-13,COMUM,0.0,0
 lvl_b-14,COMUM,0.0,0
-lvl_b-15,FIM,15.0,0
-lvl_b-16,COMUM,0.0,0
+lvl_b-15,COLETAVEL,15.0,0
+lvl_b-16,FIM,0.0,0
 lvl_b-17,COLETAVEL,10.0,0
 lvl_b-18,COLETAVEL,5.0,0
 lvl_b-19,COMUM,0.0,0

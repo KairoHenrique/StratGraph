@@ -296,8 +296,8 @@ def extract_cuphead_level_to_csv(scene_path: Path, out_dir: Path, slug: str) -> 
         nodes[plat_id] = {
             "x": round(px, 1),
             "y": round(py, 1),
-            "tipo": "COLETAVEL" if p_idx % 2 == 1 else "COMUM",
-            "valor": 6.0 if p_idx % 2 == 1 else 0.0,
+            "tipo": "COMUM",
+            "valor": 0.0,
             "arma": 0,
             "is_spine_late": False,
         }
@@ -364,11 +364,8 @@ def extract_cuphead_level_to_csv(scene_path: Path, out_dir: Path, slug: str) -> 
         )
         u_id = spine_ids[closest_idx]
         v_id = spine_ids[closest_idx + 1]
-        if p_idx == 1:
-            add_physical_edge(u_id, plat_id, mao_dupla=1)
-        else:
-            add_physical_edge(u_id, plat_id, mao_dupla=1)
-            add_physical_edge(plat_id, v_id, mao_dupla=0)
+        add_physical_edge(u_id, plat_id, mao_dupla=1)
+        add_physical_edge(plat_id, v_id, mao_dupla=0)
 
     out_dir.mkdir(parents=True, exist_ok=True)
     with (out_dir / "vertices.csv").open("w", encoding="utf-8", newline="") as vf:

@@ -96,16 +96,43 @@ def export_mod_routes_json(alpha: float = 0.05) -> Path:
 
             def build_route_wpts(r_list: list[str]) -> list[str]:
                 pts_out: list[str] = []
+
+                def append_sub_tour(host_rm: str) -> None:
+                    contracted_sub = con_g.contracted_into.get(host_rm, [])
+                    if not contracted_sub:
+                        return
+                    allowed_sub = set(contracted_sub)
+                    vis_sub: set[str] = {host_rm}
+                    tour_pairs: list[tuple[str, str]] = []
+
+                    def dfs_mod_tour(cur_sub: str) -> None:
+                        nbs = sorted(
+                            {
+                                e_s.destination
+                                for e_s in raw_g.adjacency.get(cur_sub, [])
+                                if e_s.destination in allowed_sub
+                            }
+                        )
+                        for nb_sub in nbs:
+                            if nb_sub not in vis_sub:
+                                vis_sub.add(nb_sub)
+                                tour_pairs.append((cur_sub, nb_sub))
+                                dfs_mod_tour(nb_sub)
+                                tour_pairs.append((nb_sub, cur_sub))
+
+                    dfs_mod_tour(host_rm)
+                    for a_rm, b_rm in tour_pairs:
+                        for pt in edge_wpts.get(f"{a_rm}->{b_rm}", []):
+                            pts_out.append(f"{pt[0]},{pt[1]}")
+
+                if r_list:
+                    append_sub_tour(r_list[0])
                 for idx_r in range(len(r_list) - 1):
                     u_rm = r_list[idx_r]
                     v_rm = r_list[idx_r + 1]
                     for pt in edge_wpts.get(f"{u_rm}->{v_rm}", []):
                         pts_out.append(f"{pt[0]},{pt[1]}")
-                    for ch_rm in con_g.contracted_into.get(v_rm, []):
-                        for pt in edge_wpts.get(f"{v_rm}->{ch_rm}", []):
-                            pts_out.append(f"{pt[0]},{pt[1]}")
-                        for pt in edge_wpts.get(f"{ch_rm}->{v_rm}", []):
-                            pts_out.append(f"{pt[0]},{pt[1]}")
+                    append_sub_tour(v_rm)
                 return pts_out
 
             tas_points = build_route_wpts(strat_rooms)
@@ -285,6 +312,14 @@ class Program
             var awake = slType.Methods.First(m => m.Name == "Awake");
             var il = awake.Body.GetILProcessor();
             il.InsertBefore(awake.Body.Instructions[0], il.Create(OpCodes.Call, initRef));
+
+            var chType = asm.MainModule.GetType("Cuphead");
+            var chInit = chType?.Methods.FirstOrDefault(m => m.Name == "Init");
+            if (chInit != null && chInit.HasBody)
+            {
+                var il2 = chInit.Body.GetILProcessor();
+                il2.InsertBefore(chInit.Body.Instructions[0], il2.Create(OpCodes.Call, initRef));
+            }
         }
         else if (mode == "celeste")
         {

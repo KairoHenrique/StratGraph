@@ -182,11 +182,12 @@ namespace StratGraph.CupheadMod
             if (Input.GetKeyDown(KeyCode.F5))
             {
                 _tasBotActive = !_tasBotActive;
+                _currentWaypointIndex = -1;
             }
             if (Input.GetKeyDown(KeyCode.F6))
             {
                 _useBfsRoute = !_useBfsRoute;
-                _currentWaypointIndex = 0;
+                _currentWaypointIndex = -1;
             }
 
             if (!_tasBotActive)
@@ -213,13 +214,24 @@ namespace StratGraph.CupheadMod
                 return;
             }
 
-            if (_currentWaypointIndex >= waypoints.Count)
+            Vector2 current = new Vector2(player.transform.position.x, player.transform.position.y);
+            if (_currentWaypointIndex < 0 || _currentWaypointIndex >= waypoints.Count)
             {
-                _currentWaypointIndex = 0;
+                int bestIdx = 0;
+                float bestDist = float.MaxValue;
+                for (int i = 0; i < waypoints.Count; i++)
+                {
+                    float d = (waypoints[i] - current).sqrMagnitude;
+                    if (d < bestDist)
+                    {
+                        bestDist = d;
+                        bestIdx = i;
+                    }
+                }
+                _currentWaypointIndex = bestIdx;
             }
 
             Vector2 target = waypoints[_currentWaypointIndex];
-            Vector2 current = new Vector2(player.transform.position.x, player.transform.position.y);
             Vector2 delta = target - current;
             float dist = delta.magnitude;
 

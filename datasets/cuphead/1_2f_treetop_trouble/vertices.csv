@@ -4,9 +4,9 @@ coin_02,COLETAVEL,15.0,0
 coin_03,COLETAVEL,15.0,0
 coin_04,COLETAVEL,15.0,0
 coin_05,COLETAVEL,15.0,0
-high_plat_01,COLETAVEL,6.0,0
+high_plat_01,COMUM,0.0,0
 high_plat_02,COMUM,0.0,0
-high_plat_03,COLETAVEL,6.0,0
+high_plat_03,COMUM,0.0,0
 high_plat_04,COMUM,0.0,0
 parry_shrine_arma,ARMA,0.0,1
 sec_00,INICIO,0.0,0

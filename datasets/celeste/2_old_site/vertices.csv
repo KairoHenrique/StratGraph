@@ -10,7 +10,7 @@ lvl_12d,COLETAVEL,5.0,0
 lvl_13,FIM,0.0,0
 lvl_2,COMUM,0.0,0
 lvl_3,COMUM,0.0,0
-lvl_3x,COMUM,0.0,0
+lvl_3x,ARMA,0.0,1
 lvl_4,COLETAVEL,5.0,0
 lvl_5,COLETAVEL,5.0,0
 lvl_6,COMUM,0.0,0
@@ -28,7 +28,7 @@ lvl_d6,COLETAVEL,5.0,0
 lvl_d7,COMUM,0.0,0
 lvl_d8,COMUM,0.0,0
 lvl_d9,COLETAVEL,12.0,0
-lvl_s0,ARMA,0.0,1
+lvl_s0,COMUM,0.0,0
 lvl_s1,COMUM,0.0,0
 lvl_s2,COLETAVEL,15.0,0
 lvl_start,INICIO,0.0,0

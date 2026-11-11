@@ -30,7 +30,7 @@ Divin\'opolis, Brasil}
 \maketitle
 
 \begin{abstract}
-A busca por rotas \'otimas em jogos digitais de plataforma e a\c{c}\~ao exige equilibrar tempo de travessia, desvios t\'aticos para obten\c{c}\~ao de armas ou \textit{power-ups} e coleta de itens opcionais. Algoritmos cl\'assicos de caminho m\'inimo sobre grafos est\'aticos n\~ao suportam a mudan\c{c}a din\^amica de dificuldade ap\'os a coleta de equipamentos sem violar a subestrutura \'otima, enquanto modela\c{c}\~oes baseadas em custos negativos introduzem ciclos absorventes. Este trabalho apresenta o \textit{StratGraph}, uma arquitetura que modela mapas extra\'idos diretamente dos arquivos bin\'arios oficiais de \textit{Celeste} (8 cap\'itulos) e \textit{Cuphead} (6 fases \textit{Run-and-Gun}), al\'em de benchmarks sint\'eticos, como d\'igrafos ponderados expandidos em duas camadas de estado ($L_0$ desarmado e $L_1$ armado), combinados \`a contra\c{c}\~ao topol\'ogica de becos sem sa\'ida e a uma fun\c{c}\~ao racional de peso efetivo estritamente positiva. A solu\c{c}\~ao principal via algoritmo de Dijkstra em camadas \'e comparada experimentalmente com a Busca em Largura (BFS) e com o \textit{Branch-and-Bound} em profundidade (DFS). Os resultados demonstram que a contra\c{c}\~ao de becos reduz at\'e 26,7\% dos v\'ertices em mapas reais, enquanto o Dijkstra em camadas reduz o custo efetivo da rota entre 44,3\% e 73,7\% em \textit{Celeste} e entre 60,6\% e 72,5\% em \textit{Cuphead} frente ao BFS, mantendo execu\c{c}\~ao sub-milissegundo nas fases reais e resolvendo grafos sint\'eticos de 5.000 salas em 13,1~ms, onde a busca exata em profundidade sofre explos\~ao combinat\'oria.
+A busca por rotas \'otimas em jogos digitais de plataforma e a\c{c}\~ao exige equilibrar tempo de travessia, desvios t\'aticos para obten\c{c}\~ao de armas ou \textit{power-ups} e coleta integral de itens opcionais. Algoritmos cl\'assicos de caminho m\'inimo sobre grafos est\'aticos n\~ao suportam a mudan\c{c}a din\^amica de dificuldade ap\'os a coleta de equipamentos sem violar a subestrutura \'otima, enquanto modela\c{c}\~oes baseadas em custos negativos introduzem ciclos absorventes. Este trabalho apresenta o \textit{StratGraph}, uma arquitetura que modela mapas extra\'idos diretamente dos arquivos bin\'arios oficiais de \textit{Celeste} (8 cap\'itulos, com \textit{pathfinding} $A^*$ em grid de colis\~ao $8\times 8$) e \textit{Cuphead} (6 fases \textit{Run-and-Gun}), al\'em de benchmarks sint\'eticos, como d\'igrafos ponderados expandidos em duas camadas de estado ($L_0$ desarmado e $L_1$ armado), combinados \`a contra\c{c}\~ao topol\'ogica iterativa de becos sem sa\'ida e a uma fun\c{c}\~ao racional de peso efetivo estritamente positiva. A solu\c{c}\~ao principal via algoritmo de Dijkstra em camadas \'e comparada experimentalmente com a Busca em Largura (BFS) e com o \textit{Branch-and-Bound} em profundidade (DFS). Os resultados demonstram que a contra\c{c}\~ao de becos reduz at\'e 72,7\% dos v\'ertices em mapas reais e garante a coleta de 100\% dos colet\'aveis do mapa, enquanto o Dijkstra em camadas reduz o custo efetivo da rota at\'e 48,0\% em \textit{Celeste} e at\'e 67,9\% em \textit{Cuphead} frente ao BFS sob a mesma meta de 100\% de itens, mantendo execu\c{c}\~ao sub-milissegundo nas fases reais e resolvendo grafos sint\'eticos de 5.000 salas em 18,7~ms, onde a busca exata em profundidade sofre explos\~ao combinat\'oria.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -68,8 +68,8 @@ Paralelamente, a decis\~ao de visitar v\'ertices opcionais que concedem recompen
 \subsection{Origem e Extra\c{c}\~ao dos Dados Reais e Sint\'eticos}
 Para garantir fidelidade emp\'irica, desenvolvemos extratores em Python que leem diretamente os arquivos bin\'arios das instala\c{c}\~oes oficiais dos jogos e convertem cada fase para o esquema relacional padronizado (\texttt{vertices.csv} e \texttt{arestas.csv}) documentado em~\cite{dataset_zenodo}:
 \begin{itemize}
-    \item \textbf{\textit{Celeste} (8 cap\'itulos oficiais):} O extrator decodifica o formato bin\'ario \texttt{BinaryPacker} (\texttt{.bin}) da \textit{engine} Monocle para os cap\'itulos 1 (\textit{Forsaken City}) a 9 (\textit{Core}). Cada \texttt{level} corresponde a uma sala com coordenadas $(x, y)$, dimens\~oes $(w, h)$ e matriz de blocos s\'olidos (\texttt{solids}). Duas salas adjacentes recebem aresta apenas quando h\'a abertura f\'isica livre de colisor na fronteira comum; quedas verticais abruptas s\~ao modeladas como m\~ao \'unica (\texttt{mao\_dupla=0}). A dificuldade baseia-se na contagem real de obst\'aculos da sala (\texttt{spikes}, \texttt{spinner}, \texttt{finalBoss}, \texttt{seeker}, \texttt{badelineBoost}), e os colet\'aveis contabilizam morangos (\texttt{strawberry}), fitas cassete (\texttt{cassette}) e cora\c{c}\~oes de cristal (\texttt{blackGem}).
-    \item \textbf{\textit{Cuphead} (6 fases \textit{Run-and-Gun}):} O extrator analisa os arquivos bin\'arios \texttt{SerializedFile} v17 da \textit{engine} Unity (\texttt{level41} a \texttt{level46}), correspondentes a \textit{Forest Follies}, \textit{Treetop Trouble}, \textit{Funfair Fever}, \textit{Funhouse Frazzle}, \textit{Perilous Piers} e \textit{Rugged Ridge}. S\~ao extra\'idas as coordenadas globais de \texttt{Transform} das plataformas jog\'aveis, das 5 moedas douradas oficiais (\texttt{Level\_Coin}) e dos \textit{spawners} de inimigos para estruturar os setores e rotas superiores de cada est\'agio.
+    \item \textbf{\textit{Celeste} (8 cap\'itulos oficiais):} O extrator decodifica o formato bin\'ario \texttt{BinaryPacker} (\texttt{.bin}) da \textit{engine} Monocle para os cap\'itulos 1 (\textit{Forsaken City}) a 9 (\textit{Core}). Cada \texttt{level} corresponde a uma sala com coordenadas $(x, y)$, dimens\~oes $(w, h)$ e matriz de blocos s\'olidos de $8\times 8$ pixels (\texttt{solids}). Para cada transi\c{c}\~ao entre salas adjacentes com fronteira aberta, executa-se um algoritmo $A^*$ f\'isico bloco a bloco desde a porta de entrada, passando pelas coordenadas exatas dos colet\'aveis (\texttt{strawberry}, \texttt{cassette}, \texttt{blackGem}) e estruturas de apoio (\texttt{jumpThru}, \texttt{spring}, \texttt{booster}, \texttt{zipMover}) at\'e a porta de sa\'ida, derivando o \texttt{tempo\_base}, a exposi\c{c}\~ao real aos obst\'aculos (\texttt{spikes}, \texttt{spinner}, \texttt{seeker}) e os \textit{waypoints} de movimenta\c{c}\~ao estilo TAS.
+    \item \textbf{\textit{Cuphead} (6 fases \textit{Run-and-Gun}):} O extrator analisa os arquivos bin\'arios \texttt{SerializedFile} v17 da \textit{engine} Unity (\texttt{level41} a \texttt{level46}), correspondentes a \textit{Forest Follies}, \textit{Treetop Trouble}, \textit{Funfair Fever}, \textit{Funhouse Frazzle}, \textit{Perilous Piers} e \textit{Rugged Ridge}. S\~ao extra\'idas as coordenadas globais de \texttt{Transform} das plataformas jog\'aveis, das 5 moedas douradas oficiais (\texttt{Level\_Coin}) e dos \textit{spawners} de inimigos, calculando a cadeia f\'isica de saltos entre plataformas e a exposi\c{c}\~ao a inimigos ao longo do trajeto.
     \item \textbf{Benchmarks Sint\'eticos:} Gerador com semente fixa para $|V| \in \{15, 30, 60, 150, 500, 1500, 5000\}$, mantendo 20\% dos v\'ertices como alcovas colet\'aveis em beco sem sa\'ida e atalhos direcionados para avalia\c{c}\~ao assint\'otica.
 \end{itemize}
 
@@ -106,7 +106,7 @@ A Figura~\ref{fig:fluxograma} ilustra o pipeline completo do \textit{StratGraph}
 
 Os experimentos foram conduzidos adotando $\alpha = 0{,}05$ e mediana de 5 repeti\c{c}\~oes por inst\^ancia, com limite de seguran\c{c}a (\textit{timeout}) de 150~ms para o DFS \textit{Branch-and-Bound}.
 
-A Figura~\ref{fig:contracao} apresenta o impacto do pr\'e-processamento de contra\c{c}\~ao de becos sem sa\'ida nas 14 inst\^ancias reais. Em mapas com m\'ultiplas alcovas de morangos opcionais, como \textit{Forsaken City} (C1) e \textit{Mirror Temple} (C5), a contra\c{c}\~ao eliminou 23,7\% ($38 \to 29$) e 26,7\% ($45 \to 33$) das salas antes mesmo da expans\~ao em camadas, preservando integralmente os itens coletados por auditoria.
+A Figura~\ref{fig:contracao} apresenta o impacto do pr\'e-processamento iterativo de contra\c{c}\~ao de becos sem sa\'ida nas 14 inst\^ancias reais. Em mapas com extensas ramifica\c{c}\~oes de morangos opcionais, como \textit{Old Site} (C2), \textit{Mirror Temple} (C5) e \textit{Celestial Resort} (C3), a contra\c{c}\~ao em \'arvore absorveu 72,7\% ($33 \to 9$), 66,7\% ($45 \to 15$) e 64,6\% ($65 \to 23$) das salas na espinha principal antes da expans\~ao em camadas, preservando 100\% dos colet\'aveis do mapa por auditoria.
 
 \begin{figure}[htbp]
 \centering
@@ -115,29 +115,29 @@ A Figura~\ref{fig:contracao} apresenta o impacto do pr\'e-processamento de contr
 \label{fig:contracao}
 \end{figure}
 
-As Tabelas~\ref{tab:celeste} e~\ref{tab:cuphead} consolidam os resultados comparativos nos 8 cap\'itulos de \textit{Celeste} e nas 6 fases \textit{Run-and-Gun} de \textit{Cuphead}, cujos pesos foram extra\'idos por \textit{pathfinding} f\'isico intra-sala ($A^*$ no grid 8$\times$8 de colis\~ao \texttt{<solids>} em \textit{Celeste} e cadeias de plataformas em \textit{Cuphead}), ilustrados na Figura~\ref{fig:custos}. Em todas as 14 fases reais, o BFS seguiu a linha direta de menor n\'umero de saltos na camada desarmada ($L_0$), sofrendo penalidades severas nos trechos finais de alta densidade de obst\'aculos. Em contrapartida, o Dijkstra em camadas identificou automaticamente o desvio estrat\'egico at\'e a sala de \textit{power-up}/arma, migrando para a camada $L_1$ e reduzindo o peso efetivo total entre 35,4\% e 51,1\% em \textit{Celeste} e entre 58,0\% e 70,8\% em \textit{Cuphead}. Al\'em disso, a compara\c{c}\~ao entre a execu\c{c}\~ao padr\~ao (com contra\c{c}\~ao) e a flag \texttt{--no-contract} evidencia o duplo papel de \texttt{contract\_dead\_ends}: sem contra\c{c}\~ao, algoritmos de caminho m\'inimo n\~ao entram em alcovas sem sa\'ida por somarem peso positivo sem avan\c{c}ar ao destino, capturando apenas 11 itens em \textit{Forsaken City} (contra 18 com contra\c{c}\~ao) e 2 itens em \textit{Forest Follies} (contra 6 com contra\c{c}\~ao).
+As Tabelas~\ref{tab:celeste} e~\ref{tab:cuphead} consolidam os resultados comparativos nos 8 cap\'itulos de \textit{Celeste} e nas 6 fases \textit{Run-and-Gun} de \textit{Cuphead}, cujos pesos foram extra\'idos por \textit{pathfinding} f\'isico intra-sala ($A^*$ no grid 8$\times$8 de colis\~ao \texttt{<solids>} em \textit{Celeste} e cadeias de plataformas em \textit{Cuphead}), ilustrados na Figura~\ref{fig:custos}. Gra\c{c}as \`a contra\c{c}\~ao topol\'ogica iterativa (\texttt{contract\_dead\_ends}), tanto o BFS quanto o DFS e o Dijkstra coletam literalmente 100\% de todos os colet\'aveis presentes em cada mapa (como 21/21 em \textit{Forsaken City}, 41/41 em \textit{The Summit} e 5/5 moedas douradas em todas as fases de \textit{Cuphead}), garantindo uma compara\c{c}\~ao estritamente justa sob o mesmo objetivo de 100\% de coleta (\textit{All Collectibles TAS}). Enquanto o BFS realiza toda a travessia e as excurs\~oes de coleta na camada desarmada ($L_0$), o Dijkstra em camadas realiza o desvio estrat\'egico at\'e a sala de \textit{power-up}/arma ($L_0 \to L_1$), atingindo exatamente o mesmo custo \'otimo do DFS \textit{Branch-and-Bound} e reduzindo o peso efetivo total at\'e 48,0\% em \textit{Celeste} e entre 55,6\% e 67,9\% em \textit{Cuphead}. Al\'em disso, a abla\c{c}\~ao com \texttt{--no-contract} comprova que, sem a contra\c{c}\~ao topol\'ogica proposta, algoritmos de caminho m\'inimo ignoram todas as ramifica\c{c}\~oes sem sa\'ida (capturando apenas 9 de 21 itens em \textit{Forsaken City} e 0 de 5 moedas em \textit{Cuphead}). As trajet\'orias TAS geradas foram validadas em um simulador 2D HTML5 e em \textit{mods} em C\# injetados diretamente nos execut\'aveis de \textit{Celeste} e \textit{Cuphead}.
 
 \begin{table}[htbp]
 \caption{Desempenho Comparativo nos 8 Cap\'itulos Oficiais de \textit{Celeste} ($\alpha = 0{,}05$)}
 \label{tab:celeste}
 \centering
 \scriptsize
-\setlength{\tabcolsep}{2.8pt}
+\setlength{\tabcolsep}{2.5pt}
 \begin{tabular}{lrrrrrrrr}
 \toprule
-\textbf{Cap\'itulo} & $|V|$ & $|V'|$ & \textbf{BFS} & \textbf{Dijk.} & \textbf{Red.} & \textbf{Itens Dijk.} & \textbf{Tempo} & \textbf{Tempo} \\
- & & & \textbf{Efet.} & \textbf{Efet.} & \textbf{(\%)} & \textbf{(C / NC)} & \textbf{Dijk.} & \textbf{DFS} \\
+\textbf{Cap\'itulo} & $|V|$ & $|V'|$ & \textbf{BFS} & \textbf{Dijk.} & \textbf{Red.} & \textbf{Itens} & \textbf{Tempo} & \textbf{Tempo} \\
+ & & & \textbf{Efet.} & \textbf{Efet.} & \textbf{(\%)} & \textbf{(B/D/NC)} & \textbf{Dijk.} & \textbf{DFS} \\
 \midrule
-1-Forsaken City    & 38 & 29 &   402,2 &  238,4 & 40,7\% & 18 / 11 & 0,08ms & 0,10ms \\
-2-Old Site         & 33 & 28 &   220,2 &  107,6 & 51,1\% &  3 / 1  & 0,07ms & 0,10ms \\
-3-Celestial Resort & 65 & 63 &   411,2 &  265,6 & 35,4\% &  9 / 9  & 0,21ms & 6,39ms \\
-4-Golden Ridge     & 49 & 43 &   726,0 &  402,5 & 44,6\% & 22 / 18 & 0,11ms & 0,16ms \\
-5-Mirror Temple    & 45 & 33 &   415,5 &  263,2 & 36,7\% &  7 / 2  & 0,08ms & 0,14ms \\
-6-Reflection       & 63 & 63 & 1.059,5 &  537,5 & 49,3\% &  1 / 1  & 0,18ms & 6,42ms \\
-7-The Summit       & 97 & 85 & 1.933,0 & 1.077,8 & 44,2\% & 29 / 20 & 0,22ms & 0,95ms \\
-9-Core             & 39 & 36 &   694,1 &  401,9 & 42,1\% &  7 / 4  & 0,09ms & 0,14ms \\
+1-Forsaken City    & 38 & 21 &   498,0 &   429,8 & 13,7\% & 21/21/9  & 0,04ms & 0,10ms \\
+2-Old Site         & 33 &  9 &   876,7 &   617,6 & 29,6\% & 18/18/1  & 0,02ms & 0,04ms \\
+3-Celestial Resort & 65 & 23 &   986,7 &   613,6 & 37,8\% & 24/24/7  & 0,05ms & 0,13ms \\
+4-Golden Ridge     & 49 & 35 &   889,6 &   510,5 & 42,6\% & 29/29/16 & 0,09ms & 0,21ms \\
+5-Mirror Temple    & 45 & 15 &   690,0 &   424,1 & 38,5\% & 22/22/1  & 0,04ms & 0,10ms \\
+6-Reflection       & 63 & 48 & 1.053,7 &   547,9 & 48,0\% &  2/2/0   & 0,12ms & 0,31ms \\
+7-The Summit       & 97 & 63 & 2.142,6 & 1.121,8 & 47,6\% & 41/41/19 & 0,20ms & 0,48ms \\
+9-Core             & 39 & 30 &   623,1 &   327,9 & 47,4\% &  7/7/2   & 0,08ms & 0,19ms \\
 \bottomrule
-\multicolumn{9}{l}{\tiny C = Com contra\c{c}\~ao de becos (padr\~ao); NC = Sem contra\c{c}\~ao (\texttt{--no-contract}).}
+\multicolumn{9}{l}{\tiny Itens (B/D/NC): BFS (100\%) / Dijkstra c/ contr. (100\%) / Dijkstra \texttt{--no-contract}.}
 \end{tabular}
 \end{table}
 
@@ -152,14 +152,14 @@ As Tabelas~\ref{tab:celeste} e~\ref{tab:cuphead} consolidam os resultados compar
 \textbf{Fase (\textit{Isle})} & $|V|$ & $|V'|$ & \textbf{BFS} & \textbf{Dijk.} & \textbf{Red.} & \textbf{Itens} & \textbf{Tempo} & \textbf{Tempo} \\
  & & & \textbf{Efet.} & \textbf{Efet.} & \textbf{(\%)} & \textbf{(B/D/NC)} & \textbf{Dijk.} & \textbf{DFS} \\
 \midrule
-1-1F Forest Follies  & 26 & 20 &   504,8 & 223,9 & 55,6\% & 6 / 6 / 0 & 0,07ms & 0,37ms \\
-1-2F Treetop Trouble & 26 & 20 & 1.285,2 & 434,8 & 66,2\% & 6 / 6 / 0 & 0,06ms & 0,51ms \\
-2-1F Funfair Fever   & 26 & 20 &   471,8 & 212,1 & 55,0\% & 6 / 6 / 0 & 0,07ms & 0,32ms \\
-2-2F Funhouse Frazz. & 26 & 20 & 1.686,8 & 557,4 & 67,0\% & 6 / 6 / 0 & 0,07ms & 0,33ms \\
-3-1F Perilous Piers  & 22 & 17 &   968,2 & 320,7 & 66,9\% & 5 / 5 / 0 & 0,05ms & 0,11ms \\
-3-2F Rugged Ridge    & 26 & 20 & 1.116,1 & 485,6 & 56,5\% & 6 / 6 / 0 & 0,06ms & 0,18ms \\
+1-1F Forest Follies  & 26 & 21 &   490,9 & 210,0 & 57,2\% & 5 / 5 / 0 & 0,06ms & 0,35ms \\
+1-2F Treetop Trouble & 26 & 21 & 1.252,6 & 402,2 & 67,9\% & 5 / 5 / 0 & 0,07ms & 0,64ms \\
+2-1F Funfair Fever   & 26 & 21 &   461,9 & 205,2 & 55,6\% & 5 / 5 / 0 & 0,06ms & 0,36ms \\
+2-2F Funhouse Frazz. & 26 & 21 & 1.662,2 & 532,9 & 67,9\% & 5 / 5 / 0 & 0,07ms & 0,35ms \\
+3-1F Perilous Piers  & 22 & 17 &   968,2 & 320,7 & 66,9\% & 5 / 5 / 0 & 0,04ms & 0,08ms \\
+3-2F Rugged Ridge    & 26 & 21 & 1.059,7 & 429,2 & 59,5\% & 5 / 5 / 0 & 0,08ms & 0,33ms \\
 \bottomrule
-\multicolumn{9}{l}{\tiny Itens (B/D/NC): BFS / Dijkstra com contra\c{c}\~ao / Dijkstra \texttt{--no-contract}.}
+\multicolumn{9}{l}{\tiny Itens (B/D/NC): BFS (100\%) / Dijkstra c/ contr. (100\%) / Dijkstra \texttt{--no-contract}.}
 \end{tabular}
 \end{table}
 

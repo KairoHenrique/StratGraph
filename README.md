@@ -1,6 +1,6 @@
 # StratGraph
 
-Otimização de rotas estratégicas em mapas de jogos digitais modelados como **Dígrafos Ponderados Expandidos em Camadas**, equilibrando tempo/dificuldade de travessia, desvio estratégico para obtenção de arma (*power-up*) e coleta de itens.
+Otimização de rotas estratégicas em mapas de jogos digitais modelados como **Dígrafos Ponderados Expandidos em Camadas**, equilibrando tempo/dificuldade física de travessia, desvio estratégico para obtenção de arma (*power-up* $L_0 \to L_1$) e coleta de itens com execução estilo **TAS (*Tool-Assisted Speedrun*)**.
 
 > Trabalho Final da disciplina **Estruturas em Árvores e Teoria dos Grafos** (Prof. Michel Pires da Silva — UFCI-MG).
 >
@@ -12,15 +12,16 @@ Otimização de rotas estratégicas em mapas de jogos digitais modelados como **
 
 ```text
 ├── src/                  # Núcleo algorítmico em Python 3.12 (apenas biblioteca padrão)
-├── docs/                 # Documentação técnica, modelagem e guias de execução
+├── docs/                 # Documentação técnica, modelagem matemática e guias de execução
 ├── datasets/             # Mapas tratados em CSV (Celeste, Cuphead e benchmarks sintéticos)
-├── scripts/              # Geração de benchmarks, execução em lote e plotagem para o artigo
-├── tests/                # Testes unitários e de integração
-├── results/              # Resultados experimentais exportados (CSV/JSON)
-└── article/              # Rascunho LaTeX (IEEE Conference Template), referências e figuras
+├── scripts/              # Extratores A* físicos, benchmarks, gráficos, simulador 2D e builder de mods
+├── mods/                 # Mods C# In-Game com HUD e Bot TAS (F5/F6) para Celeste e Cuphead
+├── tests/                # Testes unitários e de integração (11 testes automatizados)
+├── results/              # Resultados experimentais (CSV/JSON), simulador HTML5 e pacotes .zip
+└── article/              # Artigo científico LaTeX (IEEE Conference Template), referências e figuras
 ```
 
-Consulte [docs/plano_implementacao.md](docs/plano_implementacao.md) para ver o plano completo do projeto, [docs/INDICE.md](docs/INDICE.md) para a lista de documentos e [docs/execucao_linux_windows.md](docs/execucao_linux_windows.md) para o guia de execução.
+Consulte [docs/plano_implementacao.md](docs/plano_implementacao.md) para ver o plano completo do projeto, [docs/INDICE.md](docs/INDICE.md) para a lista de documentos, [docs/arquitetura_e_modelagem.md](docs/arquitetura_e_modelagem.md) para a modelagem matemática e [docs/execucao_linux_windows.md](docs/execucao_linux_windows.md) para o guia completo de execução.
 
 ## Execução Multiplataforma (Linux Ubuntu 24.04 e Windows)
 
@@ -28,17 +29,56 @@ O núcleo do **StratGraph** (`src/`) utiliza **exclusivamente a biblioteca padr�
 
 ```bash
 # Linux (Ubuntu 24.04)
-python3 -m src.main --dataset datasets/sample_toy --alpha 0.5
+python3 -m src.main --dataset datasets/celeste/1_forsaken_city --alpha 0.05
 
 # Windows (PowerShell / CMD)
-python -m src.main --dataset datasets/sample_toy --alpha 0.5
+python -m src.main --dataset datasets/celeste/1_forsaken_city --alpha 0.05
 ```
+
+## Simulador Visual 2D TAS e Mods *In-Game* (*Celeste* & *Cuphead*)
+
+* **Simulador Visual Interativo 2D (HTML5 Canvas — Linux e Windows):**
+  Anima os agentes de **BFS**, **DFS *Branch-and-Bound***, **Dijkstra `--no-contract`** e **StratGraph ($L_0 \to L_1$ + Contração de Becos)** percorrendo os *waypoints* físicos reais ($A^*$ no grid 8×8 `<solids>` de *Celeste* e plataformas de *Cuphead*):
+  ```bash
+  python -m scripts.simulate_route --open
+  ```
+* **Mods de Teste *In-Game* com Bot TAS (Steam / Windows):**
+  Compila os mods em C# ([`mods/celeste_stratgraph/`](mods/celeste_stratgraph/StratGraphCelesteHud.cs) e [`mods/cuphead_stratgraph/`](mods/cuphead_stratgraph/StratGraphCupheadHud.cs)) e instala nos binários da Steam (com backup automático `.stratgraph.bak`). Dentro do jogo, **`F5`** liga/desliga o **Bot TAS** e **`F6`** alterna ao vivo entre a **Rota StratGraph ($L_0 \to L_1$)** e a **Rota BFS ($L_0$)** (ambas coletando os itens):
+  ```powershell
+  # Compilar e instalar nos jogos da Steam
+  python -m scripts.build_mods --install-games
+
+  # Restaurar binários originais da Steam quando desejar
+  python -m scripts.build_mods --uninstall-games
+  ```
 
 ### Dependências opcionais (gráficos do artigo e testes)
 
 ```bash
 pip install -r requirements-dev.txt
+python -m pytest -v
 ```
+
+## Resultados Experimentais (Coleta 100% — *All Collectibles TAS*, $\alpha = 0{,}05$)
+
+Graças à **contração topológica iterativa de becos sem saída** (`contract_dead_ends`), **BFS**, **DFS *Branch-and-Bound*** e **StratGraph (Dijkstra em Camadas $L_0 \to L_1$)** coletam **literalmente 100% de todos os coletáveis** em cada mapa (enquanto a ablação `--no-contract` perde os itens das ramificações laterais), permitindo uma comparação estritamente justa sob o mesmo objetivo de 100% de coleta:
+
+| Instância (*Celeste* / *Cuphead*) | $\|V\| \to \|V'\|$ | BFS ($L_0$) Efetivo | StratGraph ($L_0 \to L_1$) Efetivo | Redução $w$ (%) | Coletáveis (`BFS / DFS / StratGraph / --no-contract`) | Tempo Dijkstra |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| *Celeste* `1_forsaken_city` | $38 \to 21$ | 497,99 | **429,81** | **-13,7%** | **21 / 21 / 21** / 9 (100%) | 0,044 ms |
+| *Celeste* `2_old_site` | $33 \to 9$ | 876,70 | **617,63** | **-29,6%** | **18 / 18 / 18** / 1 (100%) | 0,023 ms |
+| *Celeste* `3_celestial_resort` | $65 \to 23$ | 986,67 | **613,63** | **-37,8%** | **24 / 24 / 24** / 7 (100%) | 0,055 ms |
+| *Celeste* `4_golden_ridge` | $49 \to 35$ | 889,61 | **510,50** | **-42,6%** | **29 / 29 / 29** / 16 (100%) | 0,094 ms |
+| *Celeste* `5_mirror_temple` | $45 \to 15$ | 689,95 | **424,11** | **-38,5%** | **22 / 22 / 22** / 1 (100%) | 0,042 ms |
+| *Celeste* `6_reflection` | $63 \to 48$ | 1053,65 | **547,93** | **-48,0%** | **2 / 2 / 2** / 0 (100%) | 0,118 ms |
+| *Celeste* `7_summit` | $97 \to 63$ | 2142,55 | **1121,82** | **-47,6%** | **41 / 41 / 41** / 19 (100%) | 0,197 ms |
+| *Celeste* `9_core` | $39 \to 30$ | 623,10 | **327,89** | **-47,4%** | **7 / 7 / 7** / 2 (100%) | 0,079 ms |
+| *Cuphead* `1_1f_forest_follies` | $26 \to 21$ | 490,90 | **210,04** | **-57,2%** | **5 / 5 / 5** / 0 (100%) | 0,062 ms |
+| *Cuphead* `1_2f_treetop_trouble` | $26 \to 21$ | 1252,62 | **402,21** | **-67,9%** | **5 / 5 / 5** / 0 (100%) | 0,065 ms |
+| *Cuphead* `2_1f_funfair_fever` | $26 \to 21$ | 461,91 | **205,22** | **-55,6%** | **5 / 5 / 5** / 0 (100%) | 0,059 ms |
+| *Cuphead* `2_2f_funhouse_frazzle` | $26 \to 21$ | 1662,24 | **532,88** | **-67,9%** | **5 / 5 / 5** / 0 (100%) | 0,067 ms |
+| *Cuphead* `3_1f_perilous_piers` | $22 \to 17$ | 968,22 | **320,71** | **-66,9%** | **5 / 5 / 5** / 0 (100%) | 0,040 ms |
+| *Cuphead* `3_2f_rugged_ridge` | $26 \to 21$ | 1059,72 | **429,17** | **-59,5%** | **5 / 5 / 5** / 0 (100%) | 0,077 ms |
 
 ## Licença
 

@@ -150,6 +150,8 @@ def test_all_extracted_celeste_chapters() -> None:
         assert dijkstra_res.used_weapon, f"Dijkstra não desviou para a arma em {ch_dir.name}"
         assert dijkstra_res.effective_cost < bfs_res.effective_cost
         assert dijkstra_res.real_cost < bfs_res.real_cost
+        assert bfs_res.collectibles_count == len(raw.original_collectibles)
+        assert dijkstra_res.collectibles_count == len(raw.original_collectibles)
 
 
 def test_all_extracted_cuphead_levels() -> None:
@@ -170,7 +172,8 @@ def test_all_extracted_cuphead_levels() -> None:
         assert dijkstra_res.found, f"Dijkstra falhou em {lv_dir.name}"
         assert dijkstra_res.used_weapon, f"Dijkstra não usou arma em {lv_dir.name}"
         assert dijkstra_res.effective_cost < bfs_res.effective_cost
-        assert dijkstra_res.collectibles_count >= bfs_res.collectibles_count
+        assert bfs_res.collectibles_count == len(raw.original_collectibles)
+        assert dijkstra_res.collectibles_count == len(raw.original_collectibles)
 
 
 def test_synthetic_scalability_benchmarks() -> None:

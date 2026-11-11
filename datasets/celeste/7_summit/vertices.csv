@@ -94,5 +94,5 @@ lvl_f-11,COLETAVEL,15.0,0
 lvl_g-00,COMUM,0.0,0
 lvl_g-00b,COLETAVEL,30.0,0
 lvl_g-01,COLETAVEL,15.0,0
-lvl_g-02,COMUM,0.0,0
-lvl_g-03,FIM,5.0,0
+lvl_g-02,FIM,0.0,0
+lvl_g-03,COLETAVEL,5.0,0

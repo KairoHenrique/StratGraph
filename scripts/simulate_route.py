@@ -232,7 +232,7 @@ def _extract_cuphead_geometry(scene_idx: int, graph: GameGraph) -> dict[str, dic
             "cx": round(px, 1),
             "cy": round(draw_y, 1),
             "tiles": ["000000000000", "001111111100", "000000000000", "111111111111"],
-            "strawberries": 1 if p_idx % 2 == 1 else 0,
+            "strawberries": 0,
             "hazards": 1,
         }
 
@@ -330,9 +330,56 @@ def _build_step_telemetry(
     if not route.path:
         return steps
 
+    def append_excursion_steps(host_room: str, host_layer: int, contracted_list: list[str]) -> None:
+        if not (expand_contracted_excursions and contracted_list):
+            return
+        allowed_sub = set(contracted_list)
+        visited_sub: set[str] = {host_room}
+        tour_moves: list[tuple[str, str, bool]] = []
+
+        def dfs_tour(u_sub: str) -> None:
+            neighbors = sorted(
+                {
+                    e_sub.destination
+                    for e_sub in raw_graph.adjacency.get(u_sub, [])
+                    if e_sub.destination in allowed_sub
+                }
+            )
+            for v_sub in neighbors:
+                if v_sub not in visited_sub:
+                    visited_sub.add(v_sub)
+                    tour_moves.append((u_sub, v_sub, True))
+                    dfs_tour(v_sub)
+                    tour_moves.append((v_sub, u_sub, False))
+
+        dfs_tour(host_room)
+        for u_mv, v_mv, is_forward in tour_moves:
+            arrow_lbl = (
+                f"↳ Trajeto TAS em beco contraído: {u_mv} -> {v_mv}"
+                if is_forward
+                else f"↲ Retorno físico do beco: {u_mv} -> {v_mv}"
+            )
+            steps.append(
+                {
+                    "room_id": v_mv,
+                    "layer": host_layer,
+                    "cum_real": round(cum_real, 2),
+                    "cum_eff": round(cum_eff, 2),
+                    "items_count": len(collected),
+                    "collected_ids": sorted(collected),
+                    "event": arrow_lbl,
+                    "is_excursion": True,
+                    "waypoints": get_transition_waypoints(u_mv, v_mv),
+                }
+            )
+
     first_node = route.path[0]
     if raw_graph.original_collectibles.get(first_node.room_id, 0.0) > 0:
         collected.add(first_node.room_id)
+    first_contracted = working_graph.contracted_into.get(first_node.room_id, [])
+    for c_id in first_contracted:
+        if raw_graph.original_collectibles.get(c_id, 0.0) > 0:
+            collected.add(c_id)
     seen_discount.add(first_node.room_id)
     start_xy = get_anchor_xy(first_node.room_id)
 
@@ -346,9 +393,11 @@ def _build_step_telemetry(
             "collected_ids": sorted(collected),
             "event": "INÍCIO DA FASE (Spawn Real do Player)",
             "is_excursion": False,
+            "contracted_children": first_contracted,
             "waypoints": [start_xy],
         }
     )
+    append_excursion_steps(first_node.room_id, first_node.layer, first_contracted)
 
     for i in range(len(route.path) - 1):
         curr = route.path[i]
@@ -422,34 +471,7 @@ def _build_step_telemetry(
             }
         )
 
-        if expand_contracted_excursions and contracted_here:
-            for c_id in contracted_here:
-                steps.append(
-                    {
-                        "room_id": c_id,
-                        "layer": nxt.layer,
-                        "cum_real": round(cum_real, 2),
-                        "cum_eff": round(cum_eff, 2),
-                        "items_count": len(collected),
-                        "collected_ids": sorted(collected),
-                        "event": f"↳ Trajeto TAS em beco contraído: {nxt.room_id} -> {c_id}",
-                        "is_excursion": True,
-                        "waypoints": get_transition_waypoints(nxt.room_id, c_id),
-                    }
-                )
-                steps.append(
-                    {
-                        "room_id": nxt.room_id,
-                        "layer": nxt.layer,
-                        "cum_real": round(cum_real, 2),
-                        "cum_eff": round(cum_eff, 2),
-                        "items_count": len(collected),
-                        "collected_ids": sorted(collected),
-                        "event": f"↲ Retorno físico do beco {c_id} -> {nxt.room_id}",
-                        "is_excursion": True,
-                        "waypoints": get_transition_waypoints(c_id, nxt.room_id),
-                    }
-                )
+        append_excursion_steps(nxt.room_id, nxt.layer, contracted_here)
 
     return steps
 

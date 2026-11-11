@@ -1,7 +1,7 @@
 id_sala,tipo_sala,valor_coletavel,possui_arma
 lvl_1,INICIO,0.0,0
 lvl_10,COMUM,0.0,0
-lvl_10a,COMUM,0.0,0
+lvl_10a,ARMA,0.0,1
 lvl_10z,COMUM,0.0,0
 lvl_10zb,COLETAVEL,5.0,0
 lvl_11,COLETAVEL,5.0,0
@@ -20,7 +20,7 @@ lvl_6,COLETAVEL,5.0,0
 lvl_6a,COMUM,0.0,0
 lvl_6b,COMUM,0.0,0
 lvl_6c,COMUM,0.0,0
-lvl_6z,ARMA,0.0,1
+lvl_6z,COMUM,0.0,0
 lvl_6zb,COMUM,0.0,0
 lvl_7,COMUM,0.0,0
 lvl_7a,COLETAVEL,5.0,0

@@ -569,70 +569,124 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
     lcc = set(comps[0])
 
     # 3. Identificar INICIO e FIM na LCC preservando salas de coletáveis
-    if "lvl_start" in lcc:
-        start_id = "lvl_start"
-    else:
-        non_collectible_candidates = [
-            n
-            for n in lcc
-            if rooms[n]["entities"]["strawberry"] == 0
-            and rooms[n]["entities"]["cassette"] == 0
-            and rooms[n]["entities"]["blackGem"] == 0
-        ]
-        pool = non_collectible_candidates if non_collectible_candidates else list(lcc)
-        start_id = min(pool, key=lambda n: (int(rooms[n]["x"]), -int(rooms[n]["y"])))
+    def room_collectible_val(room_id: str) -> float:
+        ec: Counter[str] = rooms[room_id]["entities"]  # type: ignore[assignment]
+        return (
+            ec["strawberry"] * 5.0
+            + ec["cassette"] * 12.0
+            + ec["blackGem"] * 15.0
+            + ec["reflectionHeartStatue"] * 15.0
+        )
 
+    non_collectible_candidates = [n for n in lcc if room_collectible_val(n) == 0.0]
+    pool = non_collectible_candidates if non_collectible_candidates else list(lcc)
+    start_id = min(pool, key=lambda n: (int(rooms[n]["x"]), -int(rooms[n]["y"])))
+
+    bfs_dist0: dict[str, int] = {start_id: 0}
+    dq0 = deque([start_id])
+    while dq0:
+        u = dq0.popleft()
+        for v in sorted(open_adj[u]):
+            if v in lcc and v not in bfs_dist0:
+                bfs_dist0[v] = bfs_dist0[u] + 1
+                dq0.append(v)
+
+    goal_pool = [n for n in pool if n != start_id and n in bfs_dist0]
+    if not goal_pool:
+        goal_pool = [n for n in lcc if n != start_id]
+    goal_id = max(goal_pool, key=lambda n: (bfs_dist0[n], int(rooms[n]["x"]), -int(rooms[n]["y"])))
+
+    def is_connected_without(excluded_room: str) -> bool:
+        rem = lcc - {excluded_room}
+        if start_id not in rem or goal_id not in rem:
+            return False
+        vis = {start_id}
+        q_chk = deque([start_id])
+        while q_chk:
+            cur = q_chk.popleft()
+            for nb in open_adj[cur]:
+                if nb in rem and nb not in vis:
+                    vis.add(nb)
+                    q_chk.append(nb)
+        return len(vis) == len(rem)
+
+    # Espinha inicial para pontuar candidatos a ARMA
+    init_dist: dict[str, int] = {start_id: 0}
+    init_parent: dict[str, str | None] = {start_id: None}
+    dq_init = deque([start_id])
+    while dq_init:
+        u = dq_init.popleft()
+        for v in sorted(open_adj[u]):
+            if v in lcc and v not in init_dist:
+                init_dist[v] = init_dist[u] + 1
+                init_parent[v] = u
+                dq_init.append(v)
+    init_spine: set[str] = set()
+    c_node: str | None = goal_id
+    while c_node is not None:
+        init_spine.add(c_node)
+        c_node = init_parent.get(c_node)
+
+    # 4. Selecionar sala de ARMA (power-up sem roubar coletáveis e sem desconectar a LCC)
+    weapon_candidates = [
+        n
+        for n in non_collectible_candidates
+        if n not in {start_id, goal_id} and is_connected_without(n)
+    ]
+    if not weapon_candidates:
+        weapon_candidates = [
+            n for n in lcc if n not in {start_id, goal_id} and is_connected_without(n)
+        ]
+
+    def weapon_score(room_id: str) -> tuple[int, int, int, int, int, float]:
+        ec: Counter[str] = rooms[room_id]["entities"]  # type: ignore[assignment]
+        has_special = (
+            ec["key"] * 5
+            + ec["infiniteStar"] * 3
+            + ec["refill"] * 2
+            + ec["booster"] * 2
+            + ec["zipMover"]
+        )
+        off_init_spine = 1 if room_id not in init_spine else 0
+        near_spine = 1 if any(nb in init_spine - {goal_id} for nb in open_adj[room_id]) else 0
+        dist_from_start = init_dist.get(room_id, 999)
+        in_first_half = 1 if 1 <= dist_from_start <= max(2, init_dist[goal_id] // 2) else 0
+        return (
+            off_init_spine,
+            near_spine,
+            in_first_half,
+            has_special,
+            -dist_from_start,
+            float(rooms[room_id]["w"]),
+        )
+
+    weapon_room = max(weapon_candidates, key=weapon_score)
+
+    # Reconstruir a espinha principal em lcc - {weapon_room}
     bfs_dist: dict[str, int] = {start_id: 0}
     bfs_parent: dict[str, str | None] = {start_id: None}
     dq = deque([start_id])
     while dq:
         u = dq.popleft()
         for v in sorted(open_adj[u]):
-            if v in lcc and v not in bfs_dist:
+            if v in lcc and v != weapon_room and v not in bfs_dist:
                 bfs_dist[v] = bfs_dist[u] + 1
                 bfs_parent[v] = u
                 dq.append(v)
-    goal_id = max(bfs_dist, key=lambda n: (bfs_dist[n], int(rooms[n]["x"]), -int(rooms[n]["y"])))
 
-    bfs_spine: set[str] = set()
+    bfs_spine_list: list[str] = []
     curr: str | None = goal_id
     while curr is not None:
-        bfs_spine.add(curr)
+        bfs_spine_list.append(curr)
         curr = bfs_parent.get(curr)
-
-    # 4. Selecionar sala de ARMA (power-up: chave, fita cassete, coração, pena/refill)
-    off_spine_candidates = [n for n in lcc if n not in bfs_spine and n not in {start_id, goal_id}]
-    if not off_spine_candidates:
-        off_spine_candidates = [n for n in lcc if n not in {start_id, goal_id}]
-
-    def weapon_score(room_id: str) -> tuple[int, int, int, int, float]:
-        ec: Counter[str] = rooms[room_id]["entities"]  # type: ignore[assignment]
-        has_special = (
-            ec["key"] * 5
-            + ec["cassette"] * 6
-            + ec["blackGem"] * 6
-            + ec["infiniteStar"] * 3
-            + ec["refill"] * 2
-            + ec["booster"]
-        )
-        near_spine = 1 if any(nb in bfs_spine for nb in open_adj[room_id]) else 0
-        dist_from_start = bfs_dist.get(room_id, 999)
-        in_first_half = 1 if 1 <= dist_from_start <= max(2, bfs_dist[goal_id] // 2) else 0
-        return (near_spine, in_first_half, has_special, -dist_from_start, float(rooms[room_id]["w"]))
-
-    weapon_room = max(off_spine_candidates, key=weapon_score)
+    bfs_spine_list.reverse()
+    bfs_spine: set[str] = set(bfs_spine_list)
+    bfs_dist[weapon_room] = bfs_dist0.get(weapon_room, 1)
 
     # 5. Calcular vértices e simular o pathfinding tile-a-tile do player em cada transição (u -> v)
     vertex_rows: list[dict[str, object]] = []
     for room_id in sorted(lcc):
-        r_info = rooms[room_id]
-        ec: Counter[str] = r_info["entities"]  # type: ignore[assignment]
-        collectible_val = (
-            ec["strawberry"] * 5.0
-            + ec["cassette"] * 12.0
-            + ec["blackGem"] * 15.0
-            + ec["reflectionHeartStatue"] * 15.0
-        )
+        collectible_val = room_collectible_val(room_id)
         has_w = 1 if room_id == weapon_room else 0
         if room_id == start_id:
             r_type = "INICIO"
@@ -640,8 +694,10 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
             has_w = 0
         elif room_id == goal_id:
             r_type = "FIM"
+            collectible_val = 0.0
         elif has_w == 1:
             r_type = "ARMA"
+            collectible_val = 0.0
         elif collectible_val > 0.0:
             r_type = "COLETAVEL"
         else:
@@ -725,52 +781,23 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
         combined_waypoints = pts_u + pts_v
         return base_time, diff_no_w, diff_with_w, combined_waypoints
 
-    # 6. Construir arestas direcionadas / mão dupla preservando conectividade
-    undirected_pairs: list[tuple[str, str]] = []
-    for u in sorted(lcc):
-        for v in sorted(open_adj[u]):
-            if v in lcc and u < v:
-                undirected_pairs.append((u, v))
-
-    directed_adj: dict[str, set[str]] = {u: set() for u in lcc}
-    for u, v in undirected_pairs:
-        directed_adj[u].add(v)
-        directed_adj[v].add(u)
-
-    important_nodes = {
-        str(r["id_sala"])
-        for r in vertex_rows
-        if float(r["valor_coletavel"]) > 0.0 or int(r["possui_arma"]) == 1
-    } | {start_id, goal_id}
-
+    # 6. Construir topologia estruturada:
+    #    (a) Espinha principal s_0 -> s_1 -> ... -> s_k;
+    #    (b) Desvio estratégico da ARMA s_w <-> weapon_room -> s_{w+1};
+    #    (c) Floresta geradora BFS para todas as salas laterais (permitindo contração 100% dos becos).
     edge_rows: list[dict[str, object]] = []
     edge_waypoints: dict[str, list[list[float]]] = {}
+    added_edges: set[tuple[str, str]] = set()
 
-    for u, v in undirected_pairs:
-        rel = edge_meta.get((u, v), "H")
-        if rel == "V_DOWN":
-            origin, dest, is_vert_drop = u, v, True
-        elif rel == "V_UP":
-            origin, dest, is_vert_drop = v, u, True
-        elif bfs_dist.get(u, 0) <= bfs_dist.get(v, 0):
-            origin, dest, is_vert_drop = u, v, False
-        else:
-            origin, dest, is_vert_drop = v, u, False
-
-        two_way = 1
-        if is_vert_drop or dest == goal_id:
-            directed_adj[dest].discard(origin)
-            if _can_reach_all(directed_adj, start_id, goal_id, important_nodes):
-                two_way = 0
-            else:
-                directed_adj[dest].add(origin)
-
+    def add_graph_edge(origin: str, dest: str, two_way: int) -> None:
+        if (origin, dest) in added_edges or (dest, origin) in added_edges:
+            return
+        added_edges.add((origin, dest))
         base_t, diff_l0, diff_l1, wpts_fwd = simulate_player_transition(origin, dest)
         edge_waypoints[f"{origin}->{dest}"] = wpts_fwd
         if two_way == 1:
             _, _, _, wpts_rev = simulate_player_transition(dest, origin)
             edge_waypoints[f"{dest}->{origin}"] = wpts_rev
-
         edge_rows.append(
             {
                 "origem": origin,
@@ -781,6 +808,41 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
                 "dificuldade_com_arma": diff_l1,
             }
         )
+
+    # 6a. Arestas consecutivas da espinha principal
+    for idx in range(len(bfs_spine_list) - 1):
+        u_sp = bfs_spine_list[idx]
+        v_sp = bfs_spine_list[idx + 1]
+        rel = edge_meta.get((u_sp, v_sp), "H")
+        two_way = 0 if (rel == "V_DOWN" or v_sp == goal_id) else 1
+        add_graph_edge(u_sp, v_sp, two_way)
+
+    # 6b. Desvio estratégico de 2 saltos pela sala de ARMA: s_w <-> weapon_room -> s_{w+1}
+    w_spine_idx = 0
+    for idx in range(len(bfs_spine_list) - 1):
+        if bfs_spine_list[idx] in open_adj[weapon_room]:
+            w_spine_idx = idx
+            break
+    s_w = bfs_spine_list[w_spine_idx]
+    s_w_next = bfs_spine_list[min(w_spine_idx + 1, len(bfs_spine_list) - 1)]
+    add_graph_edge(s_w, weapon_room, 1)
+    if s_w_next != s_w:
+        add_graph_edge(weapon_room, s_w_next, 0)
+
+    # 6c. Floresta geradora BFS das salas fora da espinha enraizada nos nós da espinha
+    internal_spine = bfs_spine_list[1:-1] if len(bfs_spine_list) > 2 else list(bfs_spine_list)
+    root_order = list(internal_spine) + [
+        n for n in (start_id, goal_id) if n not in internal_spine
+    ]
+    forest_vis: set[str] = set(bfs_spine_list) | {weapon_room}
+    forest_q: deque[str] = deque(root_order)
+    while forest_q:
+        u_f = forest_q.popleft()
+        for v_f in sorted(open_adj[u_f]):
+            if v_f in lcc and v_f not in forest_vis:
+                forest_vis.add(v_f)
+                add_graph_edge(u_f, v_f, 1)
+                forest_q.append(v_f)
 
     out_dir.mkdir(parents=True, exist_ok=True)
     with (out_dir / "vertices.csv").open("w", encoding="utf-8", newline="") as vf:

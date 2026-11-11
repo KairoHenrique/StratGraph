@@ -10,7 +10,7 @@ lvl_02-b,COMUM,0.0,0
 lvl_02-c,COMUM,0.0,0
 lvl_02-d,COMUM,0.0,0
 lvl_03-a,COMUM,0.0,0
-lvl_03-b,ARMA,10.0,1
+lvl_03-b,COLETAVEL,10.0,0
 lvl_04-b,COLETAVEL,5.0,0
 lvl_04-c,COLETAVEL,5.0,0
 lvl_04-d,COMUM,0.0,0
@@ -29,7 +29,7 @@ lvl_08-d,COMUM,0.0,0
 lvl_08-x,COLETAVEL,5.0,0
 lvl_09-b,COMUM,0.0,0
 lvl_09-d,COMUM,0.0,0
-lvl_0x-a,COMUM,0.0,0
+lvl_0x-a,ARMA,0.0,1
 lvl_0x-b,COMUM,0.0,0
 lvl_10-c,COMUM,0.0,0
 lvl_10-d,COMUM,0.0,0
