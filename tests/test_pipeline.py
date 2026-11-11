@@ -206,3 +206,24 @@ def test_results_and_figures_exist() -> None:
         assert Path(f"article/figures/{fig_name}.png").is_file()
 
 
+def test_simulator_and_mods_export() -> None:
+    """Verifica a geração do Simulador 2D TAS e das rotas/DLLs dos Mods In-Game."""
+    import json
+
+    from scripts.build_mods import export_mod_routes_json
+    from scripts.simulate_route import generate_simulator_html
+
+    sim_html = generate_simulator_html()
+    assert sim_html.is_file()
+    assert sim_html.stat().st_size > 100_000
+
+    routes_json = export_mod_routes_json()
+    assert routes_json.is_file()
+    data = json.loads(routes_json.read_text(encoding="utf-8"))
+    assert "celeste_1_forsaken_city" in data
+    assert "cuphead_1_1f_forest_follies" in data
+    assert len(data["celeste_1_forsaken_city"]["tas_waypoints_flat"]) > 50
+    assert len(data["cuphead_1_1f_forest_follies"]["tas_waypoints_flat"]) > 50
+
+
+

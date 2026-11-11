@@ -12,6 +12,9 @@ env/
 results/*.csv
 results/*.json
 results/*.zip
+results/*.html
+datasets/**/waypoints.json
+mods/dist/
 !results/.gitkeep
 
 # LaTeX temporários (caso compile artigo localmente)

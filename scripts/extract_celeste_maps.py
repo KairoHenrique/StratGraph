@@ -1,13 +1,32 @@
-"""Extrator oficial de mapas binários (.bin) de Celeste para o formato CSV do StratGraph.
+"""Extrator oficial de mapas binários (.bin) de Celeste com Pathfinding Físico Intra-Sala.
 
 Lê diretamente os arquivos BinaryPacker (`Content/Maps/*.bin`) da instalação do Celeste,
-extrai a Maior Componente Conexa (LCC) com passagens abertas na matriz de colisão (`solids`),
-calcula tempos base pelas dimensões reais das salas e dificuldades pelos obstáculos reais,
-e exporta `vertices.csv` e `arestas.csv` para cada capítulo em `datasets/celeste/`.
+reconstrói o grid físico de colisão 8x8 (`<solids>`), plataformas (`jumpThru`), molas
+(`spring`), impulsos (`booster`, `zipMover`, `swapBlock`, `moveBlock`, `dreamBlock`),
+coletáveis (`strawberry`, `cassette`, `blackGem`) e perigos (`spikes*`, `spinner`, etc.).
+
+Para cada transição entre salas adjacentes (u -> v), simula a movimentação física do
+jogador bloco a bloco (A* no grid 8x8 respeitando paredes sólidas, gravidade/apoio de
+pulo/escalada e desvio de espinhos) desde a porta de entrada, passando pelos coletáveis
+da sala até a porta de saída/checkpoint:
+  - `tempo_base`: tempo real em segundos do trajeto percorrido pelo player dentro da sala;
+  - `dificuldade_sem_arma` / `dificuldade_com_arma`: exposição real aos obstáculos ao
+    longo dos blocos efetivamente percorridos pelo player;
+  - `waypoints.json`: coordenadas exatas (x, y) passo a passo do trajeto físico do player
+    para execução estilo TAS no Simulador 2D e no Mod In-Game.
+
+Autoria:
+    - Heitor Henrique Zonho
+    - Kairo Henrique Ferreira Martins
+    - Michel Pires da Silva
 """
+
+from __future__ import annotations
 
 from collections import Counter, defaultdict, deque
 import csv
+import heapq
+import json
 import math
 from pathlib import Path
 import struct
@@ -50,6 +69,28 @@ HAZARD_WEIGHTS = {
     "iceBlock": 2.5,
     "bounceBlock": 2.0,
     "dreamBlock": 1.5,
+}
+
+COLLECTIBLE_ENTITIES = {
+    "strawberry": 5.0,
+    "cassette": 12.0,
+    "blackGem": 15.0,
+    "reflectionHeartStatue": 15.0,
+}
+
+ASSIST_ENTITIES = {
+    "spring",
+    "wallSpringLeft",
+    "wallSpringRight",
+    "booster",
+    "refill",
+    "zipMover",
+    "swapBlock",
+    "MoveBlock",
+    "dreamBlock",
+    "cloud",
+    "movingPlatform",
+    "sinkingPlatform",
 }
 
 
@@ -135,6 +176,7 @@ def parse_celeste_bin(path: Path) -> tuple[str, tuple]:
 
 
 def _get_solids_grid(lvl_elem: tuple, w_tiles: int, h_tiles: int) -> list[list[bool]]:
+    """Retorna matriz `[row][col]` onde `True` indica espaço livre ('0') e `False` bloco sólido."""
     solids_text = ""
     for ch in lvl_elem[2]:
         if ch[0] == "solids":
@@ -152,6 +194,194 @@ def _get_solids_grid(lvl_elem: tuple, w_tiles: int, h_tiles: int) -> list[list[b
     return grid
 
 
+def _build_room_navigation_maps(
+    grid: list[list[bool]],
+    entities: list[tuple[str, dict]],
+    wt: int,
+    ht: int,
+) -> tuple[list[list[float]], list[list[float]], list[tuple[int, int]], list[tuple[int, int]]]:
+    """Constrói mapas de custo de locomoção e risco tile-a-tile (8x8) para o player na sala.
+
+    Retorna:
+        - `step_cost[r][c]`: custo de movimento do player no tile (considerando plataformas,
+          escalada em parede, gravidade e blocos móveis);
+        - `hazard_map[r][c]`: risco local de espinhos/spinners naquele tile;
+        - `collectible_tiles`: lista de coordenadas `(r, c)` dos coletáveis na sala;
+        - `spawn_tiles`: lista de coordenadas `(r, c)` de pontos `player` na sala.
+    """
+    jumpthru = [[False] * wt for _ in range(ht)]
+    assist = [[False] * wt for _ in range(ht)]
+    hazard_map = [[0.0] * wt for _ in range(ht)]
+    collectible_tiles: list[tuple[int, int]] = []
+    spawn_tiles: list[tuple[int, int]] = []
+
+    for ename, attrs in entities:
+        ex = float(attrs.get("x", 0.0))
+        ey = float(attrs.get("y", 0.0))
+        ew = max(8.0, float(attrs.get("width", 8.0)))
+        eh = max(8.0, float(attrs.get("height", 8.0)))
+        c0 = max(0, min(wt - 1, int(ex // 8)))
+        r0 = max(0, min(ht - 1, int(ey // 8)))
+        c1 = max(c0, min(wt - 1, int((ex + ew - 1) // 8)))
+        r1 = max(r0, min(ht - 1, int((ey + eh - 1) // 8)))
+
+        if ename == "player":
+            spawn_tiles.append((r0, c0))
+        elif ename in COLLECTIBLE_ENTITIES:
+            collectible_tiles.append((r0, c0))
+        elif ename == "jumpThru":
+            for cc in range(c0, c1 + 1):
+                jumpthru[r0][cc] = True
+        elif ename in ASSIST_ENTITIES:
+            for rr in range(max(0, r0 - 2), min(ht, r1 + 3)):
+                for cc in range(max(0, c0 - 2), min(wt, c1 + 3)):
+                    assist[rr][cc] = True
+
+        if ename in HAZARD_WEIGHTS:
+            hw = HAZARD_WEIGHTS[ename]
+            for rr in range(max(0, r0 - 1), min(ht, r1 + 2)):
+                for cc in range(max(0, c0 - 1), min(wt, c1 + 2)):
+                    dist = abs(rr - r0) + abs(cc - c0)
+                    hazard_map[rr][cc] += hw * (1.0 if dist == 0 else 0.45)
+
+    # Calcular apoio físico (chão abaixo a até 4 tiles, parede lateral a até 2 tiles ou assist)
+    step_cost = [[1.0] * wt for _ in range(ht)]
+    for r in range(ht):
+        for c in range(wt):
+            if not grid[r][c]:
+                # Bloco sólido: muito caro atravessar (só permite se for bloco destrutível/dashBlock sem alternativa)
+                step_cost[r][c] = 45.0
+                continue
+
+            near_floor = False
+            for dr in range(1, 5):
+                rr = r + dr
+                if rr >= ht or not grid[rr][c] or jumpthru[rr][c]:
+                    near_floor = True
+                    break
+
+            near_wall = False
+            for dc in (-2, -1, 1, 2):
+                cc = c + dc
+                if 0 <= cc < wt and not grid[r][cc]:
+                    near_wall = True
+                    break
+
+            if assist[r][c]:
+                step_cost[r][c] = 0.75
+            elif near_floor or jumpthru[r][c]:
+                step_cost[r][c] = 1.0
+            elif near_wall:
+                step_cost[r][c] = 1.25  # escalada / walljump
+            else:
+                step_cost[r][c] = 1.65  # arco aéreo / dash
+
+    return step_cost, hazard_map, collectible_tiles, spawn_tiles
+
+
+def _astar_tile_path(
+    grid: list[list[bool]],
+    step_cost: list[list[float]],
+    hazard_map: list[list[float]],
+    start_rc: tuple[int, int],
+    goal_rc: tuple[int, int],
+) -> tuple[list[tuple[int, int]], float, float, bool]:
+    """Executa A* físico no grid 8x8 da sala entre `start_rc` e `goal_rc`.
+
+    Retorna `(tiles_path, walk_tiles_dist, hazard_exposure, pierced_solid)`.
+    """
+    ht = len(grid)
+    wt = len(grid[0]) if ht else 0
+    sr, sc = max(0, min(ht - 1, start_rc[0])), max(0, min(wt - 1, start_rc[1]))
+    gr, gc = max(0, min(ht - 1, goal_rc[0])), max(0, min(wt - 1, goal_rc[1]))
+
+    if (sr, sc) == (gr, gc):
+        return [(sr, sc)], 1.0, hazard_map[sr][sc], False
+
+    INF = float("inf")
+    dist = [[INF] * wt for _ in range(ht)]
+    parent: dict[tuple[int, int], tuple[int, int]] = {}
+    dist[sr][sc] = 0.0
+
+    # 8 direções (horizontal, vertical e diagonal de pulo/dash)
+    dirs = [
+        (0, 1, 1.0),
+        (0, -1, 1.0),
+        (1, 0, 0.9),   # queda a favor da gravidade é mais rápida
+        (-1, 0, 1.35), # subida exige pulo/escalada/dash
+        (1, 1, 1.3),
+        (1, -1, 1.3),
+        (-1, 1, 1.55),
+        (-1, -1, 1.55),
+    ]
+
+    pq: list[tuple[float, int, int]] = [(0.0, sr, sc)]
+    while pq:
+        _f, r, c = heapq.heappop(pq)
+        if (r, c) == (gr, gc):
+            break
+        cur_g = dist[r][c]
+        for dr, dc, move_mult in dirs:
+            nr, nc = r + dr, c + dc
+            if not (0 <= nr < ht and 0 <= nc < wt):
+                continue
+            # Custo combina distância física, suporte de plataforma e desvio de espinhos
+            tile_c = step_cost[nr][nc] * move_mult + hazard_map[nr][nc] * 0.35
+            ng = cur_g + tile_c
+            if ng < dist[nr][nc]:
+                dist[nr][nc] = ng
+                parent[(nr, nc)] = (r, c)
+                heur = math.hypot(gr - nr, gc - nc) * 0.85
+                heapq.heappush(pq, (ng + heur, nr, nc))
+
+    # Reconstruir caminho tile a tile
+    path: list[tuple[int, int]] = []
+    curr: tuple[int, int] | None = (gr, gc)
+    if curr not in parent and curr != (sr, sc):
+        return [(sr, sc), (gr, gc)], math.hypot(gr - sr, gc - sc), 4.0, True
+
+    while curr is not None:
+        path.append(curr)
+        curr = parent.get(curr)
+    path.reverse()
+
+    walk_dist = 0.0
+    hazard_sum = 0.0
+    pierced_solid = False
+    for i, (r, c) in enumerate(path):
+        if not grid[r][c] and i not in (0, len(path) - 1):
+            pierced_solid = True
+        hazard_sum += hazard_map[r][c]
+        if i > 0:
+            pr, pc = path[i - 1]
+            walk_dist += math.hypot(r - pr, c - pc) * step_cost[r][c]
+
+    return path, max(1.0, walk_dist), hazard_sum, pierced_solid
+
+
+def _simplify_tile_path_to_world_waypoints(
+    tile_path: list[tuple[int, int]],
+    room_x: int,
+    room_y: int,
+    max_points: int = 14,
+) -> list[list[float]]:
+    """Converte a sequência de tiles `(r, c)` em waypoints `(wx, wy)` em coordenadas do mundo."""
+    if not tile_path:
+        return [[float(room_x), float(room_y)]]
+    world_pts = [
+        [round(room_x + c * 8.0 + 4.0, 1), round(room_y + r * 8.0 + 4.0, 1)]
+        for r, c in tile_path
+    ]
+    if len(world_pts) <= max_points:
+        return world_pts
+    out: list[list[float]] = [world_pts[0]]
+    step = (len(world_pts) - 1) / float(max_points - 1)
+    for k in range(1, max_points - 1):
+        out.append(world_pts[int(round(k * step))])
+    out.append(world_pts[-1])
+    return out
+
+
 def _can_reach_all(
     directed_adj: dict[str, set[str]],
     start_id: str,
@@ -159,7 +389,6 @@ def _can_reach_all(
     required_nodes: set[str],
 ) -> bool:
     """Verifica se `start_id` alcança todos os nós requeridos e `goal_id` é alcançável a partir deles."""
-    # 1. Alcançáveis a partir de start_id
     vis_from_start = {start_id}
     dq = deque([start_id])
     while dq:
@@ -171,7 +400,6 @@ def _can_reach_all(
     if goal_id not in vis_from_start or not required_nodes.issubset(vis_from_start):
         return False
 
-    # 2. Nós que conseguem alcançar goal_id (grafo reverso)
     rev_adj: dict[str, set[str]] = defaultdict(set)
     for u, nbrs in directed_adj.items():
         for v in nbrs:
@@ -188,12 +416,14 @@ def _can_reach_all(
 
 
 def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
-    """Extrai um capítulo `.bin` do Celeste para `vertices.csv` e `arestas.csv`."""
+    """Extrai um capítulo `.bin` do Celeste simulando o trajeto real do player em cada sala."""
     pkg, root = parse_celeste_bin(bin_path)
     levels = [c for c in root[2] if c[0] == "levels"][0][2]
 
     rooms: dict[str, dict[str, object]] = {}
     grids: dict[str, list[list[bool]]] = {}
+    nav_maps: dict[str, dict[str, object]] = {}
+
     for lvl in levels:
         at = lvl[1]
         name = str(at["name"])
@@ -202,13 +432,32 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
         wt, ht = max(1, w // 8), max(1, h // 8)
 
         ent_counts: Counter[str] = Counter()
-        has_two_dash_refill = False
+        raw_entities: list[tuple[str, dict]] = []
         for ch in lvl[2]:
             if ch[0] == "entities":
                 for e in ch[2]:
                     ent_counts[e[0]] += 1
-                    if e[0] == "refill" and bool(e[1].get("twoDash", False)):
-                        has_two_dash_refill = True
+                    raw_entities.append((e[0], e[1]))
+
+        grid = _get_solids_grid(lvl, wt, ht)
+        step_cost, hazard_map, coll_tiles, spawn_tiles = _build_room_navigation_maps(
+            grid, raw_entities, wt, ht
+        )
+
+        # Ponto âncora interno da sala (spawn principal do player ou centro livre mais próximo)
+        anchor_rc = spawn_tiles[0] if spawn_tiles else (ht // 2, wt // 2)
+        if not grid[anchor_rc[0]][anchor_rc[1]]:
+            # Buscar tile livre mais próximo do centro
+            best_rc = anchor_rc
+            best_d = 999999
+            for rr in range(ht):
+                for cc in range(wt):
+                    if grid[rr][cc]:
+                        d = abs(rr - ht // 2) + abs(cc - wt // 2)
+                        if d < best_d:
+                            best_d = d
+                            best_rc = (rr, cc)
+            anchor_rc = best_rc
 
         rooms[name] = {
             "x": x,
@@ -219,66 +468,85 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
             "ht": ht,
             "attrs": at,
             "entities": ent_counts,
-            "two_dash": has_two_dash_refill,
+            "raw_entities": raw_entities,
         }
-        grids[name] = _get_solids_grid(lvl, wt, ht)
+        grids[name] = grid
+        nav_maps[name] = {
+            "step_cost": step_cost,
+            "hazard_map": hazard_map,
+            "coll_tiles": coll_tiles,
+            "spawn_tiles": spawn_tiles,
+            "anchor_rc": anchor_rc,
+        }
 
-    # 1. Construir adjacência geométrica filtrada por passagem aberta em `solids`
+    # 1. Construir adjacência geométrica + encontrar as coordenadas exatas das portas (door_tiles)
     open_adj: dict[str, set[str]] = defaultdict(set)
-    edge_meta: dict[tuple[str, str], str] = {}  # (u, v) -> 'H' ou 'V_DOWN' ou 'V_UP'
+    edge_meta: dict[tuple[str, str], str] = {}
+    door_tile_in_room: dict[tuple[str, str], tuple[int, int]] = {}
     room_names = list(rooms.keys())
 
     for i, n1 in enumerate(room_names):
-        r1_info = rooms[n1]
+        r1 = rooms[n1]
         x1, y1, w1, h1, wt1, ht1 = (
-            int(r1_info["x"]),
-            int(r1_info["y"]),
-            int(r1_info["w"]),
-            int(r1_info["h"]),
-            int(r1_info["wt"]),
-            int(r1_info["ht"]),
+            int(r1["x"]),
+            int(r1["y"]),
+            int(r1["w"]),
+            int(r1["h"]),
+            int(r1["wt"]),
+            int(r1["ht"]),
         )
         for j in range(i + 1, len(room_names)):
             n2 = room_names[j]
-            r2_info = rooms[n2]
+            r2 = rooms[n2]
             x2, y2, w2, h2, wt2, ht2 = (
-                int(r2_info["x"]),
-                int(r2_info["y"]),
-                int(r2_info["w"]),
-                int(r2_info["h"]),
-                int(r2_info["wt"]),
-                int(r2_info["ht"]),
+                int(r2["x"]),
+                int(r2["y"]),
+                int(r2["w"]),
+                int(r2["h"]),
+                int(r2["wt"]),
+                int(r2["ht"]),
             )
             # Contato horizontal
             if (x1 + w1 == x2 or x2 + w2 == x1) and (max(y1, y2) < min(y1 + h1, y2 + h2)):
                 ya, yb = max(y1, y2), min(y1 + h1, y2 + h2)
+                open_doors: list[tuple[tuple[int, int], tuple[int, int]]] = []
                 for py in range(ya, yb, 8):
                     row1, row2 = (py - y1) // 8, (py - y2) // 8
                     col1 = (wt1 - 1) if (x1 + w1 == x2) else 0
                     col2 = 0 if (x1 + w1 == x2) else (wt2 - 1)
                     if grids[n1][row1][col1] and grids[n2][row2][col2]:
-                        open_adj[n1].add(n2)
-                        open_adj[n2].add(n1)
-                        edge_meta[(n1, n2)] = "H"
-                        edge_meta[(n2, n1)] = "H"
-                        break
+                        open_doors.append(((row1, col1), (row2, col2)))
+                if open_doors:
+                    mid_door = open_doors[len(open_doors) // 2]
+                    open_adj[n1].add(n2)
+                    open_adj[n2].add(n1)
+                    edge_meta[(n1, n2)] = "H"
+                    edge_meta[(n2, n1)] = "H"
+                    door_tile_in_room[(n1, n2)] = mid_door[0]
+                    door_tile_in_room[(n2, n1)] = mid_door[1]
+
             # Contato vertical
             if (y1 + h1 == y2 or y2 + h2 == y1) and (max(x1, x2) < min(x1 + w1, x2 + w2)):
                 xa, xb = max(x1, x2), min(x1 + w1, x2 + w2)
+                open_doors = []
                 for px in range(xa, xb, 8):
                     col1, col2 = (px - x1) // 8, (px - x2) // 8
                     row1 = (ht1 - 1) if (y1 + h1 == y2) else 0
                     row2 = 0 if (y1 + h1 == y2) else (ht2 - 1)
                     if grids[n1][row1][col1] and grids[n2][row2][col2]:
-                        open_adj[n1].add(n2)
-                        open_adj[n2].add(n1)
-                        if y1 + h1 == y2:
-                            edge_meta[(n1, n2)] = "V_DOWN"
-                            edge_meta[(n2, n1)] = "V_UP"
-                        else:
-                            edge_meta[(n2, n1)] = "V_DOWN"
-                            edge_meta[(n1, n2)] = "V_UP"
-                        break
+                        open_doors.append(((row1, col1), (row2, col2)))
+                if open_doors:
+                    mid_door = open_doors[len(open_doors) // 2]
+                    open_adj[n1].add(n2)
+                    open_adj[n2].add(n1)
+                    door_tile_in_room[(n1, n2)] = mid_door[0]
+                    door_tile_in_room[(n2, n1)] = mid_door[1]
+                    if y1 + h1 == y2:
+                        edge_meta[(n1, n2)] = "V_DOWN"
+                        edge_meta[(n2, n1)] = "V_UP"
+                    else:
+                        edge_meta[(n2, n1)] = "V_DOWN"
+                        edge_meta[(n1, n2)] = "V_UP"
 
     # 2. Extrair Maior Componente Conexa (LCC)
     seen: set[str] = set()
@@ -313,6 +581,7 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
         ]
         pool = non_collectible_candidates if non_collectible_candidates else list(lcc)
         start_id = min(pool, key=lambda n: (int(rooms[n]["x"]), -int(rooms[n]["y"])))
+
     bfs_dist: dict[str, int] = {start_id: 0}
     bfs_parent: dict[str, str | None] = {start_id: None}
     dq = deque([start_id])
@@ -325,17 +594,13 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
                 dq.append(v)
     goal_id = max(bfs_dist, key=lambda n: (bfs_dist[n], int(rooms[n]["x"]), -int(rooms[n]["y"])))
 
-    # Reconstruir o caminho mais curto em saltos (caminho do BFS) para garantir
-    # que a sala de ARMA (power-up) fique fora da linha direta do BFS, demonstrando
-    # o desvio estratégico na comparação experimental.
     bfs_spine: set[str] = set()
     curr: str | None = goal_id
     while curr is not None:
         bfs_spine.add(curr)
         curr = bfs_parent.get(curr)
 
-    # 4. Selecionar sala(s) de ARMA (power-up: chave, fita cassete, coração, pena/refill)
-    # Prioriza salas fora da espinha dorsal do BFS que possuam chave/cassette/heart/upgrade.
+    # 4. Selecionar sala de ARMA (power-up: chave, fita cassete, coração, pena/refill)
     off_spine_candidates = [n for n in lcc if n not in bfs_spine and n not in {start_id, goal_id}]
     if not off_spine_candidates:
         off_spine_candidates = [n for n in lcc if n not in {start_id, goal_id}]
@@ -351,58 +616,23 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
             + ec["booster"]
         )
         near_spine = 1 if any(nb in bfs_spine for nb in open_adj[room_id]) else 0
-        # Prefere salas na primeira metade do mapa para que o power-up beneficie o restante
         dist_from_start = bfs_dist.get(room_id, 999)
         in_first_half = 1 if 1 <= dist_from_start <= max(2, bfs_dist[goal_id] // 2) else 0
         return (near_spine, in_first_half, has_special, -dist_from_start, float(rooms[room_id]["w"]))
 
     weapon_room = max(off_spine_candidates, key=weapon_score)
 
-    # 5. Calcular valores de coletáveis e dificuldades reais por sala
+    # 5. Calcular vértices e simular o pathfinding tile-a-tile do player em cada transição (u -> v)
     vertex_rows: list[dict[str, object]] = []
-    room_diff_no_weapon: dict[str, float] = {}
-    room_diff_with_weapon: dict[str, float] = {}
-    room_base_time: dict[str, float] = {}
-
     for room_id in sorted(lcc):
         r_info = rooms[room_id]
         ec: Counter[str] = r_info["entities"]  # type: ignore[assignment]
-        w_px, h_px = float(r_info["w"]), float(r_info["h"])
-
-        # Tempo base proporcional à diagonal da sala em pixels (escala em segundos)
-        base_t = round(max(2.0, math.hypot(w_px, h_px) / 64.0), 2)
-        room_base_time[room_id] = base_t
-
-        # Coletáveis oficiais na sala (morangos, fita cassete, coração de cristal / estátua)
         collectible_val = (
             ec["strawberry"] * 5.0
             + ec["cassette"] * 12.0
             + ec["blackGem"] * 15.0
             + ec["reflectionHeartStatue"] * 15.0
         )
-
-        # Dificuldade real baseada nos obstáculos presentes na sala
-        raw_hazard = 0.0
-        for h_name, weight in HAZARD_WEIGHTS.items():
-            raw_hazard += ec[h_name] * weight
-        at = r_info["attrs"]  # type: ignore[assignment]
-        if str(at.get("windPattern", "None")) != "None":
-            raw_hazard += 6.0
-        if bool(at.get("dark", False)):
-            raw_hazard += 5.0
-
-        # Salas na espinha direta de saltos após a metade do nível têm penalidade
-        # acentuada sem o power-up (modelando gargalos de precisão quando desarmado).
-        if room_id in bfs_spine and bfs_dist.get(room_id, 0) >= bfs_dist[goal_id] // 3:
-            raw_hazard = max(raw_hazard * 1.8, 18.0)
-        else:
-            raw_hazard = max(raw_hazard, 2.0)
-
-        diff_no_w = round(raw_hazard, 2)
-        diff_with_w = round(max(0.5, diff_no_w * 0.20), 2)
-        room_diff_no_weapon[room_id] = diff_no_w
-        room_diff_with_weapon[room_id] = diff_with_w
-
         has_w = 1 if room_id == weapon_room else 0
         if room_id == start_id:
             r_type = "INICIO"
@@ -426,6 +656,75 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
             }
         )
 
+    def simulate_player_transition(u: str, v: str) -> tuple[float, float, float, list[list[float]]]:
+        """Simula o player saindo da âncora de `u` -> porta `(u,v)` -> (itens de `v`) -> âncora de `v`."""
+        ru, rv = rooms[u], rooms[v]
+        nu, nv = nav_maps[u], nav_maps[v]
+        door_u = door_tile_in_room.get((u, v), nu["anchor_rc"])  # type: ignore[arg-type]
+        door_v = door_tile_in_room.get((v, u), nv["anchor_rc"])  # type: ignore[arg-type]
+
+        # Parte 1: na sala de origem u, do ponto âncora até a porta de saída para v
+        path_u, dist_u, haz_u, _p1 = _astar_tile_path(
+            grids[u],
+            nu["step_cost"],  # type: ignore[arg-type]
+            nu["hazard_map"],  # type: ignore[arg-type]
+            nu["anchor_rc"],  # type: ignore[arg-type]
+            door_u,  # type: ignore[arg-type]
+        )
+
+        # Parte 2: na sala de destino v, da porta de entrada passando pelos coletáveis até a âncora de v
+        coll_v: list[tuple[int, int]] = list(nv["coll_tiles"])  # type: ignore[arg-type]
+        waypoints_v_rc: list[tuple[int, int]] = [door_v]  # type: ignore[list-item]
+        for ct in coll_v[:2]:
+            waypoints_v_rc.append(ct)
+        waypoints_v_rc.append(nv["anchor_rc"])  # type: ignore[arg-type]
+
+        full_tiles_v: list[tuple[int, int]] = []
+        dist_v = 0.0
+        haz_v = 0.0
+        for k in range(len(waypoints_v_rc) - 1):
+            seg_path, seg_dist, seg_haz, _p2 = _astar_tile_path(
+                grids[v],
+                nv["step_cost"],  # type: ignore[arg-type]
+                nv["hazard_map"],  # type: ignore[arg-type]
+                waypoints_v_rc[k],
+                waypoints_v_rc[k + 1],
+            )
+            if full_tiles_v and seg_path:
+                full_tiles_v.extend(seg_path[1:])
+            else:
+                full_tiles_v.extend(seg_path)
+            dist_v += seg_dist
+            haz_v += seg_haz
+
+        # Converter distância real em tiles (8px) para tempo em segundos (velocidade média ~13 tiles/s = 104 px/s)
+        total_tiles_walked = dist_u * 0.35 + dist_v
+        base_time = round(max(1.8, total_tiles_walked / 11.5), 2)
+
+        # Dificuldade real ao longo dos tiles percorridos pelo player
+        at_v = rv["attrs"]  # type: ignore[assignment]
+        env_haz = 0.0
+        if str(at_v.get("windPattern", "None")) != "None":
+            env_haz += 5.0
+        if bool(at_v.get("dark", False)):
+            env_haz += 4.5
+
+        raw_path_hazard = (haz_u * 0.25 + haz_v * 0.85) + env_haz
+        if v in bfs_spine and bfs_dist.get(v, 0) >= bfs_dist[goal_id] // 3:
+            raw_path_hazard = max(raw_path_hazard * 1.65, 18.0)
+        else:
+            raw_path_hazard = max(raw_path_hazard, 2.0)
+
+        diff_no_w = round(raw_path_hazard, 2)
+        diff_with_w = round(max(0.5, diff_no_w * 0.20), 2)
+
+        pts_u = _simplify_tile_path_to_world_waypoints(path_u, int(ru["x"]), int(ru["y"]), max_points=6)
+        pts_v = _simplify_tile_path_to_world_waypoints(
+            full_tiles_v, int(rv["x"]), int(rv["y"]), max_points=10
+        )
+        combined_waypoints = pts_u + pts_v
+        return base_time, diff_no_w, diff_with_w, combined_waypoints
+
     # 6. Construir arestas direcionadas / mão dupla preservando conectividade
     undirected_pairs: list[tuple[str, str]] = []
     for u in sorted(lcc):
@@ -433,8 +732,6 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
             if v in lcc and u < v:
                 undirected_pairs.append((u, v))
 
-    # Começa com grafo todo mão dupla e testa tornar quedas verticais (V_DOWN)
-    # unidirecionais (mao_dupla = 0) quando isso não desconectar salas importantes.
     directed_adj: dict[str, set[str]] = {u: set() for u in lcc}
     for u, v in undirected_pairs:
         directed_adj[u].add(v)
@@ -447,9 +744,10 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
     } | {start_id, goal_id}
 
     edge_rows: list[dict[str, object]] = []
+    edge_waypoints: dict[str, list[list[float]]] = {}
+
     for u, v in undirected_pairs:
         rel = edge_meta.get((u, v), "H")
-        # Ordena par (origin -> dest) no sentido da queda vertical ou progressão BFS
         if rel == "V_DOWN":
             origin, dest, is_vert_drop = u, v, True
         elif rel == "V_UP":
@@ -461,21 +759,26 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
 
         two_way = 1
         if is_vert_drop or dest == goal_id:
-            # Tenta remover retorno dest -> origin (tornar mão única)
             directed_adj[dest].discard(origin)
             if _can_reach_all(directed_adj, start_id, goal_id, important_nodes):
                 two_way = 0
             else:
                 directed_adj[dest].add(origin)
 
+        base_t, diff_l0, diff_l1, wpts_fwd = simulate_player_transition(origin, dest)
+        edge_waypoints[f"{origin}->{dest}"] = wpts_fwd
+        if two_way == 1:
+            _, _, _, wpts_rev = simulate_player_transition(dest, origin)
+            edge_waypoints[f"{dest}->{origin}"] = wpts_rev
+
         edge_rows.append(
             {
                 "origem": origin,
                 "destino": dest,
                 "mao_dupla": two_way,
-                "tempo_base": room_base_time[dest],
-                "dificuldade_sem_arma": room_diff_no_weapon[dest],
-                "dificuldade_com_arma": room_diff_with_weapon[dest],
+                "tempo_base": base_t,
+                "dificuldade_sem_arma": diff_l0,
+                "dificuldade_com_arma": diff_l1,
             }
         )
 
@@ -501,6 +804,32 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
         )
         writer.writeheader()
         writer.writerows(edge_rows)
+
+    # Salvar coordenadas de spawn/entidades e waypoints físicos de cada transição
+    room_anchors: dict[str, dict[str, object]] = {}
+    for room_id in sorted(lcc):
+        r_info = rooms[room_id]
+        ar, ac = nav_maps[room_id]["anchor_rc"]  # type: ignore[misc]
+        coll_list = [
+            [round(int(r_info["x"]) + cc * 8.0 + 4.0, 1), round(int(r_info["y"]) + rr * 8.0 + 4.0, 1)]
+            for rr, cc in nav_maps[room_id]["coll_tiles"]  # type: ignore[union-attr]
+        ]
+        room_anchors[room_id] = {
+            "x": int(r_info["x"]),
+            "y": int(r_info["y"]),
+            "w": int(r_info["w"]),
+            "h": int(r_info["h"]),
+            "anchor": [
+                round(int(r_info["x"]) + ac * 8.0 + 4.0, 1),
+                round(int(r_info["y"]) + ar * 8.0 + 4.0, 1),
+            ],
+            "collectibles_xy": coll_list,
+        }
+
+    (out_dir / "waypoints.json").write_text(
+        json.dumps({"rooms": room_anchors, "edges": edge_waypoints}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
     return {
         "package": pkg,

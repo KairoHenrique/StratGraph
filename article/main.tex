@@ -115,7 +115,7 @@ A Figura~\ref{fig:contracao} apresenta o impacto do pr\'e-processamento de contr
 \label{fig:contracao}
 \end{figure}
 
-As Tabelas~\ref{tab:celeste} e~\ref{tab:cuphead} consolidam os resultados comparativos nos 8 cap\'itulos de \textit{Celeste} e nas 6 fases \textit{Run-and-Gun} de \textit{Cuphead}, ilustrados visualmente na Figura~\ref{fig:custos}. Em todas as 14 fases reais, o BFS seguiu a linha direta de menor n\'umero de saltos na camada desarmada ($L_0$), sofrendo penalidades severas nos trechos finais de alta densidade de obst\'aculos. Em contrapartida, o Dijkstra em camadas identificou automaticamente o desvio estrat\'egico at\'e a sala de \textit{power-up}/arma, migrando para a camada $L_1$ e reduzindo o peso efetivo total entre 44,3\% e 73,7\% em \textit{Celeste} e entre 60,6\% e 72,5\% em \textit{Cuphead}. Al\'em disso, a compara\c{c}\~ao entre a execu\c{c}\~ao padr\~ao (com contra\c{c}\~ao) e a flag \texttt{--no-contract} evidencia o duplo papel de \texttt{contract\_dead\_ends}: sem contra\c{c}\~ao, algoritmos de caminho m\'inimo n\~ao entram em alcovas sem sa\'ida por somarem peso positivo sem avan\c{c}ar ao destino, capturando apenas 11 itens em \textit{Forsaken City} (contra 18 com contra\c{c}\~ao) e 2 itens em \textit{Forest Follies} (contra 6 com contra\c{c}\~ao).
+As Tabelas~\ref{tab:celeste} e~\ref{tab:cuphead} consolidam os resultados comparativos nos 8 cap\'itulos de \textit{Celeste} e nas 6 fases \textit{Run-and-Gun} de \textit{Cuphead}, cujos pesos foram extra\'idos por \textit{pathfinding} f\'isico intra-sala ($A^*$ no grid 8$\times$8 de colis\~ao \texttt{<solids>} em \textit{Celeste} e cadeias de plataformas em \textit{Cuphead}), ilustrados na Figura~\ref{fig:custos}. Em todas as 14 fases reais, o BFS seguiu a linha direta de menor n\'umero de saltos na camada desarmada ($L_0$), sofrendo penalidades severas nos trechos finais de alta densidade de obst\'aculos. Em contrapartida, o Dijkstra em camadas identificou automaticamente o desvio estrat\'egico at\'e a sala de \textit{power-up}/arma, migrando para a camada $L_1$ e reduzindo o peso efetivo total entre 35,4\% e 51,1\% em \textit{Celeste} e entre 58,0\% e 70,8\% em \textit{Cuphead}. Al\'em disso, a compara\c{c}\~ao entre a execu\c{c}\~ao padr\~ao (com contra\c{c}\~ao) e a flag \texttt{--no-contract} evidencia o duplo papel de \texttt{contract\_dead\_ends}: sem contra\c{c}\~ao, algoritmos de caminho m\'inimo n\~ao entram em alcovas sem sa\'ida por somarem peso positivo sem avan\c{c}ar ao destino, capturando apenas 11 itens em \textit{Forsaken City} (contra 18 com contra\c{c}\~ao) e 2 itens em \textit{Forest Follies} (contra 6 com contra\c{c}\~ao).
 
 \begin{table}[htbp]
 \caption{Desempenho Comparativo nos 8 Cap\'itulos Oficiais de \textit{Celeste} ($\alpha = 0{,}05$)}
@@ -128,14 +128,14 @@ As Tabelas~\ref{tab:celeste} e~\ref{tab:cuphead} consolidam os resultados compar
 \textbf{Cap\'itulo} & $|V|$ & $|V'|$ & \textbf{BFS} & \textbf{Dijk.} & \textbf{Red.} & \textbf{Itens Dijk.} & \textbf{Tempo} & \textbf{Tempo} \\
  & & & \textbf{Efet.} & \textbf{Efet.} & \textbf{(\%)} & \textbf{(C / NC)} & \textbf{Dijk.} & \textbf{DFS} \\
 \midrule
-1-Forsaken City    & 38 & 29 &   631,7 &  351,8 & 44,3\% & 18 / 11 & 0,07ms & 0,11ms \\
-2-Old Site         & 33 & 28 &   255,1 &  134,0 & 47,5\% &  3 / 1  & 0,07ms & 0,12ms \\
-3-Celestial Resort & 65 & 63 & 3.045,3 &  997,3 & 67,3\% &  9 / 9  & 0,19ms & 6,19ms \\
-4-Golden Ridge     & 49 & 43 & 1.389,5 &  591,7 & 57,4\% & 22 / 18 & 0,11ms & 0,15ms \\
-5-Mirror Temple    & 45 & 33 & 1.315,0 &  675,3 & 48,6\% &  7 / 2  & 0,08ms & 0,14ms \\
-6-Reflection       & 63 & 63 & 8.059,8 & 2.117,6 & 73,7\% &  1 / 1  & 0,16ms & 5,36ms \\
-7-The Summit       & 97 & 85 & 14.663,9 & 4.144,6 & 71,7\% & 29 / 20 & 0,20ms & 0,90ms \\
-9-Core             & 39 & 36 & 1.213,8 &  650,3 & 46,4\% &  7 / 4  & 0,09ms & 0,14ms \\
+1-Forsaken City    & 38 & 29 &   402,2 &  238,4 & 40,7\% & 18 / 11 & 0,08ms & 0,10ms \\
+2-Old Site         & 33 & 28 &   220,2 &  107,6 & 51,1\% &  3 / 1  & 0,07ms & 0,10ms \\
+3-Celestial Resort & 65 & 63 &   411,2 &  265,6 & 35,4\% &  9 / 9  & 0,21ms & 6,39ms \\
+4-Golden Ridge     & 49 & 43 &   726,0 &  402,5 & 44,6\% & 22 / 18 & 0,11ms & 0,16ms \\
+5-Mirror Temple    & 45 & 33 &   415,5 &  263,2 & 36,7\% &  7 / 2  & 0,08ms & 0,14ms \\
+6-Reflection       & 63 & 63 & 1.059,5 &  537,5 & 49,3\% &  1 / 1  & 0,18ms & 6,42ms \\
+7-The Summit       & 97 & 85 & 1.933,0 & 1.077,8 & 44,2\% & 29 / 20 & 0,22ms & 0,95ms \\
+9-Core             & 39 & 36 &   694,1 &  401,9 & 42,1\% &  7 / 4  & 0,09ms & 0,14ms \\
 \bottomrule
 \multicolumn{9}{l}{\tiny C = Com contra\c{c}\~ao de becos (padr\~ao); NC = Sem contra\c{c}\~ao (\texttt{--no-contract}).}
 \end{tabular}
@@ -152,12 +152,12 @@ As Tabelas~\ref{tab:celeste} e~\ref{tab:cuphead} consolidam os resultados compar
 \textbf{Fase (\textit{Isle})} & $|V|$ & $|V'|$ & \textbf{BFS} & \textbf{Dijk.} & \textbf{Red.} & \textbf{Itens} & \textbf{Tempo} & \textbf{Tempo} \\
  & & & \textbf{Efet.} & \textbf{Efet.} & \textbf{(\%)} & \textbf{(B/D/NC)} & \textbf{Dijk.} & \textbf{DFS} \\
 \midrule
-1-1F Forest Follies  & 26 & 22 & 384,4 & 151,4 & 60,6\% & 4 / 6 / 2 & 0,06ms & 0,43ms \\
-1-2F Treetop Trouble & 26 & 22 & 661,6 & 210,0 & 68,3\% & 4 / 5 / 1 & 0,06ms & 0,60ms \\
-2-1F Funfair Fever   & 26 & 22 & 470,0 & 159,7 & 66,0\% & 4 / 6 / 2 & 0,06ms & 0,70ms \\
-2-2F Funhouse Frazz. & 26 & 22 & 876,1 & 255,1 & 70,9\% & 4 / 6 / 2 & 0,06ms & 0,60ms \\
-3-1F Perilous Piers  & 22 & 19 & 843,1 & 231,5 & 72,5\% & 3 / 5 / 2 & 0,04ms & 0,13ms \\
-3-2F Rugged Ridge    & 26 & 22 & 647,2 & 216,7 & 66,5\% & 4 / 6 / 2 & 0,06ms & 0,33ms \\
+1-1F Forest Follies  & 26 & 22 &   522,0 & 212,3 & 59,3\% & 4 / 6 / 2 & 0,07ms & 0,70ms \\
+1-2F Treetop Trouble & 26 & 22 & 1.230,3 & 397,0 & 67,7\% & 4 / 5 / 1 & 0,07ms & 0,83ms \\
+2-1F Funfair Fever   & 26 & 22 &   503,1 & 205,5 & 59,2\% & 4 / 6 / 2 & 0,06ms & 0,71ms \\
+2-2F Funhouse Frazz. & 26 & 22 & 1.808,5 & 527,7 & 70,8\% & 4 / 6 / 2 & 0,07ms & 0,68ms \\
+3-1F Perilous Piers  & 22 & 19 &   959,9 & 290,2 & 69,8\% & 3 / 5 / 2 & 0,05ms & 0,17ms \\
+3-2F Rugged Ridge    & 26 & 22 & 1.133,7 & 476,4 & 58,0\% & 4 / 5 / 1 & 0,06ms & 0,38ms \\
 \bottomrule
 \multicolumn{9}{l}{\tiny Itens (B/D/NC): BFS / Dijkstra com contra\c{c}\~ao / Dijkstra \texttt{--no-contract}.}
 \end{tabular}

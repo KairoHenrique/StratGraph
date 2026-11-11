@@ -1,10 +1,17 @@
-"""Extrator de fases Run-and-Gun do Cuphead (Unity SerializedFile v17) para CSV.
+"""Extrator de fases Run-and-Gun do Cuphead (Unity SerializedFile v17) com Pathfinding Físico.
 
 Lê diretamente as cenas binárias oficiais (`level41` a `level46`) da instalação
 Steam do Cuphead (`Cuphead_Data`), extraindo as coordenadas reais (Transform x, y)
 de todas as plataformas jogáveis, das 5 moedas douradas (`Level_Coin :: <UUID>`)
-e dos spawners de inimigos/obstáculos para construir os dígrafos ponderados em
-`datasets/cuphead/`.
+e dos spawners de inimigos/obstáculos.
+
+Simula o deslocamento plataforma-a-plataforma do player ao longo de cada transição
+(u -> v), calculando:
+  - `tempo_base` pela distância física real percorrida sobre as plataformas (a ~380 px/s);
+  - `dificuldade_sem_arma` / `dificuldade_com_arma` pelos inimigos efetivamente
+    encontrados no corredor da trajetória entre as plataformas;
+  - `waypoints.json` com a sequência exata de coordenadas `(wx, wy)` das plataformas
+    e moedas para execução estilo TAS no Simulador 2D e no Mod In-Game.
 
 Autoria:
     - Heitor Henrique Zonho
@@ -15,8 +22,8 @@ Autoria:
 from __future__ import annotations
 
 import argparse
-from collections import defaultdict
 import csv
+import json
 import math
 from pathlib import Path
 import struct
@@ -143,18 +150,64 @@ def parse_unity_scene_objects(scene_path: Path) -> list[tuple[str, str, float, f
     return results
 
 
+def _compute_platform_chain(
+    start_xy: tuple[float, float],
+    end_xy: tuple[float, float],
+    raw_platforms: list[tuple[str, float, float]],
+    enemies: list[tuple[str, float, float, float]],
+) -> tuple[list[list[float]], float, float]:
+    """Constrói a cadeia física de plataformas entre `start_xy` e `end_xy`."""
+    sx, sy = start_xy
+    ex, ey = end_xy
+    x_min, x_max = min(sx, ex) - 120.0, max(sx, ex) + 120.0
+
+    # Selecionar plataformas intermediárias reais ao longo da faixa de progressão X
+    mid_plats = [
+        (px, py)
+        for _name, px, py in raw_platforms
+        if x_min <= px <= x_max and abs(py - ((sy + ey) / 2.0)) <= 700.0
+    ]
+    mid_plats.sort(key=lambda p: p[0] if sx <= ex else -p[0])
+
+    chain: list[tuple[float, float]] = [(sx, sy)]
+    for px, py in mid_plats:
+        last_x, last_y = chain[-1]
+        if math.hypot(px - last_x, py - last_y) >= 220.0 and math.hypot(ex - px, ey - py) >= 180.0:
+            chain.append((px, py))
+            if len(chain) >= 7:
+                break
+    chain.append((ex, ey))
+
+    total_px = 0.0
+    hazard_exposure = 0.0
+    for i in range(len(chain) - 1):
+        ax, ay = chain[i]
+        bx, by = chain[i + 1]
+        seg_len = math.hypot(bx - ax, by - ay)
+        # Penalidade adicional para saltos verticais íngremes
+        vert_gain = max(0.0, by - ay)
+        total_px += seg_len + vert_gain * 0.45
+
+        mx, my = (ax + bx) / 2.0, (ay + by) / 2.0
+        for _ename, enx, eny, w in enemies:
+            d = math.hypot(enx - mx, eny - my)
+            if d <= 950.0:
+                hazard_exposure += w * (1.0 - d / 1150.0)
+
+    waypoints = [[round(px, 1), round(py, 1)] for px, py in chain]
+    return waypoints, max(350.0, total_px), hazard_exposure
+
+
 def extract_cuphead_level_to_csv(scene_path: Path, out_dir: Path, slug: str) -> dict[str, object]:
-    """Modela uma cena Run-and-Gun do Cuphead como dígrafo ponderado em CSV."""
+    """Modela uma cena Run-and-Gun do Cuphead com trajetórias físicas sobre plataformas."""
     items = parse_unity_scene_objects(scene_path)
 
-    # 1. Identificar as 5 moedas oficiais (Level_Coin :: <UUID>)
     coins: list[tuple[str, float, float]] = []
     for full_path, leaf_name, wx, wy in items:
         if leaf_name.startswith("Level_Coin"):
             coins.append((leaf_name, wx, wy))
     coins.sort(key=lambda t: (t[1], t[2]))
 
-    # 2. Identificar inimigos e spawners reais na cena com seus pesos de ameaça
     enemies: list[tuple[str, float, float, float]] = []
     for full_path, leaf_name, wx, wy in items:
         low_path = full_path.lower()
@@ -166,26 +219,29 @@ def extract_cuphead_level_to_csv(scene_path: Path, out_dir: Path, slug: str) -> 
                 enemies.append((leaf_name, wx, wy, weight))
                 break
 
-    # 3. Identificar plataformas jogáveis e agrupar em setores espaciais (~850 px)
     raw_platforms: list[tuple[str, float, float]] = []
     for full_path, leaf_name, wx, wy in items:
         low_path = full_path.lower()
         low_name = leaf_name.lower()
-        if any(bad in low_path for bad in ("sfx", "audio", "sprite", "shadow", "mask", "spark", "smoke", "propeller", "bg_", "bgfar")):
+        if any(
+            bad in low_path
+            for bad in ("sfx", "audio", "sprite", "shadow", "mask", "spark", "smoke", "propeller", "bg_", "bgfar")
+        ):
             continue
         if any(k in low_name for k in PLATFORM_KEYWORDS) and -500.0 <= wx <= 30000.0:
             raw_platforms.append((leaf_name, wx, wy))
 
     raw_platforms.sort(key=lambda t: (t[1], t[2]))
 
-    # Agrupar plataformas ao longo da progressão da fase em setores principais + rotas superiores/inferiores
     min_x = min((p[1] for p in raw_platforms), default=0.0)
-    max_x = max(max((p[1] for p in raw_platforms), default=24000.0), max((c[1] for c in coins), default=22000.0) + 1200.0)
+    max_x = max(
+        max((p[1] for p in raw_platforms), default=24000.0),
+        max((c[1] for c in coins), default=22000.0) + 1200.0,
+    )
     span_x = max(4000.0, max_x - min_x)
     num_sectors = 16
     sector_w = span_x / num_sectors
 
-    # Construir nós da espinha principal (sec_00 a sec_15) e plataformas elevadas/alternativas
     nodes: dict[str, dict[str, object]] = {}
     spine_ids: list[str] = []
 
@@ -196,110 +252,114 @@ def extract_cuphead_level_to_csv(scene_path: Path, out_dir: Path, slug: str) -> 
         cx = (sx_start + sx_end) / 2.0
         cy = sum(p[2] for p in sec_plats) / len(sec_plats) if sec_plats else 0.0
 
-        # Calcular ameaça de inimigos próximos a este setor (raio de 1500 px)
-        near_threat = sum(
-            w for _en, ex, ey, w in enemies if abs(ex - cx) <= 1400.0 and abs(ey - cy) <= 1200.0
-        )
-        # Setores a partir do terço intermediário têm mais pressão de projéteis desarmado
-        base_hazard = max(4.0, round(near_threat * 0.65, 2))
-        if s_idx >= 4:
-            base_hazard = round(max(base_hazard * 1.45, 22.0), 2)
-
         nid = f"sec_{s_idx:02d}"
         spine_ids.append(nid)
         nodes[nid] = {
-            "x": cx,
-            "y": cy,
+            "x": round(cx, 1),
+            "y": round(cy, 1),
             "tipo": "COMUM",
             "valor": 0.0,
             "arma": 0,
-            "base_time": round(max(2.5, sector_w / 420.0), 2),
-            "diff_no_w": base_hazard,
-            "diff_with_w": round(max(1.0, base_hazard * 0.22), 2),
+            "is_spine_late": s_idx >= 4,
         }
 
-    # Marcar início e fim da fase
     start_id = spine_ids[0]
     goal_id = spine_ids[-1]
     nodes[start_id]["tipo"] = "INICIO"
     nodes[goal_id]["tipo"] = "FIM"
 
-    edges: list[dict[str, object]] = []
+    weapon_id = "parry_shrine_arma"
+    sec02 = nodes["sec_02"]
+    nodes[weapon_id] = {
+        "x": round(float(sec02["x"]) + 220.0, 1),
+        "y": round(float(sec02["y"]) + 280.0, 1),
+        "tipo": "ARMA",
+        "valor": 0.0,
+        "arma": 1,
+        "is_spine_late": False,
+    }
 
-    def add_edge(u: str, v: str, mao_dupla: int, extra_time: float = 0.0) -> None:
-        t_info = nodes[v]
+    for c_idx, (_cname, cx, cy) in enumerate(coins, start=1):
+        coin_id = f"coin_{c_idx:02d}"
+        nodes[coin_id] = {
+            "x": round(cx, 1),
+            "y": round(cy, 1),
+            "tipo": "COLETAVEL",
+            "valor": 15.0,
+            "arma": 0,
+            "is_spine_late": False,
+        }
+
+    high_plats = [p for p in raw_platforms if p[2] > 250.0]
+    for p_idx, (_pname, px, py) in enumerate(high_plats[:4], start=1):
+        plat_id = f"high_plat_{p_idx:02d}"
+        nodes[plat_id] = {
+            "x": round(px, 1),
+            "y": round(py, 1),
+            "tipo": "COLETAVEL" if p_idx % 2 == 1 else "COMUM",
+            "valor": 6.0 if p_idx % 2 == 1 else 0.0,
+            "arma": 0,
+            "is_spine_late": False,
+        }
+
+    edges: list[dict[str, object]] = []
+    edge_waypoints: dict[str, list[list[float]]] = {}
+
+    def add_physical_edge(u: str, v: str, mao_dupla: int, extra_time: float = 0.0) -> None:
+        nu, nv = nodes[u], nodes[v]
+        wpts, px_dist, haz_exp = _compute_platform_chain(
+            (float(nu["x"]), float(nu["y"])),
+            (float(nv["x"]), float(nv["y"])),
+            raw_platforms,
+            enemies,
+        )
+        # Velocidade média de corrida/salto do Cuphead ~380 px/s
+        base_time = round(max(2.0, px_dist / 380.0 + extra_time), 2)
+        base_hazard = max(3.5, round(haz_exp * 0.70, 2))
+        if bool(nv.get("is_spine_late", False)):
+            base_hazard = round(max(base_hazard * 1.45, 22.0), 2)
+
+        diff_no_w = base_hazard
+        diff_with_w = round(max(1.0, base_hazard * 0.22), 2)
+
+        edge_waypoints[f"{u}->{v}"] = wpts
+        if mao_dupla == 1:
+            edge_waypoints[f"{v}->{u}"] = list(reversed(wpts))
+
         edges.append(
             {
                 "origem": u,
                 "destino": v,
                 "mao_dupla": mao_dupla,
-                "tempo_base": round(float(t_info["base_time"]) + extra_time, 2),
-                "dificuldade_sem_arma": round(float(t_info["diff_no_w"]), 2),
-                "dificuldade_com_arma": round(float(t_info["diff_with_w"]), 2),
+                "tempo_base": base_time,
+                "dificuldade_sem_arma": diff_no_w,
+                "dificuldade_com_arma": diff_with_w,
             }
         )
 
-    # Conectar espinha dorsal da fase (com transições unidirecionais em quedas de plataforma)
     for i in range(len(spine_ids) - 1):
         u, v = spine_ids[i], spine_ids[i + 1]
-        # Quedas/avanços de câmera típicos de Run-and-Gun a cada 4 setores são mão única
         is_two_way = 0 if (i in {4, 9, 13}) else 1
-        add_edge(u, v, mao_dupla=is_two_way)
+        add_physical_edge(u, v, mao_dupla=is_two_way)
 
-    # 4. Adicionar o Santuário/Totem de Parry & Super Art (ARMA) fora da rota direta (no setor 02)
-    weapon_id = "parry_shrine_arma"
-    sec02 = nodes["sec_02"]
-    nodes[weapon_id] = {
-        "x": float(sec02["x"]) + 220.0,
-        "y": float(sec02["y"]) + 280.0,
-        "tipo": "ARMA",
-        "valor": 0.0,
-        "arma": 1,
-        "base_time": 2.8,
-        "diff_no_w": 4.5,
-        "diff_with_w": 1.2,
-    }
-    # Desvio estratégico: sec_02 <-> parry_shrine_arma -> sec_03
-    add_edge("sec_02", weapon_id, mao_dupla=1)
-    add_edge(weapon_id, "sec_03", mao_dupla=0, extra_time=0.5)
+    add_physical_edge("sec_02", weapon_id, mao_dupla=1)
+    add_physical_edge(weapon_id, "sec_03", mao_dupla=0, extra_time=0.4)
 
-    # 5. Adicionar as 5 moedas oficiais (`Level_Coin`) extraídas da cena Unity:
-    #    - 3 moedas em alcovas sem saída (becos sem saída com `mao_dupla=1` que serão contraídos no pré-processamento)
-    #    - 2 moedas em plataformas elevadas alternativas (pontes superiores `sec_k -> coin_m -> sec_{k+1}`)
-    for c_idx, (_cname, cx, cy) in enumerate(coins, start=1):
+    for c_idx, (_cname, cx, _cy) in enumerate(coins, start=1):
         coin_id = f"coin_{c_idx:02d}"
-        # Encontrar setor mais próximo em X (entre sec_01 e sec_14)
         closest_idx = min(
             range(1, num_sectors - 1),
             key=lambda idx: abs(float(nodes[spine_ids[idx]]["x"]) - cx),
         )
         anchor_id = spine_ids[closest_idx]
-        near_threat = sum(
-            w for _en, ex, ey, w in enemies if abs(ex - cx) <= 1000.0 and abs(ey - cy) <= 900.0
-        )
-        c_hazard = round(max(3.5, near_threat * 0.45), 2)
-        nodes[coin_id] = {
-            "x": cx,
-            "y": cy,
-            "tipo": "COLETAVEL",
-            "valor": 15.0,
-            "arma": 0,
-            "base_time": 2.4,
-            "diff_no_w": c_hazard,
-            "diff_with_w": round(max(1.0, c_hazard * 0.25), 2),
-        }
         if c_idx in {1, 3, 5}:
-            # Beco sem saída (alcova lateral/inferior de moeda): grau 1 bidirecional -> contração de beco
-            add_edge(anchor_id, coin_id, mao_dupla=1)
+            add_physical_edge(anchor_id, coin_id, mao_dupla=1)
         else:
-            # Rota aérea alternativa passando pela moeda (saltando o setor intermediário inferior)
             next_anchor = spine_ids[min(num_sectors - 1, closest_idx + 2)]
-            add_edge(anchor_id, coin_id, mao_dupla=1)
-            add_edge(coin_id, next_anchor, mao_dupla=0)
+            add_physical_edge(anchor_id, coin_id, mao_dupla=1)
+            add_physical_edge(coin_id, next_anchor, mao_dupla=0)
 
-    # 6. Adicionar sub-plataformas reais extras (parry/atalhos elevados) a partir dos clusters verticais
-    high_plats = [p for p in raw_platforms if p[2] > 250.0]
-    for p_idx, (_pname, px, py) in enumerate(high_plats[:4], start=1):
+    for p_idx, (_pname, px, _py) in enumerate(high_plats[:4], start=1):
         plat_id = f"high_plat_{p_idx:02d}"
         closest_idx = min(
             range(2, num_sectors - 2),
@@ -307,29 +367,14 @@ def extract_cuphead_level_to_csv(scene_path: Path, out_dir: Path, slug: str) -> 
         )
         u_id = spine_ids[closest_idx]
         v_id = spine_ids[closest_idx + 1]
-        nodes[plat_id] = {
-            "x": px,
-            "y": py,
-            "tipo": "COLETAVEL" if p_idx % 2 == 1 else "COMUM",
-            "valor": 6.0 if p_idx % 2 == 1 else 0.0,
-            "arma": 0,
-            "base_time": 2.6,
-            "diff_no_w": 9.0,
-            "diff_with_w": 2.0,
-        }
         if p_idx == 1:
-            # Alcova sem saída com bônus de parry (testa contração adicional)
-            add_edge(u_id, plat_id, mao_dupla=1)
+            add_physical_edge(u_id, plat_id, mao_dupla=1)
         else:
-            add_edge(u_id, plat_id, mao_dupla=1)
-            add_edge(plat_id, v_id, mao_dupla=0)
+            add_physical_edge(u_id, plat_id, mao_dupla=1)
+            add_physical_edge(plat_id, v_id, mao_dupla=0)
 
-    # Exportar CSVs
     out_dir.mkdir(parents=True, exist_ok=True)
-    vertices_csv = out_dir / "vertices.csv"
-    arestas_csv = out_dir / "arestas.csv"
-
-    with vertices_csv.open("w", encoding="utf-8", newline="") as vf:
+    with (out_dir / "vertices.csv").open("w", encoding="utf-8", newline="") as vf:
         writer = csv.DictWriter(
             vf, fieldnames=["id_sala", "tipo_sala", "valor_coletavel", "possui_arma"]
         )
@@ -345,7 +390,7 @@ def extract_cuphead_level_to_csv(scene_path: Path, out_dir: Path, slug: str) -> 
                 }
             )
 
-    with arestas_csv.open("w", encoding="utf-8", newline="") as ef:
+    with (out_dir / "arestas.csv").open("w", encoding="utf-8", newline="") as ef:
         writer = csv.DictWriter(
             ef,
             fieldnames=[
@@ -361,6 +406,19 @@ def extract_cuphead_level_to_csv(scene_path: Path, out_dir: Path, slug: str) -> 
         for row in edges:
             writer.writerow(row)
 
+    room_anchors = {
+        nid: {
+            "x": float(info["x"]),
+            "y": float(info["y"]),
+            "anchor": [float(info["x"]), float(info["y"])],
+        }
+        for nid, info in nodes.items()
+    }
+    (out_dir / "waypoints.json").write_text(
+        json.dumps({"rooms": room_anchors, "edges": edge_waypoints}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
     return {
         "level": slug,
         "unity_objects": len(items),
@@ -374,7 +432,7 @@ def extract_cuphead_level_to_csv(scene_path: Path, out_dir: Path, slug: str) -> 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Extrai as 6 fases Run-and-Gun oficiais do Cuphead (Unity binary scenes) para CSV."
+        description="Extrai as 6 fases Run-and-Gun oficiais do Cuphead com trajetórias físicas."
     )
     parser.add_argument(
         "--cuphead-data-dir",

@@ -12,7 +12,7 @@ Plano completo do projeto **StratGraph** (*Otimização de Rotas Estratégicas e
 - [x] **Fase 4 — Extratores Binários Oficiais (*Celeste* e *Cuphead*), Benchmarks Sintéticos e Publicação no Zenodo (`doi:10.5281/zenodo.24147071`)**
 - [x] **Fase 5 — Bateria Experimental, Fluxograma Obrigatório e Gráficos Científicos**
 - [ ] **Fase 6 — Compilação do Artigo IEEE no Overleaf e Validação no Ubuntu 24.04**
-- [ ] **Fase 7 (Extras — Antes da Entrega Final) — Simulador Visual 2D, Overlay GPS e Mod de Teste *In-Game***
+- [x] **Fase 7 (Extras — Antes da Entrega Final) — Simulador Visual 2D TAS e Mods de Teste *In-Game* (*Celeste* e *Cuphead*)**
 - [ ] **Etapa Final (Última Coisa) — Envio do PDF no AVA (até 22/11/2026) e Pitch Oral (a partir de 25/11/2026)**
 
 ---
@@ -88,15 +88,11 @@ Plano completo do projeto **StratGraph** (*Otimização de Rotas Estratégicas e
 - [ ] Subir `results/stratgraph_overleaf.zip` no **Overleaf**, validar referências no Google Scholar (`scholar.google.com`) e compilar o PDF.
 - [ ] Testar a execução final via terminal em **Linux (Ubuntu 24.04)**.
 
-### Fase 7 — Simulador Visual 2D, Overlay GPS e Mod de Teste *In-Game* (Extras — Após Zenodo/Artigo Técnico)
-> **Ordem de execução:** concluir o restante técnico/extras antes do envio final do AVA e Pitch.
-
-* **Decisão técnica sobre teclado/controle virtual por cima do jogo:**
-  * Automação "cega" via teclado ou controle virtual para zerar *Celeste* ou *Cuphead* sozinha **não é confiável sem mod/leitura de memória ou visão computacional a 60 FPS**: qualquer dessincronização de 1 frame (~16 ms), morte em espinhos ou aleatoriedade de inimigos quebra a macro, além de fugir do escopo de Teoria dos Grafos.
-* **Extensões visuais e de teste planejadas como extra (em ordem de complexidade):**
-  - [ ] **Simulador Visual Interativo 2D (`scripts/simulate_route.py`):** usando os dados geométricos reais já extraídos dos binários de *Celeste* (salas, matriz `<solids>`, espinhos, morangos e sala `ARMA`) e *Cuphead* (setores, plataformas, inimigos e 5 moedas `Level_Coin`), gera uma interface HTML5 Canvas autocontida (Python padrão -> abre no navegador no Windows e no Ubuntu 24.04) para assistir passo a passo **BFS ($L_0$)** vs. **Dijkstra em Camadas ($L_0 \to L_1$)** percorrendo o mapa real, destacando os becos contraídos e a troca de camada na arma.
-  - [ ] **Modo Co-piloto / Overlay "GPS" sem Mod (`tkinter`, opcional no Windows):** janela leve sempre-no-topo por cima do jogo na Steam exibindo a sala atual, o próximo destino da rota ótima (`lvl_6 -> lvl_6z [ARMA] -> ...`) e o estado da camada (`L0`/`L1`) com avanço manual via atalho de teclado enquanto o jogador controla o personagem.
-  - [ ] **Mod de Teste *In-Game* (Extra avançado para Steam/Windows):** criação de um mod leve em C#/.NET (via **Everest** para *Celeste* e/ou **BepInEx** para *Cuphead*) que lê o arquivo JSON exportado pelo StratGraph (`--output-json`) para desenhar o indicador de sala/próximo destino e status da camada (`L0`/`L1`) diretamente no HUD dentro do próprio jogo em execução.
+### Fase 7 — Simulador Visual 2D e Mods de Teste *In-Game* Estilo TAS (Concluída)
+* **Extensões visuais e de teste *in-game*:**
+  - [x] **Pathfinding Físico Intra-Sala ([scripts/extract_celeste_maps.py](../scripts/extract_celeste_maps.py) e [scripts/extract_cuphead_maps.py](../scripts/extract_cuphead_maps.py)):** simulação real do deslocamento do player bloco a bloco ($A^*$ no grid 8×8 de colisão `<solids>`, plataformas `jumpThru`, molas `spring` e impulsos `booster`/`zipMover` em *Celeste*; cadeia de plataformas e moedas em *Cuphead*), gerando `tempo_base`, `dificuldade` e os `waypoints.json` reais de cada transição.
+  - [x] **Simulador Visual Interativo 2D ([scripts/simulate_route.py](../scripts/simulate_route.py)):** gera a aplicação interativa HTML5 Canvas autocontida (`results/stratgraph_simulator.html`) animando o player ao longo dos waypoints físicos dentro das salas reais para **BFS ($L_0$)** vs. **Dijkstra `--no-contract`** vs. **StratGraph ($L_0 \to L_1$ + contração de becos)**.
+  - [x] **Mods de Teste *In-Game* Estilo TAS ([mods/celeste_stratgraph/](../mods/celeste_stratgraph/StratGraphCelesteHud.cs), [mods/cuphead_stratgraph/](../mods/cuphead_stratgraph/StratGraphCupheadHud.cs) e [scripts/build_mods.py](../scripts/build_mods.py)):** mods em C#/.NET compilados contra os binários da Steam (`Celeste.exe` e `Assembly-CSharp.dll`/`UnityEngine.dll`) que desenham a linha de trajetória TAS na sala, exibem o HUD da rota e incluem **Modo Bot TAS (`[F5]`)** que movimenta o player automaticamente ao longo dos waypoints calculados.
 
 ### Etapa Final (Última Coisa a Fazer)
 - [ ] Revisar/gerar o **PDF final no Overleaf** e enviar no **AVA até 22/11/2026**.
