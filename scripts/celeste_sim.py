@@ -139,6 +139,8 @@ class RoomModel60Hz:
         spinners: list[Rect],
         springs: list[Rect] | None = None,
         refills: list[Rect] | None = None,
+        dash_blocks: list[Rect] | None = None,
+        zip_movers: list[Rect] | None = None,
     ) -> None:
         self.bx = bx
         self.by = by
@@ -152,6 +154,8 @@ class RoomModel60Hz:
         self.spinners = spinners
         self.springs = springs or []
         self.refills = refills or []
+        self.dash_blocks = dash_blocks or []
+        self.zip_movers = zip_movers or []
 
     @classmethod
     def from_game_state(
@@ -206,6 +210,8 @@ class RoomModel60Hz:
 
         springs: list[Rect] = []
         refills: list[Rect] = []
+        dash_blocks: list[Rect] = []
+        zip_movers: list[Rect] = []
         if room_entities:
             for ename, attrs in room_entities:
                 ex = bx + float(attrs.get("x", 0.0))
@@ -214,10 +220,28 @@ class RoomModel60Hz:
                     springs.append(Rect(ex - 6, ey - 8, 12, 8))
                 elif ename == "refill":
                     refills.append(Rect(ex - 6, ey - 6, 12, 12))
+                elif ename == "dashBlock":
+                    dw = float(attrs.get("width", 16.0))
+                    dh = float(attrs.get("height", 16.0))
+                    rc = max(0, min(ht - 1, int((ey + dh * 0.5 - by) // 8)))
+                    cc = max(0, min(wt - 1, int((ex + dw * 0.5 - bx) // 8)))
+                    if solids[rc][cc]:
+                        dash_blocks.append(Rect(ex, ey, dw, dh))
+                elif ename == "zipMover":
+                    zw = float(attrs.get("width", 16.0))
+                    zh = float(attrs.get("height", 16.0))
+                    zip_movers.append(Rect(ex, ey, zw, zh))
 
-        return cls(bx, by, bw, bh, solids, jts, spikes, spinners, springs, refills)
+        return cls(bx, by, bw, bh, solids, jts, spikes, spinners, springs, refills, dash_blocks, zip_movers)
 
-    def solid_at_box(self, x: float, y: float, w: float = 8.0, h: float = 11.0) -> bool:
+    def tile_in_dash_block(self, r: int, c: int) -> bool:
+        if not self.dash_blocks:
+            return False
+        tx = self.bx + c * 8.0 + 1.0
+        ty = self.by + r * 8.0 + 1.0
+        return any(db.overlaps(tx, ty, 6.0, 6.0) for db in self.dash_blocks)
+
+    def solid_at_box(self, x: float, y: float, w: float = 8.0, h: float = 11.0, ignore_dash_blocks: bool = False) -> bool:
         """Retorna True se o retângulo `[x, x+w) x [y, y+h)` colide com algum bloco sólido."""
         c0 = int(math.floor((x - self.bx) / 8.0))
         c1 = int(math.floor((x + w - 0.001 - self.bx) / 8.0))
@@ -232,12 +256,14 @@ class RoomModel60Hz:
                 if c < 0 or c >= self.wt:
                     continue
                 if self.solids[r][c]:
+                    if ignore_dash_blocks and self.tile_in_dash_block(r, c):
+                        continue
                     return True
         return False
 
-    def player_collides_solid(self, px: float, py: float) -> bool:
+    def player_collides_solid(self, px: float, py: float, ignore_dash_blocks: bool = False) -> bool:
         """Hitbox padrão 8x11 da Madeline com base centrada em `(px, py)`."""
-        return self.solid_at_box(round(px) - 4.0, round(py) - 11.0, 8.0, 11.0)
+        return self.solid_at_box(round(px) - 4.0, round(py) - 11.0, 8.0, 11.0, ignore_dash_blocks=ignore_dash_blocks)
 
     def on_ground(self, px: float, py: float, down_only: bool = True) -> bool:
         if self.solid_at_box(round(px) - 4.0, round(py), 8.0, 1.0):
@@ -245,7 +271,7 @@ class RoomModel60Hz:
         if down_only:
             rx, ry = round(px) - 4.0, round(py)
             for jt in self.jump_thrus:
-                if rx + 8.0 > jt.x and rx < jt.x + jt.w and abs(ry - jt.y) <= 1.0:
+                if rx + 8.0 > jt.x and rx < jt.x + jt.w and ry == jt.y:
                     return True
         return False
 
@@ -311,7 +337,7 @@ class RoomModel60Hz:
             d = dist[r][c] + 1
             for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
                 nr, nc = r + dr, c + dc
-                if 0 <= nr < self.ht and 0 <= nc < self.wt and not self.solids[nr][nc]:
+                if 0 <= nr < self.ht and 0 <= nc < self.wt and (not self.solids[nr][nc] or self.tile_in_dash_block(nr, nc)):
                     if d < dist[nr][nc]:
                         dist[nr][nc] = d
                         dq.append((nr, nc))
@@ -391,7 +417,7 @@ def compute_doorway_targets(
         r0 = max(0, (y0 - by) // 8)
         r1 = min(room.ht, (y1 - by) // 8)
         c = room.wt - 1
-        flags = [not room.solids[r][c] for r in range(r0, r1)]
+        flags = [not room.solids[r][c] or room.tile_in_dash_block(r, c) for r in range(r0, r1)]
         for sr0, sr1 in _spans(flags):
             py0 = by + (r0 + sr0) * 8.0
             ph = max(8.0, (sr1 - sr0) * 8.0)
@@ -404,7 +430,7 @@ def compute_doorway_targets(
         r0 = max(0, (y0 - by) // 8)
         r1 = min(room.ht, (y1 - by) // 8)
         c = 0
-        flags = [not room.solids[r][c] for r in range(r0, r1)]
+        flags = [not room.solids[r][c] or room.tile_in_dash_block(r, c) for r in range(r0, r1)]
         for sr0, sr1 in _spans(flags):
             py0 = by + (r0 + sr0) * 8.0
             ph = max(8.0, (sr1 - sr0) * 8.0)
@@ -417,7 +443,7 @@ def compute_doorway_targets(
         c0 = max(0, (x0 - bx) // 8)
         c1 = min(room.wt, (x1 - bx) // 8)
         r = 0
-        flags = [not room.solids[r][c] for c in range(c0, c1)]
+        flags = [not room.solids[r][c] or room.tile_in_dash_block(r, c) for c in range(c0, c1)]
         for sc0, sc1 in _spans(flags):
             px0 = bx + (c0 + sc0) * 8.0
             pw = max(8.0, (sc1 - sc0) * 8.0)
@@ -430,11 +456,11 @@ def compute_doorway_targets(
         c0 = max(0, (x0 - bx) // 8)
         c1 = min(room.wt, (x1 - bx) // 8)
         r = room.ht - 1
-        flags = [not room.solids[r][c] for c in range(c0, c1)]
+        flags = [not room.solids[r][c] or room.tile_in_dash_block(r, c) for c in range(c0, c1)]
         for sc0, sc1 in _spans(flags):
             px0 = bx + (c0 + sc0) * 8.0
             pw = max(8.0, (sc1 - sc0) * 8.0)
-            targets.append(Rect(px0, by + bh - 4.0, pw, 16.0))
+            targets.append(Rect(px0, by + bh + 2.0, pw, 16.0))
 
     # Fallback geométrico pelo centro da interseção caso a borda tenha blocos quebráveis
     if not targets:
@@ -544,17 +570,35 @@ def step_celeste_60hz(
     elif np.coyote_timer > 0:
         np.coyote_timer -= 1
 
-    # Estado ativo de dash (10 quadros a 240 px/s, depois EndDash no 11º quadro antes da física normal)
+    # Estado ativo de dash (SuperJump se pular no solo/coyote durante dash horizontal, senão 10q a 240 px/s)
     if np.dash_timer > 0:
-        np.dash_timer -= 1
-        if np.dash_timer > 0:
-            np.vx = np.dash_dx * DASH_SPEED
-            np.vy = np.dash_dy * DASH_SPEED
+        if (
+            jump_pressed
+            and (grounded or np.coyote_timer > 0)
+            and abs(np.dash_dx) > 0.5
+            and np.dash_dy >= 0.0
+            and "D" not in tokens
+        ):
+            if np.dash_timer <= 5:
+                np.dashes = 1
+            np.dash_timer = 0
+            np.half_grav_dash = False
+            super_dir = 1.0 if np.dash_dx > 0 else -1.0
+            np.vx = super_dir * 260.0
+            np.vy = JUMP_SPEED
+            np.var_jump_timer = VAR_JUMP_FRAMES
+            np.var_jump_speed = JUMP_SPEED
+            np.coyote_timer = 0
+            np.on_ground = False
         else:
-            if np.dash_dy <= 0.0:
-                np.vx = np.dash_dx * END_DASH_SPEED
-                np.vy = np.dash_dy * (END_DASH_SPEED * 0.75)
-                if np.dash_dy < 0.0:
+            np.dash_timer -= 1
+            if np.dash_timer > 0:
+                np.vx = np.dash_dx * DASH_SPEED
+                np.vy = np.dash_dy * DASH_SPEED
+            else:
+                if np.dash_dy <= 0.0:
+                    np.vx = np.dash_dx * END_DASH_SPEED
+                    np.vy = np.dash_dy * (END_DASH_SPEED * 0.75)
                     np.half_grav_dash = True
     else:
         # Escalada com G junto à parede
@@ -619,15 +663,15 @@ def step_celeste_60hz(
                     np.vy = JUMP_SPEED
                     np.var_jump_timer = VAR_JUMP_FRAMES
                     np.var_jump_speed = JUMP_SPEED
-                    np.force_move_dir = 1 if move_x >= 0 else 0
-                    np.force_move_timer = 9 if move_x >= 0 else 0
+                    np.force_move_dir = 1 if move_x != 0 else 0
+                    np.force_move_timer = 9 if move_x != 0 else 0
                 elif room.wall_next_to(np.x, np.y, 1, 3.0):
                     np.vx = -WALL_JUMP_HSPEED
                     np.vy = JUMP_SPEED
                     np.var_jump_timer = VAR_JUMP_FRAMES
                     np.var_jump_speed = JUMP_SPEED
-                    np.force_move_dir = -1 if move_x <= 0 else 0
-                    np.force_move_timer = 9 if move_x <= 0 else 0
+                    np.force_move_dir = -1 if move_x != 0 else 0
+                    np.force_move_timer = 9 if move_x != 0 else 0
 
         if np.var_jump_timer > 0:
             if jump_held or np.auto_jump:
@@ -640,6 +684,7 @@ def step_celeste_60hz(
             np.auto_jump = False
 
     # Integração pixel a pixel (eixo X depois eixo Y) respeitando sólidos & jumpThrus
+    can_break_dash = np.dash_timer > 0 or np.dash_freeze > 0
     dx_total = np.vx * DT
     dy_total = np.vy * DT
 
@@ -647,7 +692,7 @@ def step_celeste_60hz(
     step_dx = dx_total / steps_x
     for _ in range(steps_x):
         nx = np.x + step_dx
-        if not room.player_collides_solid(nx, np.y):
+        if not room.player_collides_solid(nx, np.y, ignore_dash_blocks=can_break_dash):
             np.x = nx
         else:
             np.vx = 0.0
@@ -657,7 +702,7 @@ def step_celeste_60hz(
     step_dy = dy_total / steps_y
     for _ in range(steps_y):
         ny = np.y + step_dy
-        blocked = room.player_collides_solid(np.x, ny)
+        blocked = room.player_collides_solid(np.x, ny, ignore_dash_blocks=can_break_dash)
         if not blocked and step_dy > 0.0 and not ("D" in tokens):
             # Colisão com topo de JumpThru
             rx = round(np.x) - 4.0
@@ -724,6 +769,7 @@ def _candidate_macros(
     prefer_dx: float,
     prefer_dy: float,
     forbid_dash: bool = False,
+    allow_super: bool = False,
 ) -> list[list[tuple[int, tuple[str, ...]]]]:
     """Gera macro-ações fisicamente válidas de acordo com o estado atual."""
     macros: list[list[tuple[int, tuple[str, ...]]]] = []
@@ -737,7 +783,12 @@ def _candidate_macros(
             macros.append([(10, (d, "J")), (6, (d,))])
             macros.append([(15, (d, "J")), (6, (d,))])
             macros.append([(12, (d, "J")), (8, (d, "U", "G"))])
-            macros.append([(6, (d, "D"))])
+            macros.append([(8, (d,)), (8, (d, "D"))])
+            macros.append([(14, (d,)), (12, (d, "D"))])
+            macros.append([(6, (d, "D", "J"))])
+            if allow_super and p.dashes >= 1 and not forbid_dash:
+                macros.append([(1, (d, "X")), (9, (d,)), (14, (d, "J")), (6, (d,))])
+                macros.append([(1, (d, "X")), (4, (d,)), (14, (d, "J")), (6, (d,))])
         macros.append([(14, ("J",))])
         macros.append([(5, ("D",))])
         macros.append([(6, ())])
@@ -797,6 +848,7 @@ def plan_to_goal_60hz(
     max_frames: int = 460,
     diverse_count: int = 3,
     forbid_dash: bool = False,
+    allow_super: bool = False,
 ) -> list[list[tuple[int, tuple[str, ...]]]]:
     """Busca A* no modelo 60Hz retornando até `diverse_count` planos macro viáveis."""
     goal_rects = [goal_rect] if isinstance(goal_rect, Rect) else list(goal_rect)
@@ -817,6 +869,9 @@ def plan_to_goal_60hz(
     ]
     visited: dict[tuple[int, int, int, bool, int, int], int] = {}
     solutions: list[list[tuple[int, tuple[str, ...]]]] = []
+    backup_solutions: list[list[tuple[int, tuple[str, ...]]]] = []
+    seen_prefixes: set[tuple[tuple[int, tuple[str, ...]], ...]] = set()
+    hits_found = 0
     best_fallback: tuple[float, list[tuple[int, tuple[str, ...]]]] = (h0, [])
 
     expansions = 0
@@ -846,7 +901,9 @@ def plan_to_goal_60hz(
             continue
         visited[state_key] = elapsed_fr
 
-        for macro in _candidate_macros(room, cur, nc[0] - cur.x, nc[1] - cur.y, forbid_dash=forbid_dash):
+        for macro in _candidate_macros(
+            room, cur, nc[0] - cur.x, nc[1] - cur.y, forbid_dash=forbid_dash, allow_super=allow_super
+        ):
             nxt, used_ops, npj, npd, hit = _roll_macro(room, cur, macro, pj, pd, goal_rects)
             if nxt.dead or not used_ops:
                 continue
@@ -855,8 +912,18 @@ def plan_to_goal_60hz(
             merged_ops = _merge_ops(ops, used_ops)
 
             if hit:
-                solutions.append(merged_ops)
-                if len(solutions) >= diverse_count:
+                hits_found += 1
+                pkey = tuple(merged_ops[: min(4, len(merged_ops))])
+                if pkey not in seen_prefixes or not solutions:
+                    seen_prefixes.add(pkey)
+                    solutions.append(merged_ops)
+                elif len(backup_solutions) < diverse_count:
+                    backup_solutions.append(merged_ops)
+                if len(solutions) >= diverse_count or hits_found >= max(diverse_count * 3, 8):
+                    for bp in backup_solutions:
+                        if len(solutions) >= diverse_count:
+                            break
+                        solutions.append(bp)
                     return solutions
                 continue
 
@@ -867,6 +934,10 @@ def plan_to_goal_60hz(
                 heapq.heappush(heap, (new_fr * 0.45 + nh, new_fr, counter, nxt, npj, npd, merged_ops))
 
     if solutions:
+        for bp in backup_solutions:
+            if len(solutions) >= diverse_count:
+                break
+            solutions.append(bp)
         return solutions
     return [best_fallback[1]] if best_fallback[1] else []
 

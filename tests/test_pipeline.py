@@ -362,4 +362,60 @@ def test_stratgraph_chapter1_walk_and_live_tas_artifact() -> None:
     assert report["out_path"] == "tas/celeste/1_forsaken_city_live.tas"
 
 
+def test_gephi_gexf_export(tmp_path: Path) -> None:
+    """Valida a exportacao de grafos no formato padrao Gephi (.gexf) com suporte visual."""
+    import xml.etree.ElementTree as ET
+    from scripts.export_gephi import export_dataset_gephi_bundle
+
+    toy_dir = Path("datasets/sample_toy")
+    out_dir = tmp_path / "gephi_toy"
+    exported_files = export_dataset_gephi_bundle(toy_dir, output_dir=out_dir)
+
+    assert len(exported_files) == 3
+    base_file, route_file, layered_file = exported_files
+    assert base_file.is_file()
+    assert route_file.is_file()
+    assert layered_file.is_file()
+
+    # Valida integridade XML do arquivo com rota otima
+    tree = ET.parse(route_file)
+    root = tree.getroot()
+    assert "gexf" in root.tag.lower()
+
+    # Namespace maps
+    ns = {
+        "g": "http://www.gexf.net/1.2draft",
+        "viz": "http://www.gexf.net/1.2draft/viz",
+    }
+
+    graph = root.find("g:graph", ns)
+    assert graph is not None
+
+    nodes = graph.findall("g:nodes/g:node", ns)
+    assert len(nodes) >= 6
+
+    # Verifica se ha cores e posicoes visuais (viz:color e viz:position)
+    first_node = nodes[0]
+    color = first_node.find("viz:color", ns)
+    assert color is not None
+    assert "r" in color.attrib and "g" in color.attrib and "b" in color.attrib
+
+    pos = first_node.find("viz:position", ns)
+    assert pos is not None
+    assert "x" in pos.attrib and "y" in pos.attrib
+
+    # Verifica se as arestas existem e se a rota otima foi marcada
+    edges = graph.findall("g:edges/g:edge", ns)
+    assert len(edges) >= 5
+
+    # Valida o grafo em camadas (Layered Graph)
+    tree_layered = ET.parse(layered_file)
+    root_layered = tree_layered.getroot()
+    graph_layered = root_layered.find("g:graph", ns)
+    assert graph_layered is not None
+    nodes_l = graph_layered.findall("g:nodes/g:node", ns)
+    assert len(nodes_l) > len(nodes)  # Camada 0 + Camada 1 expandida
+
+
+
 

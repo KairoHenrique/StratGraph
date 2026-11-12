@@ -1,0 +1,2020 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:viz="http://www.gexf.net/1.2draft/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2026-11-12">
+    <creator>StratGraph (AEDS Games B10)</creator>
+    <description>Grafo Base: 3_celestial_resort</description>
+  </meta>
+  <graph defaultedgetype="directed" mode="static">
+    <attributes class="node">
+      <attribute id="0" title="tipo_sala" type="string"/>
+      <attribute id="1" title="valor_coletavel" type="float"/>
+      <attribute id="2" title="tem_arma" type="boolean"/>
+      <attribute id="3" title="na_rota_otima" type="boolean"/>
+    </attributes>
+    <attributes class="edge">
+      <attribute id="e0" title="tempo_base" type="float"/>
+      <attribute id="e1" title="dif_sem_arma" type="float"/>
+      <attribute id="e2" title="dif_com_arma" type="float"/>
+      <attribute id="e3" title="na_rota_otima" type="boolean"/>
+    </attributes>
+    <nodes>
+      <node id="lvl_00-a" label="lvl_00-a [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="177.60" y="12.80" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_00-b" label="lvl_00-b [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="177.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_00-c" label="lvl_00-c [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="177.60" y="49.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_00-d" label="lvl_00-d [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="177.60" y="68.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_01-b" label="lvl_01-b [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="209.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_01-c" label="lvl_01-c [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="209.60" y="49.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="12.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_02-a" label="lvl_02-a [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="241.60" y="12.80" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_02-b" label="lvl_02-b [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="241.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_02-c" label="lvl_02-c [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="241.60" y="49.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_02-d" label="lvl_02-d [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="209.60" y="68.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_03-a" label="lvl_03-a [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="273.60" y="12.80" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_03-b" label="lvl_03-b [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="273.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="10.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_04-b" label="lvl_04-b [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="305.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_04-c" label="lvl_04-c [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="305.60" y="49.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_04-d" label="lvl_04-d [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="305.60" y="68.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_05-a" label="lvl_05-a [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="337.60" y="12.80" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_05-c" label="lvl_05-c [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="337.60" y="49.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_06-a" label="lvl_06-a [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="369.60" y="12.80" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_06-b" label="lvl_06-b [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="369.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_06-c" label="lvl_06-c [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="369.60" y="49.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_06-d" label="lvl_06-d [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="369.60" y="68.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_07-a" label="lvl_07-a [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="401.60" y="12.80" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_07-b" label="lvl_07-b [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="401.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_08-a" label="lvl_08-a [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="433.60" y="12.80" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_08-b" label="lvl_08-b [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="433.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_08-c" label="lvl_08-c [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="433.60" y="49.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_08-d" label="lvl_08-d [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="433.60" y="68.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_08-x" label="lvl_08-x [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="433.60" y="-5.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_09-b" label="lvl_09-b [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="465.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_09-d" label="lvl_09-d [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="465.60" y="68.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_0x-a" label="lvl_0x-a [ARMA]">
+        <viz:color r="241" g="196" b="15" a="1.0"/>
+        <viz:position x="145.60" y="12.80" z="0.0"/>
+        <viz:size value="22.0"/>
+        <attvalues>
+          <attvalue for="0" value="ARMA"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="true"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_0x-b" label="lvl_0x-b [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="145.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_10-c" label="lvl_10-c [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="497.60" y="49.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_10-d" label="lvl_10-d [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="497.60" y="68.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_10-x" label="lvl_10-x [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="497.60" y="-5.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_10-y" label="lvl_10-y [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="497.60" y="-24.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_10-z" label="lvl_10-z [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="497.60" y="-42.40" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_11-a" label="lvl_11-a [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="529.60" y="12.80" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_11-b" label="lvl_11-b [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="529.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_11-c" label="lvl_11-c [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="529.60" y="49.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="15.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_11-d" label="lvl_11-d [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="529.60" y="68.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_11-x" label="lvl_11-x [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="529.60" y="-5.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_11-y" label="lvl_11-y [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="529.60" y="-24.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_11-z" label="lvl_11-z [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="529.60" y="-42.40" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_12-b" label="lvl_12-b [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="561.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_12-c" label="lvl_12-c [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="561.60" y="49.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_12-d" label="lvl_12-d [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="561.60" y="68.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_12-x" label="lvl_12-x [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="561.60" y="-5.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_12-y" label="lvl_12-y [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="561.60" y="-24.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_13-a" label="lvl_13-a [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="593.60" y="12.80" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_13-b" label="lvl_13-b [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="593.60" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_13-x" label="lvl_13-x [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="593.60" y="-5.60" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_roof00" label="lvl_roof00 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="177.60" y="86.40" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_roof01" label="lvl_roof01 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="258.40" y="86.40" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_roof02" label="lvl_roof02 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="300.00" y="86.40" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_roof03" label="lvl_roof03 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="346.40" y="86.40" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_roof04" label="lvl_roof04 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="444.00" y="86.40" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_roof05" label="lvl_roof05 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="477.60" y="86.40" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_roof06" label="lvl_roof06 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="620.00" y="86.40" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="10.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_roof06b" label="lvl_roof06b [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="559.20" y="86.40" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_roof07" label="lvl_roof07 [FIM]">
+        <viz:color r="231" g="76" b="60" a="1.0"/>
+        <viz:position x="823.20" y="86.40" z="0.0"/>
+        <viz:size value="22.0"/>
+        <attvalues>
+          <attvalue for="0" value="FIM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_s0" label="lvl_s0 [INICIO]">
+        <viz:color r="46" g="204" b="113" a="1.0"/>
+        <viz:position x="-12.00" y="-0.00" z="0.0"/>
+        <viz:size value="22.0"/>
+        <attvalues>
+          <attvalue for="0" value="INICIO"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_s1" label="lvl_s1 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="20.00" y="20.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_s2" label="lvl_s2 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="60.00" y="20.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="10.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="lvl_s3" label="lvl_s3 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="110.40" y="31.20" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="0" source="lvl_00-a" target="lvl_02-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.13"/>
+          <attvalue for="e1" value="2.29"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="1" source="lvl_00-b" target="lvl_0x-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.18"/>
+          <attvalue for="e1" value="10.36"/>
+          <attvalue for="e2" value="2.07"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="2" source="lvl_00-b" target="lvl_00-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.67"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="3" source="lvl_00-b" target="lvl_01-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.79"/>
+          <attvalue for="e1" value="4.02"/>
+          <attvalue for="e2" value="0.80"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="4" source="lvl_00-c" target="lvl_00-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.67"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="5" source="lvl_00-c" target="lvl_01-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.48"/>
+          <attvalue for="e1" value="32.01"/>
+          <attvalue for="e2" value="6.40"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="6" source="lvl_00-d" target="lvl_02-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.87"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="7" source="lvl_00-d" target="lvl_roof00" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="8" source="lvl_01-b" target="lvl_00-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.79"/>
+          <attvalue for="e1" value="4.02"/>
+          <attvalue for="e2" value="0.80"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="9" source="lvl_01-b" target="lvl_02-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.45"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="10" source="lvl_01-c" target="lvl_00-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.48"/>
+          <attvalue for="e1" value="32.01"/>
+          <attvalue for="e2" value="6.40"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="11" source="lvl_01-c" target="lvl_02-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.61"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="12" source="lvl_02-a" target="lvl_02-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.46"/>
+          <attvalue for="e1" value="3.82"/>
+          <attvalue for="e2" value="0.76"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="13" source="lvl_02-a" target="lvl_00-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.13"/>
+          <attvalue for="e1" value="2.29"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="14" source="lvl_02-b" target="lvl_01-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.45"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="15" source="lvl_02-b" target="lvl_02-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.46"/>
+          <attvalue for="e1" value="3.82"/>
+          <attvalue for="e2" value="0.76"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="16" source="lvl_02-c" target="lvl_01-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.61"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="17" source="lvl_02-c" target="lvl_04-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="14.04"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="18" source="lvl_02-c" target="lvl_03-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="13.09"/>
+          <attvalue for="e1" value="21.99"/>
+          <attvalue for="e2" value="4.40"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="19" source="lvl_02-d" target="lvl_04-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.60"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="20" source="lvl_02-d" target="lvl_00-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.87"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="21" source="lvl_03-a" target="lvl_04-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="7.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="22" source="lvl_03-a" target="lvl_05-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.73"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="23" source="lvl_03-b" target="lvl_02-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="13.09"/>
+          <attvalue for="e1" value="21.99"/>
+          <attvalue for="e2" value="4.40"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="24" source="lvl_03-b" target="lvl_04-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.91"/>
+          <attvalue for="e1" value="9.07"/>
+          <attvalue for="e2" value="1.81"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="25" source="lvl_04-b" target="lvl_03-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.91"/>
+          <attvalue for="e1" value="9.07"/>
+          <attvalue for="e2" value="1.81"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="26" source="lvl_04-b" target="lvl_03-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="7.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="27" source="lvl_04-c" target="lvl_02-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="14.04"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="28" source="lvl_04-c" target="lvl_04-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="14.34"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="29" source="lvl_04-d" target="lvl_04-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="14.34"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="30" source="lvl_04-d" target="lvl_02-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.60"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="31" source="lvl_04-d" target="lvl_06-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="10.08"/>
+          <attvalue for="e1" value="7.42"/>
+          <attvalue for="e2" value="1.48"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="32" source="lvl_05-a" target="lvl_03-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.73"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="33" source="lvl_05-a" target="lvl_06-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="7.27"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="34" source="lvl_05-c" target="lvl_06-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="15.60"/>
+          <attvalue for="e1" value="6.24"/>
+          <attvalue for="e2" value="1.25"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="35" source="lvl_06-a" target="lvl_05-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="7.27"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="36" source="lvl_06-a" target="lvl_07-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="37" source="lvl_06-b" target="lvl_07-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.23"/>
+          <attvalue for="e1" value="2.87"/>
+          <attvalue for="e2" value="0.57"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="38" source="lvl_06-c" target="lvl_07-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="9.78"/>
+          <attvalue for="e1" value="3.65"/>
+          <attvalue for="e2" value="0.73"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="39" source="lvl_06-c" target="lvl_05-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="15.60"/>
+          <attvalue for="e1" value="6.24"/>
+          <attvalue for="e2" value="1.25"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="40" source="lvl_06-c" target="lvl_08-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="41" source="lvl_06-d" target="lvl_04-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="10.08"/>
+          <attvalue for="e1" value="7.42"/>
+          <attvalue for="e2" value="1.48"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="42" source="lvl_06-d" target="lvl_08-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.02"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="43" source="lvl_07-a" target="lvl_06-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="44" source="lvl_07-a" target="lvl_07-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.54"/>
+          <attvalue for="e1" value="17.00"/>
+          <attvalue for="e2" value="3.40"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="45" source="lvl_07-b" target="lvl_07-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.54"/>
+          <attvalue for="e1" value="17.00"/>
+          <attvalue for="e2" value="3.40"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="46" source="lvl_07-b" target="lvl_06-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.23"/>
+          <attvalue for="e1" value="2.87"/>
+          <attvalue for="e2" value="0.57"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="47" source="lvl_07-b" target="lvl_06-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="9.78"/>
+          <attvalue for="e1" value="3.65"/>
+          <attvalue for="e2" value="0.73"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="48" source="lvl_07-b" target="lvl_08-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.01"/>
+          <attvalue for="e1" value="7.46"/>
+          <attvalue for="e2" value="1.49"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="49" source="lvl_08-a" target="lvl_09-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="50" source="lvl_08-b" target="lvl_07-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.01"/>
+          <attvalue for="e1" value="7.46"/>
+          <attvalue for="e2" value="1.49"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="51" source="lvl_08-c" target="lvl_06-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="52" source="lvl_08-d" target="lvl_06-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.02"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="53" source="lvl_08-d" target="lvl_09-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.38"/>
+          <attvalue for="e1" value="5.74"/>
+          <attvalue for="e2" value="1.15"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="54" source="lvl_08-x" target="lvl_09-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.22"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="55" source="lvl_09-b" target="lvl_09-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.96"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="56" source="lvl_09-b" target="lvl_08-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="57" source="lvl_09-b" target="lvl_08-x" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.22"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="58" source="lvl_09-b" target="lvl_10-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.71"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="59" source="lvl_09-b" target="lvl_10-x" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.40"/>
+          <attvalue for="e1" value="8.50"/>
+          <attvalue for="e2" value="1.70"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="60" source="lvl_09-b" target="lvl_11-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.78"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="61" source="lvl_09-b" target="lvl_11-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.69"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="62" source="lvl_09-d" target="lvl_08-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.38"/>
+          <attvalue for="e1" value="5.74"/>
+          <attvalue for="e2" value="1.15"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="63" source="lvl_09-d" target="lvl_09-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.96"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="64" source="lvl_0x-a" target="lvl_s3" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="65" source="lvl_0x-a" target="lvl_0x-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="66" source="lvl_0x-b" target="lvl_s3" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.67"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="67" source="lvl_0x-b" target="lvl_00-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.18"/>
+          <attvalue for="e1" value="10.36"/>
+          <attvalue for="e2" value="2.07"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="68" source="lvl_10-c" target="lvl_09-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.71"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="69" source="lvl_10-c" target="lvl_10-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.95"/>
+          <attvalue for="e1" value="2.50"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="70" source="lvl_10-c" target="lvl_11-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.99"/>
+          <attvalue for="e1" value="18.34"/>
+          <attvalue for="e2" value="3.67"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="71" source="lvl_10-d" target="lvl_10-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.95"/>
+          <attvalue for="e1" value="2.50"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="72" source="lvl_10-d" target="lvl_11-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="7.38"/>
+          <attvalue for="e1" value="11.05"/>
+          <attvalue for="e2" value="2.21"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="73" source="lvl_10-x" target="lvl_09-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.40"/>
+          <attvalue for="e1" value="8.50"/>
+          <attvalue for="e2" value="1.70"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="74" source="lvl_10-x" target="lvl_10-y" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="10.36"/>
+          <attvalue for="e1" value="11.25"/>
+          <attvalue for="e2" value="2.25"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="75" source="lvl_10-x" target="lvl_11-x" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.50"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="76" source="lvl_10-y" target="lvl_10-x" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="10.36"/>
+          <attvalue for="e1" value="11.25"/>
+          <attvalue for="e2" value="2.25"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="77" source="lvl_10-y" target="lvl_10-z" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.48"/>
+          <attvalue for="e1" value="6.89"/>
+          <attvalue for="e2" value="1.38"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="78" source="lvl_10-z" target="lvl_10-y" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.48"/>
+          <attvalue for="e1" value="6.89"/>
+          <attvalue for="e2" value="1.38"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="79" source="lvl_10-z" target="lvl_11-z" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.43"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="80" source="lvl_11-a" target="lvl_09-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.78"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="81" source="lvl_11-a" target="lvl_12-x" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.15"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="82" source="lvl_11-a" target="lvl_13-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.14"/>
+          <attvalue for="e1" value="6.90"/>
+          <attvalue for="e2" value="1.38"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="83" source="lvl_11-b" target="lvl_09-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.69"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="84" source="lvl_11-b" target="lvl_12-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="85" source="lvl_11-c" target="lvl_10-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.99"/>
+          <attvalue for="e1" value="18.34"/>
+          <attvalue for="e2" value="3.67"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="86" source="lvl_11-c" target="lvl_12-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.36"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="87" source="lvl_11-d" target="lvl_10-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="7.38"/>
+          <attvalue for="e1" value="11.05"/>
+          <attvalue for="e2" value="2.21"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="88" source="lvl_11-d" target="lvl_12-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.19"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="89" source="lvl_11-x" target="lvl_10-x" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.50"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="90" source="lvl_11-x" target="lvl_11-y" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.35"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="91" source="lvl_11-y" target="lvl_11-x" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.35"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="92" source="lvl_11-y" target="lvl_12-y" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="10.90"/>
+          <attvalue for="e1" value="36.85"/>
+          <attvalue for="e2" value="7.37"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="93" source="lvl_11-z" target="lvl_10-z" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.43"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="94" source="lvl_12-b" target="lvl_11-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="95" source="lvl_12-c" target="lvl_11-c" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.36"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="96" source="lvl_12-d" target="lvl_11-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.19"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="97" source="lvl_12-x" target="lvl_11-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.15"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="98" source="lvl_12-x" target="lvl_13-x" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.20"/>
+          <attvalue for="e1" value="2.29"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="99" source="lvl_12-y" target="lvl_11-y" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="10.90"/>
+          <attvalue for="e1" value="36.85"/>
+          <attvalue for="e2" value="7.37"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="100" source="lvl_13-a" target="lvl_11-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.14"/>
+          <attvalue for="e1" value="6.90"/>
+          <attvalue for="e2" value="1.38"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="101" source="lvl_13-a" target="lvl_13-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="7.98"/>
+          <attvalue for="e1" value="8.03"/>
+          <attvalue for="e2" value="1.61"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="102" source="lvl_13-b" target="lvl_13-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="7.98"/>
+          <attvalue for="e1" value="8.03"/>
+          <attvalue for="e2" value="1.61"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="103" source="lvl_13-x" target="lvl_12-x" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.20"/>
+          <attvalue for="e1" value="2.29"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="104" source="lvl_roof00" target="lvl_00-d" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="105" source="lvl_roof00" target="lvl_roof01" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.85"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="106" source="lvl_roof01" target="lvl_roof00" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.85"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="107" source="lvl_roof01" target="lvl_roof02" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.83"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="108" source="lvl_roof02" target="lvl_roof01" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.83"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="109" source="lvl_roof02" target="lvl_roof03" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="17.82"/>
+          <attvalue for="e1" value="27.64"/>
+          <attvalue for="e2" value="5.53"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="110" source="lvl_roof03" target="lvl_roof02" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="17.82"/>
+          <attvalue for="e1" value="27.64"/>
+          <attvalue for="e2" value="5.53"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="111" source="lvl_roof03" target="lvl_roof04" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.75"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="112" source="lvl_roof04" target="lvl_roof03" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.75"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="113" source="lvl_roof04" target="lvl_roof05" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="114" source="lvl_roof05" target="lvl_roof04" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="115" source="lvl_roof05" target="lvl_roof06b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.28"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="116" source="lvl_roof06" target="lvl_roof06b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="34.62"/>
+          <attvalue for="e1" value="26.51"/>
+          <attvalue for="e2" value="5.30"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="117" source="lvl_roof06" target="lvl_roof07" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="10.44"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="118" source="lvl_roof06b" target="lvl_roof05" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.28"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="3.60"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="119" source="lvl_roof06b" target="lvl_roof06" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="34.62"/>
+          <attvalue for="e1" value="26.51"/>
+          <attvalue for="e2" value="5.30"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="120" source="lvl_s0" target="lvl_s1" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.85"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="121" source="lvl_s1" target="lvl_s0" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.85"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="122" source="lvl_s1" target="lvl_s2" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="14.87"/>
+          <attvalue for="e1" value="4.13"/>
+          <attvalue for="e2" value="0.83"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="123" source="lvl_s2" target="lvl_s1" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="14.87"/>
+          <attvalue for="e1" value="4.13"/>
+          <attvalue for="e2" value="0.83"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="124" source="lvl_s2" target="lvl_s3" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="15.03"/>
+          <attvalue for="e1" value="3.44"/>
+          <attvalue for="e2" value="0.69"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="125" source="lvl_s3" target="lvl_s2" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="15.03"/>
+          <attvalue for="e1" value="3.44"/>
+          <attvalue for="e2" value="0.69"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="126" source="lvl_s3" target="lvl_0x-b" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.67"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="127" source="lvl_s3" target="lvl_0x-a" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.80"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="0.50"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+    </edges>
+  </graph>
+</gexf>

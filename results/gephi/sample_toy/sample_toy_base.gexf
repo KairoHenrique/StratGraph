@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:viz="http://www.gexf.net/1.2draft/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2026-11-12">
+    <creator>StratGraph (AEDS Games B10)</creator>
+    <description>Grafo Base: sample_toy</description>
+  </meta>
+  <graph defaultedgetype="directed" mode="static">
+    <attributes class="node">
+      <attribute id="0" title="tipo_sala" type="string"/>
+      <attribute id="1" title="valor_coletavel" type="float"/>
+      <attribute id="2" title="tem_arma" type="boolean"/>
+      <attribute id="3" title="na_rota_otima" type="boolean"/>
+    </attributes>
+    <attributes class="edge">
+      <attribute id="e0" title="tempo_base" type="float"/>
+      <attribute id="e1" title="dif_sem_arma" type="float"/>
+      <attribute id="e2" title="dif_com_arma" type="float"/>
+      <attribute id="e3" title="na_rota_otima" type="boolean"/>
+    </attributes>
+    <nodes>
+      <node id="S0" label="S0 [INICIO]">
+        <viz:color r="46" g="204" b="113" a="1.0"/>
+        <viz:position x="300.00" y="0.00" z="0.0"/>
+        <viz:size value="22.0"/>
+        <attvalues>
+          <attvalue for="0" value="INICIO"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="S1" label="S1 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="150.00" y="259.81" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="S2" label="S2 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="-150.00" y="259.81" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="S3" label="S3 [ARMA]">
+        <viz:color r="241" g="196" b="15" a="1.0"/>
+        <viz:position x="-300.00" y="0.00" z="0.0"/>
+        <viz:size value="22.0"/>
+        <attvalues>
+          <attvalue for="0" value="ARMA"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="true"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="S4" label="S4 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-150.00" y="-259.81" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="S5" label="S5 [FIM]">
+        <viz:color r="231" g="76" b="60" a="1.0"/>
+        <viz:position x="150.00" y="-259.81" z="0.0"/>
+        <viz:size value="22.0"/>
+        <attvalues>
+          <attvalue for="0" value="FIM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="0" source="S0" target="S1" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.00"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="2.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="1" source="S1" target="S0" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.00"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="2.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="2" source="S1" target="S2" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.00"/>
+          <attvalue for="e1" value="1.00"/>
+          <attvalue for="e2" value="1.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="3" source="S1" target="S4" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.00"/>
+          <attvalue for="e1" value="25.00"/>
+          <attvalue for="e2" value="3.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="4" source="S1" target="S3" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.00"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="2.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="5" source="S2" target="S1" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.00"/>
+          <attvalue for="e1" value="1.00"/>
+          <attvalue for="e2" value="1.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="6" source="S3" target="S1" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.00"/>
+          <attvalue for="e1" value="2.00"/>
+          <attvalue for="e2" value="2.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="7" source="S3" target="S4" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.00"/>
+          <attvalue for="e1" value="15.00"/>
+          <attvalue for="e2" value="2.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="8" source="S4" target="S3" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.00"/>
+          <attvalue for="e1" value="15.00"/>
+          <attvalue for="e2" value="2.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="9" source="S4" target="S5" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.00"/>
+          <attvalue for="e1" value="18.00"/>
+          <attvalue for="e2" value="2.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+    </edges>
+  </graph>
+</gexf>

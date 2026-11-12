@@ -1,0 +1,974 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:viz="http://www.gexf.net/1.2draft/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2026-11-12">
+    <creator>StratGraph (AEDS Games B10)</creator>
+    <description>Grafo em Camadas L0/L1 (alpha=0.05): 3_1f_perilous_piers</description>
+  </meta>
+  <graph defaultedgetype="directed" mode="static">
+    <attributes class="node">
+      <attribute id="0" title="room_id" type="string"/>
+      <attribute id="1" title="camada" type="integer"/>
+      <attribute id="2" title="na_rota_otima" type="boolean"/>
+    </attributes>
+    <attributes class="edge">
+      <attribute id="e0" title="peso_efetivo" type="float"/>
+      <attribute id="e1" title="custo_real" type="float"/>
+      <attribute id="e2" title="transicao_de_arma" type="boolean"/>
+      <attribute id="e3" title="na_rota_otima" type="boolean"/>
+    </attributes>
+    <nodes>
+      <node id="(parry_shrine_arma, L0)" label="(parry_shrine_arma, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="parry_shrine_arma"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_00, L0)" label="(sec_00, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_00"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_01, L0)" label="(sec_01, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_01"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_02, L0)" label="(sec_02, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_02"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_03, L0)" label="(sec_03, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_03"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_04, L0)" label="(sec_04, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_04"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_05, L0)" label="(sec_05, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_05"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_06, L0)" label="(sec_06, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_06"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_07, L0)" label="(sec_07, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_07"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_08, L0)" label="(sec_08, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_08"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_09, L0)" label="(sec_09, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_09"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_10, L0)" label="(sec_10, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_10"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_11, L0)" label="(sec_11, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_11"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_12, L0)" label="(sec_12, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_12"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_13, L0)" label="(sec_13, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_13"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_14, L0)" label="(sec_14, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_14"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_15, L0)" label="(sec_15, L0)">
+        <viz:color r="41" g="128" b="185" a="1.0"/>
+        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_15"/>
+          <attvalue for="1" value="0"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(parry_shrine_arma, L1)" label="(parry_shrine_arma, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="parry_shrine_arma"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_00, L1)" label="(sec_00, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="20.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_00"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_01, L1)" label="(sec_01, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="20.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_01"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_02, L1)" label="(sec_02, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="20.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_02"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="false"/>
+        </attvalues>
+      </node>
+      <node id="(sec_03, L1)" label="(sec_03, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_03"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_04, L1)" label="(sec_04, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_04"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_05, L1)" label="(sec_05, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_05"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_06, L1)" label="(sec_06, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_06"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_07, L1)" label="(sec_07, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_07"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_08, L1)" label="(sec_08, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_08"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_09, L1)" label="(sec_09, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_09"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_10, L1)" label="(sec_10, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_10"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_11, L1)" label="(sec_11, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_11"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_12, L1)" label="(sec_12, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_12"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_13, L1)" label="(sec_13, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_13"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_14, L1)" label="(sec_14, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_14"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+      <node id="(sec_15, L1)" label="(sec_15, L1)">
+        <viz:color r="243" g="156" b="18" a="1.0"/>
+        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:size value="26.0"/>
+        <attvalues>
+          <attvalue for="0" value="sec_15"/>
+          <attvalue for="1" value="1"/>
+          <attvalue for="2" value="true"/>
+        </attvalues>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="0" source="(parry_shrine_arma, L0)" target="(sec_02, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="21.96"/>
+          <attvalue for="e1" value="38.43"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="1" source="(parry_shrine_arma, L0)" target="(sec_03, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="57.49"/>
+          <attvalue for="e1" value="57.49"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="2" source="(parry_shrine_arma, L0)" target="(parry_shrine_arma, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="0.00"/>
+          <attvalue for="e1" value="0.00"/>
+          <attvalue for="e2" value="true"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="3" source="(parry_shrine_arma, L1)" target="(sec_02, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="7.75"/>
+          <attvalue for="e1" value="13.56"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="4" source="(parry_shrine_arma, L1)" target="(sec_03, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="17.06"/>
+          <attvalue for="e1" value="17.06"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="5" source="(sec_00, L0)" target="(sec_01, L0)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="23.61"/>
+          <attvalue for="e1" value="23.61"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="6" source="(sec_00, L1)" target="(sec_01, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.77"/>
+          <attvalue for="e1" value="8.77"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="7" source="(sec_01, L0)" target="(sec_00, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="23.61"/>
+          <attvalue for="e1" value="23.61"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="8" source="(sec_01, L0)" target="(sec_02, L0)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="23.17"/>
+          <attvalue for="e1" value="40.55"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="9" source="(sec_01, L1)" target="(sec_00, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.77"/>
+          <attvalue for="e1" value="8.77"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="10" source="(sec_01, L1)" target="(sec_02, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="9.39"/>
+          <attvalue for="e1" value="16.44"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="11" source="(sec_02, L0)" target="(sec_01, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="15.21"/>
+          <attvalue for="e1" value="15.21"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="12" source="(sec_02, L0)" target="(sec_03, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="44.38"/>
+          <attvalue for="e1" value="44.38"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="13" source="(sec_02, L0)" target="(parry_shrine_arma, L0)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="13.09"/>
+          <attvalue for="e1" value="13.09"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="14" source="(sec_02, L1)" target="(sec_01, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="7.32"/>
+          <attvalue for="e1" value="7.32"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="15" source="(sec_02, L1)" target="(sec_03, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="13.51"/>
+          <attvalue for="e1" value="13.51"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="16" source="(sec_02, L1)" target="(parry_shrine_arma, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.44"/>
+          <attvalue for="e1" value="4.44"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="17" source="(sec_03, L0)" target="(sec_02, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="39.84"/>
+          <attvalue for="e1" value="69.72"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="18" source="(sec_03, L0)" target="(sec_04, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="67.03"/>
+          <attvalue for="e1" value="67.03"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="19" source="(sec_03, L1)" target="(sec_02, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="12.93"/>
+          <attvalue for="e1" value="22.63"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="20" source="(sec_03, L1)" target="(sec_04, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="18.32"/>
+          <attvalue for="e1" value="18.32"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="21" source="(sec_04, L0)" target="(sec_03, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="67.03"/>
+          <attvalue for="e1" value="67.03"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="22" source="(sec_04, L0)" target="(sec_05, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="83.95"/>
+          <attvalue for="e1" value="146.91"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="23" source="(sec_04, L1)" target="(sec_03, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="18.32"/>
+          <attvalue for="e1" value="18.32"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="24" source="(sec_04, L1)" target="(sec_05, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="23.59"/>
+          <attvalue for="e1" value="41.28"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="25" source="(sec_05, L0)" target="(sec_06, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="94.77"/>
+          <attvalue for="e1" value="94.77"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="26" source="(sec_05, L1)" target="(sec_06, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="24.62"/>
+          <attvalue for="e1" value="24.62"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="27" source="(sec_06, L0)" target="(sec_05, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="94.68"/>
+          <attvalue for="e1" value="165.69"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="28" source="(sec_06, L0)" target="(sec_07, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="90.93"/>
+          <attvalue for="e1" value="159.13"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="29" source="(sec_06, L1)" target="(sec_05, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="26.01"/>
+          <attvalue for="e1" value="45.52"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="30" source="(sec_06, L1)" target="(sec_07, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="24.31"/>
+          <attvalue for="e1" value="42.54"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="31" source="(sec_07, L0)" target="(sec_06, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="130.71"/>
+          <attvalue for="e1" value="130.71"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="32" source="(sec_07, L0)" target="(sec_08, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="45.48"/>
+          <attvalue for="e1" value="45.48"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="33" source="(sec_07, L1)" target="(sec_06, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="33.04"/>
+          <attvalue for="e1" value="33.04"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="34" source="(sec_07, L1)" target="(sec_08, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="14.22"/>
+          <attvalue for="e1" value="14.22"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="35" source="(sec_08, L0)" target="(sec_07, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="42.23"/>
+          <attvalue for="e1" value="73.90"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="36" source="(sec_08, L0)" target="(sec_09, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="26.90"/>
+          <attvalue for="e1" value="26.90"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="37" source="(sec_08, L1)" target="(sec_07, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="13.55"/>
+          <attvalue for="e1" value="23.72"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="38" source="(sec_08, L1)" target="(sec_09, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="9.74"/>
+          <attvalue for="e1" value="9.74"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="39" source="(sec_09, L0)" target="(sec_08, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="26.90"/>
+          <attvalue for="e1" value="26.90"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="40" source="(sec_09, L0)" target="(sec_10, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="27.13"/>
+          <attvalue for="e1" value="27.13"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="41" source="(sec_09, L1)" target="(sec_08, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="9.74"/>
+          <attvalue for="e1" value="9.74"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="42" source="(sec_09, L1)" target="(sec_10, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="9.97"/>
+          <attvalue for="e1" value="9.97"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="43" source="(sec_10, L0)" target="(sec_11, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="71.41"/>
+          <attvalue for="e1" value="124.96"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="44" source="(sec_10, L1)" target="(sec_11, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="21.54"/>
+          <attvalue for="e1" value="37.69"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="45" source="(sec_11, L0)" target="(sec_10, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="71.06"/>
+          <attvalue for="e1" value="71.06"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="46" source="(sec_11, L0)" target="(sec_12, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="104.59"/>
+          <attvalue for="e1" value="104.59"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="47" source="(sec_11, L1)" target="(sec_10, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="21.23"/>
+          <attvalue for="e1" value="21.23"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="48" source="(sec_11, L1)" target="(sec_12, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="26.46"/>
+          <attvalue for="e1" value="26.46"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="49" source="(sec_12, L0)" target="(sec_11, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="90.57"/>
+          <attvalue for="e1" value="158.49"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="50" source="(sec_12, L0)" target="(sec_13, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="136.98"/>
+          <attvalue for="e1" value="136.98"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="51" source="(sec_12, L1)" target="(sec_11, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="24.53"/>
+          <attvalue for="e1" value="42.92"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="52" source="(sec_12, L1)" target="(sec_13, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="33.60"/>
+          <attvalue for="e1" value="33.60"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="53" source="(sec_13, L0)" target="(sec_12, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="136.98"/>
+          <attvalue for="e1" value="136.98"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="54" source="(sec_13, L0)" target="(sec_14, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="101.50"/>
+          <attvalue for="e1" value="177.62"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="55" source="(sec_13, L1)" target="(sec_12, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="33.60"/>
+          <attvalue for="e1" value="33.60"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="56" source="(sec_13, L1)" target="(sec_14, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="28.17"/>
+          <attvalue for="e1" value="49.30"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="57" source="(sec_14, L0)" target="(sec_15, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="26.40"/>
+          <attvalue for="e1" value="26.40"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="58" source="(sec_14, L1)" target="(sec_15, L1)" weight="5.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="5.0"/>
+        <attvalues>
+          <attvalue for="e0" value="9.24"/>
+          <attvalue for="e1" value="9.24"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="59" source="(sec_15, L0)" target="(sec_14, L0)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="27.34"/>
+          <attvalue for="e1" value="47.84"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="60" source="(sec_15, L1)" target="(sec_14, L1)" weight="1.0">
+        <viz:color r="127" g="140" b="141" a="0.5"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="11.84"/>
+          <attvalue for="e1" value="20.72"/>
+          <attvalue for="e2" value="false"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+    </edges>
+  </graph>
+</gexf>

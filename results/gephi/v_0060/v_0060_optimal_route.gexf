@@ -1,0 +1,1945 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:viz="http://www.gexf.net/1.2draft/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2026-11-12">
+    <creator>StratGraph (AEDS Games B10)</creator>
+    <description>Rota Otima StratGraph (alpha=0.05): v_0060</description>
+  </meta>
+  <graph defaultedgetype="directed" mode="static">
+    <attributes class="node">
+      <attribute id="0" title="tipo_sala" type="string"/>
+      <attribute id="1" title="valor_coletavel" type="float"/>
+      <attribute id="2" title="tem_arma" type="boolean"/>
+      <attribute id="3" title="na_rota_otima" type="boolean"/>
+    </attributes>
+    <attributes class="edge">
+      <attribute id="e0" title="tempo_base" type="float"/>
+      <attribute id="e1" title="dif_sem_arma" type="float"/>
+      <attribute id="e2" title="dif_com_arma" type="float"/>
+      <attribute id="e3" title="na_rota_otima" type="boolean"/>
+    </attributes>
+    <nodes>
+      <node id="s_0000" label="s_0000 [INICIO]">
+        <viz:color r="46" g="204" b="113" a="1.0"/>
+        <viz:position x="1500.00" y="0.00" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="INICIO"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0001" label="s_0001 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="1491.78" y="156.79" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="8.90"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0002" label="s_0002 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="1467.22" y="311.87" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="9.70"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="s_0003" label="s_0003 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="1426.58" y="463.53" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0004" label="s_0004 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="1370.32" y="610.10" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0005" label="s_0005 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="1299.04" y="750.00" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0006" label="s_0006 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="1213.53" y="881.68" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0007" label="s_0007 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="1114.72" y="1003.70" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="8.20"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0008" label="s_0008 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="1003.70" y="1114.72" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="s_0009" label="s_0009 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="881.68" y="1213.53" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0010" label="s_0010 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="750.00" y="1299.04" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0011" label="s_0011 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="610.10" y="1370.32" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0012" label="s_0012 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="463.53" y="1426.58" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0013" label="s_0013 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="311.87" y="1467.22" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0014" label="s_0014 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="156.79" y="1491.78" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="10.50"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0015" label="s_0015 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="0.00" y="1500.00" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0016" label="s_0016 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-156.79" y="1491.78" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0017" label="s_0017 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-311.87" y="1467.22" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="s_0018" label="s_0018 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-463.53" y="1426.58" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0019" label="s_0019 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-610.10" y="1370.32" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0020" label="s_0020 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-750.00" y="1299.04" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="s_0021" label="s_0021 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="-881.68" y="1213.53" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="9.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0022" label="s_0022 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1003.70" y="1114.72" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0023" label="s_0023 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1114.72" y="1003.70" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="s_0024" label="s_0024 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1213.53" y="881.68" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0025" label="s_0025 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="-1299.04" y="750.00" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="6.70"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0026" label="s_0026 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1370.32" y="610.10" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="s_0027" label="s_0027 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1426.58" y="463.53" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0028" label="s_0028 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1467.22" y="311.87" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0029" label="s_0029 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1491.78" y="156.79" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="s_0030" label="s_0030 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1500.00" y="0.00" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0031" label="s_0031 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1491.78" y="-156.79" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0032" label="s_0032 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="-1467.22" y="-311.87" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.70"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="s_0033" label="s_0033 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1426.58" y="-463.53" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0034" label="s_0034 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1370.32" y="-610.10" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0035" label="s_0035 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1299.04" y="-750.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="s_0036" label="s_0036 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1213.53" y="-881.68" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0037" label="s_0037 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1114.72" y="-1003.70" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0038" label="s_0038 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-1003.70" y="-1114.72" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="s_0039" label="s_0039 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-881.68" y="-1213.53" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0040" label="s_0040 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-750.00" y="-1299.04" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0041" label="s_0041 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-610.10" y="-1370.32" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="s_0042" label="s_0042 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-463.53" y="-1426.58" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0043" label="s_0043 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-311.87" y="-1467.22" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0044" label="s_0044 [COMUM]">
+        <viz:color r="52" g="152" b="219" a="1.0"/>
+        <viz:position x="-156.79" y="-1491.78" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="COMUM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="s_0045" label="s_0045 [FIM]">
+        <viz:color r="231" g="76" b="60" a="1.0"/>
+        <viz:position x="-0.00" y="-1500.00" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="FIM"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="w_0000" label="w_0000 [ARMA]">
+        <viz:color r="241" g="196" b="15" a="1.0"/>
+        <viz:position x="156.79" y="-1491.78" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="ARMA"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="true"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="w_0001" label="w_0001 [ARMA]">
+        <viz:color r="241" g="196" b="15" a="1.0"/>
+        <viz:position x="311.87" y="-1467.22" z="0.0"/>
+        <viz:size value="28.0"/>
+        <attvalues>
+          <attvalue for="0" value="ARMA"/>
+          <attvalue for="1" value="0.00"/>
+          <attvalue for="2" value="true"/>
+          <attvalue for="3" value="true"/>
+        </attvalues>
+      </node>
+      <node id="c_0000" label="c_0000 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="463.53" y="-1426.58" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="14.80"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="c_0001" label="c_0001 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="610.10" y="-1370.32" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="5.70"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="c_0002" label="c_0002 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="750.00" y="-1299.04" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="7.60"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="c_0003" label="c_0003 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="881.68" y="-1213.53" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="7.70"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="c_0004" label="c_0004 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="1003.70" y="-1114.72" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="10.50"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="c_0005" label="c_0005 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="1114.72" y="-1003.70" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="11.60"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="c_0006" label="c_0006 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="1213.53" y="-881.68" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="7.30"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="c_0007" label="c_0007 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="1299.04" y="-750.00" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="7.70"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="c_0008" label="c_0008 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="1370.32" y="-610.10" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="7.10"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="c_0009" label="c_0009 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="1426.58" y="-463.53" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="10.40"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="c_0010" label="c_0010 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="1467.22" y="-311.87" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="14.90"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+      <node id="c_0011" label="c_0011 [COLETAVEL]">
+        <viz:color r="155" g="89" b="182" a="1.0"/>
+        <viz:position x="1491.78" y="-156.79" z="0.0"/>
+        <viz:size value="16.0"/>
+        <attvalues>
+          <attvalue for="0" value="COLETAVEL"/>
+          <attvalue for="1" value="10.30"/>
+          <attvalue for="2" value="false"/>
+          <attvalue for="3" value="false"/>
+        </attvalues>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="0" source="s_0000" target="s_0001" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.69"/>
+          <attvalue for="e1" value="7.34"/>
+          <attvalue for="e2" value="1.61"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="1" source="s_0001" target="s_0000" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.69"/>
+          <attvalue for="e1" value="7.34"/>
+          <attvalue for="e2" value="1.61"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="2" source="s_0001" target="s_0002" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.89"/>
+          <attvalue for="e1" value="4.95"/>
+          <attvalue for="e2" value="1.09"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="3" source="s_0001" target="s_0003" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="10.27"/>
+          <attvalue for="e1" value="11.88"/>
+          <attvalue for="e2" value="1.74"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="4" source="s_0002" target="s_0001" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.89"/>
+          <attvalue for="e1" value="4.95"/>
+          <attvalue for="e2" value="1.09"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="5" source="s_0002" target="s_0003" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.10"/>
+          <attvalue for="e1" value="6.00"/>
+          <attvalue for="e2" value="1.32"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="6" source="s_0002" target="c_0002" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.62"/>
+          <attvalue for="e1" value="4.32"/>
+          <attvalue for="e2" value="0.99"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="7" source="s_0003" target="s_0002" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.10"/>
+          <attvalue for="e1" value="6.00"/>
+          <attvalue for="e2" value="1.32"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="8" source="s_0003" target="s_0004" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.70"/>
+          <attvalue for="e1" value="6.12"/>
+          <attvalue for="e2" value="1.35"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="9" source="s_0004" target="s_0005" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.37"/>
+          <attvalue for="e1" value="7.87"/>
+          <attvalue for="e2" value="1.73"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="10" source="s_0004" target="s_0006" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="9.18"/>
+          <attvalue for="e1" value="18.89"/>
+          <attvalue for="e2" value="2.77"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="11" source="s_0005" target="s_0004" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.37"/>
+          <attvalue for="e1" value="7.87"/>
+          <attvalue for="e2" value="1.73"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="12" source="s_0005" target="s_0006" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.35"/>
+          <attvalue for="e1" value="4.99"/>
+          <attvalue for="e2" value="1.10"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="13" source="s_0006" target="s_0005" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.35"/>
+          <attvalue for="e1" value="4.99"/>
+          <attvalue for="e2" value="1.10"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="14" source="s_0006" target="s_0007" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.78"/>
+          <attvalue for="e1" value="7.72"/>
+          <attvalue for="e2" value="1.70"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="15" source="s_0007" target="s_0006" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.78"/>
+          <attvalue for="e1" value="7.72"/>
+          <attvalue for="e2" value="1.70"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="16" source="s_0007" target="s_0008" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.10"/>
+          <attvalue for="e1" value="3.36"/>
+          <attvalue for="e2" value="0.74"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="17" source="s_0007" target="s_0009" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.51"/>
+          <attvalue for="e1" value="8.06"/>
+          <attvalue for="e2" value="1.18"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="18" source="s_0007" target="w_0000" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.50"/>
+          <attvalue for="e1" value="3.50"/>
+          <attvalue for="e2" value="1.00"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="19" source="s_0008" target="s_0007" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.10"/>
+          <attvalue for="e1" value="3.36"/>
+          <attvalue for="e2" value="0.74"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="20" source="s_0008" target="s_0009" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.50"/>
+          <attvalue for="e1" value="7.41"/>
+          <attvalue for="e2" value="1.63"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="21" source="s_0009" target="s_0010" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.85"/>
+          <attvalue for="e1" value="21.57"/>
+          <attvalue for="e2" value="4.75"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="22" source="s_0010" target="s_0009" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.85"/>
+          <attvalue for="e1" value="21.57"/>
+          <attvalue for="e2" value="4.75"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="23" source="s_0010" target="s_0011" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.90"/>
+          <attvalue for="e1" value="31.16"/>
+          <attvalue for="e2" value="6.86"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="24" source="s_0010" target="s_0012" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="10.29"/>
+          <attvalue for="e1" value="74.78"/>
+          <attvalue for="e2" value="10.98"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="25" source="s_0011" target="s_0010" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.90"/>
+          <attvalue for="e1" value="31.16"/>
+          <attvalue for="e2" value="6.86"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="26" source="s_0011" target="s_0012" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.25"/>
+          <attvalue for="e1" value="24.27"/>
+          <attvalue for="e2" value="5.34"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="27" source="s_0012" target="s_0011" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.25"/>
+          <attvalue for="e1" value="24.27"/>
+          <attvalue for="e2" value="5.34"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="28" source="s_0012" target="s_0013" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.82"/>
+          <attvalue for="e1" value="21.09"/>
+          <attvalue for="e2" value="4.64"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="29" source="s_0013" target="s_0012" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.82"/>
+          <attvalue for="e1" value="21.09"/>
+          <attvalue for="e2" value="4.64"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="30" source="s_0013" target="s_0014" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.95"/>
+          <attvalue for="e1" value="20.00"/>
+          <attvalue for="e2" value="4.40"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="31" source="s_0013" target="s_0015" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.29"/>
+          <attvalue for="e1" value="48.00"/>
+          <attvalue for="e2" value="7.04"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="32" source="s_0013" target="c_0001" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.09"/>
+          <attvalue for="e1" value="5.02"/>
+          <attvalue for="e2" value="1.95"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="33" source="s_0014" target="s_0015" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.18"/>
+          <attvalue for="e1" value="21.22"/>
+          <attvalue for="e2" value="4.67"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="34" source="s_0014" target="w_0001" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.50"/>
+          <attvalue for="e1" value="3.50"/>
+          <attvalue for="e2" value="1.00"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="35" source="s_0015" target="s_0014" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.18"/>
+          <attvalue for="e1" value="21.22"/>
+          <attvalue for="e2" value="4.67"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="36" source="s_0015" target="s_0016" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.78"/>
+          <attvalue for="e1" value="23.45"/>
+          <attvalue for="e2" value="5.16"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="37" source="s_0016" target="s_0015" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.78"/>
+          <attvalue for="e1" value="23.45"/>
+          <attvalue for="e2" value="5.16"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="38" source="s_0016" target="s_0017" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.03"/>
+          <attvalue for="e1" value="19.66"/>
+          <attvalue for="e2" value="4.33"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="39" source="s_0016" target="s_0018" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.36"/>
+          <attvalue for="e1" value="47.18"/>
+          <attvalue for="e2" value="6.93"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="40" source="s_0017" target="s_0016" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.03"/>
+          <attvalue for="e1" value="19.66"/>
+          <attvalue for="e2" value="4.33"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="41" source="s_0017" target="s_0018" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.03"/>
+          <attvalue for="e1" value="23.85"/>
+          <attvalue for="e2" value="5.25"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="42" source="s_0017" target="c_0003" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.33"/>
+          <attvalue for="e1" value="5.51"/>
+          <attvalue for="e2" value="1.64"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="43" source="s_0017" target="c_0004" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.94"/>
+          <attvalue for="e1" value="4.78"/>
+          <attvalue for="e2" value="0.93"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="44" source="s_0018" target="s_0017" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.03"/>
+          <attvalue for="e1" value="23.85"/>
+          <attvalue for="e2" value="5.25"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="45" source="s_0018" target="s_0019" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.61"/>
+          <attvalue for="e1" value="28.20"/>
+          <attvalue for="e2" value="6.20"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="46" source="s_0019" target="s_0020" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.95"/>
+          <attvalue for="e1" value="21.41"/>
+          <attvalue for="e2" value="4.71"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="47" source="s_0019" target="s_0021" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.29"/>
+          <attvalue for="e1" value="51.38"/>
+          <attvalue for="e2" value="7.54"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="48" source="s_0020" target="s_0019" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.95"/>
+          <attvalue for="e1" value="21.41"/>
+          <attvalue for="e2" value="4.71"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="49" source="s_0020" target="s_0021" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.16"/>
+          <attvalue for="e1" value="22.16"/>
+          <attvalue for="e2" value="4.88"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="50" source="s_0020" target="c_0011" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.45"/>
+          <attvalue for="e1" value="2.22"/>
+          <attvalue for="e2" value="1.37"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="51" source="s_0021" target="s_0020" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.16"/>
+          <attvalue for="e1" value="22.16"/>
+          <attvalue for="e2" value="4.88"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="52" source="s_0021" target="s_0022" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.10"/>
+          <attvalue for="e1" value="20.82"/>
+          <attvalue for="e2" value="4.58"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="53" source="s_0022" target="s_0021" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.10"/>
+          <attvalue for="e1" value="20.82"/>
+          <attvalue for="e2" value="4.58"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="54" source="s_0022" target="s_0023" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.13"/>
+          <attvalue for="e1" value="29.29"/>
+          <attvalue for="e2" value="6.44"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="55" source="s_0022" target="s_0024" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.67"/>
+          <attvalue for="e1" value="70.30"/>
+          <attvalue for="e2" value="10.30"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="56" source="s_0023" target="s_0022" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.13"/>
+          <attvalue for="e1" value="29.29"/>
+          <attvalue for="e2" value="6.44"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="57" source="s_0023" target="s_0024" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.40"/>
+          <attvalue for="e1" value="24.47"/>
+          <attvalue for="e2" value="5.38"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="58" source="s_0024" target="s_0025" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.45"/>
+          <attvalue for="e1" value="26.99"/>
+          <attvalue for="e2" value="5.94"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="59" source="s_0025" target="s_0024" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.45"/>
+          <attvalue for="e1" value="26.99"/>
+          <attvalue for="e2" value="5.94"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="60" source="s_0025" target="s_0026" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.29"/>
+          <attvalue for="e1" value="19.30"/>
+          <attvalue for="e2" value="4.25"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="61" source="s_0025" target="s_0027" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="6.91"/>
+          <attvalue for="e1" value="46.32"/>
+          <attvalue for="e2" value="6.80"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="62" source="s_0026" target="s_0025" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.29"/>
+          <attvalue for="e1" value="19.30"/>
+          <attvalue for="e2" value="4.25"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="63" source="s_0026" target="s_0027" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.10"/>
+          <attvalue for="e1" value="29.06"/>
+          <attvalue for="e2" value="6.39"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="64" source="s_0026" target="c_0006" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.30"/>
+          <attvalue for="e1" value="2.54"/>
+          <attvalue for="e2" value="1.21"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="65" source="s_0027" target="s_0026" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.10"/>
+          <attvalue for="e1" value="29.06"/>
+          <attvalue for="e2" value="6.39"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="66" source="s_0027" target="s_0028" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.86"/>
+          <attvalue for="e1" value="29.72"/>
+          <attvalue for="e2" value="6.54"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="67" source="s_0028" target="s_0027" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.86"/>
+          <attvalue for="e1" value="29.72"/>
+          <attvalue for="e2" value="6.54"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="68" source="s_0028" target="s_0029" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.89"/>
+          <attvalue for="e1" value="30.87"/>
+          <attvalue for="e2" value="6.79"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="69" source="s_0028" target="s_0030" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="12.37"/>
+          <attvalue for="e1" value="74.09"/>
+          <attvalue for="e2" value="10.86"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="70" source="s_0029" target="s_0030" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.14"/>
+          <attvalue for="e1" value="18.11"/>
+          <attvalue for="e2" value="3.98"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="71" source="s_0030" target="s_0029" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.14"/>
+          <attvalue for="e1" value="18.11"/>
+          <attvalue for="e2" value="3.98"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="72" source="s_0030" target="s_0031" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.47"/>
+          <attvalue for="e1" value="21.06"/>
+          <attvalue for="e2" value="4.63"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="73" source="s_0030" target="c_0010" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.83"/>
+          <attvalue for="e1" value="3.81"/>
+          <attvalue for="e2" value="1.99"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="74" source="s_0031" target="s_0030" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.47"/>
+          <attvalue for="e1" value="21.06"/>
+          <attvalue for="e2" value="4.63"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="75" source="s_0031" target="s_0032" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.77"/>
+          <attvalue for="e1" value="27.83"/>
+          <attvalue for="e2" value="6.12"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="76" source="s_0031" target="s_0033" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="10.02"/>
+          <attvalue for="e1" value="66.79"/>
+          <attvalue for="e2" value="9.79"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="77" source="s_0031" target="c_0007" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.24"/>
+          <attvalue for="e1" value="3.79"/>
+          <attvalue for="e2" value="1.05"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="78" source="s_0032" target="s_0031" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.77"/>
+          <attvalue for="e1" value="27.83"/>
+          <attvalue for="e2" value="6.12"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="79" source="s_0032" target="s_0033" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.73"/>
+          <attvalue for="e1" value="27.87"/>
+          <attvalue for="e2" value="6.13"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="80" source="s_0032" target="c_0009" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.03"/>
+          <attvalue for="e1" value="4.38"/>
+          <attvalue for="e2" value="1.72"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="81" source="s_0033" target="s_0032" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.73"/>
+          <attvalue for="e1" value="27.87"/>
+          <attvalue for="e2" value="6.13"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="82" source="s_0033" target="s_0034" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.86"/>
+          <attvalue for="e1" value="26.93"/>
+          <attvalue for="e2" value="5.92"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="83" source="s_0034" target="s_0035" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.16"/>
+          <attvalue for="e1" value="29.71"/>
+          <attvalue for="e2" value="6.54"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="84" source="s_0034" target="s_0036" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.74"/>
+          <attvalue for="e1" value="71.30"/>
+          <attvalue for="e2" value="10.46"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="85" source="s_0035" target="s_0034" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.16"/>
+          <attvalue for="e1" value="29.71"/>
+          <attvalue for="e2" value="6.54"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="86" source="s_0035" target="s_0036" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.46"/>
+          <attvalue for="e1" value="28.90"/>
+          <attvalue for="e2" value="6.36"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="87" source="s_0036" target="s_0035" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.46"/>
+          <attvalue for="e1" value="28.90"/>
+          <attvalue for="e2" value="6.36"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="88" source="s_0036" target="s_0037" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.05"/>
+          <attvalue for="e1" value="30.14"/>
+          <attvalue for="e2" value="6.63"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="89" source="s_0037" target="s_0036" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.05"/>
+          <attvalue for="e1" value="30.14"/>
+          <attvalue for="e2" value="6.63"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="90" source="s_0037" target="s_0038" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.71"/>
+          <attvalue for="e1" value="20.64"/>
+          <attvalue for="e2" value="4.54"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="91" source="s_0037" target="s_0039" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.69"/>
+          <attvalue for="e1" value="49.54"/>
+          <attvalue for="e2" value="7.26"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="92" source="s_0038" target="s_0037" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.71"/>
+          <attvalue for="e1" value="20.64"/>
+          <attvalue for="e2" value="4.54"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="93" source="s_0038" target="s_0039" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.82"/>
+          <attvalue for="e1" value="19.99"/>
+          <attvalue for="e2" value="4.40"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="94" source="s_0038" target="c_0000" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.33"/>
+          <attvalue for="e1" value="2.60"/>
+          <attvalue for="e2" value="2.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="95" source="s_0039" target="s_0040" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.08"/>
+          <attvalue for="e1" value="26.42"/>
+          <attvalue for="e2" value="5.81"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="96" source="s_0040" target="s_0039" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.08"/>
+          <attvalue for="e1" value="26.42"/>
+          <attvalue for="e2" value="5.81"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="97" source="s_0040" target="s_0041" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.19"/>
+          <attvalue for="e1" value="30.31"/>
+          <attvalue for="e2" value="6.67"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="98" source="s_0040" target="s_0042" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.80"/>
+          <attvalue for="e1" value="72.74"/>
+          <attvalue for="e2" value="10.67"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="99" source="s_0041" target="s_0040" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.19"/>
+          <attvalue for="e1" value="30.31"/>
+          <attvalue for="e2" value="6.67"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="100" source="s_0041" target="s_0042" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.84"/>
+          <attvalue for="e1" value="22.78"/>
+          <attvalue for="e2" value="5.01"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="101" source="s_0042" target="s_0041" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="5.84"/>
+          <attvalue for="e1" value="22.78"/>
+          <attvalue for="e2" value="5.01"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="102" source="s_0042" target="s_0043" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.97"/>
+          <attvalue for="e1" value="30.80"/>
+          <attvalue for="e2" value="6.78"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="103" source="s_0042" target="c_0005" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.36"/>
+          <attvalue for="e1" value="5.11"/>
+          <attvalue for="e2" value="1.64"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="104" source="s_0043" target="s_0042" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.97"/>
+          <attvalue for="e1" value="30.80"/>
+          <attvalue for="e2" value="6.78"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="105" source="s_0043" target="s_0044" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="4.09"/>
+          <attvalue for="e1" value="21.48"/>
+          <attvalue for="e2" value="4.73"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="106" source="s_0043" target="s_0045" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="8.59"/>
+          <attvalue for="e1" value="51.55"/>
+          <attvalue for="e2" value="7.57"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="107" source="s_0043" target="c_0008" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.99"/>
+          <attvalue for="e1" value="4.76"/>
+          <attvalue for="e2" value="1.21"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="108" source="s_0044" target="s_0045" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.98"/>
+          <attvalue for="e1" value="18.13"/>
+          <attvalue for="e2" value="3.99"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="109" source="s_0045" target="s_0044" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.98"/>
+          <attvalue for="e1" value="18.13"/>
+          <attvalue for="e2" value="3.99"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="110" source="w_0000" target="s_0007" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.50"/>
+          <attvalue for="e1" value="3.50"/>
+          <attvalue for="e2" value="1.00"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="111" source="w_0000" target="s_0008" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.80"/>
+          <attvalue for="e1" value="4.00"/>
+          <attvalue for="e2" value="1.20"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="112" source="w_0001" target="s_0014" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.50"/>
+          <attvalue for="e1" value="3.50"/>
+          <attvalue for="e2" value="1.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="113" source="w_0001" target="s_0015" weight="4.0">
+        <viz:color r="230" g="126" b="34" a="1.0"/>
+        <viz:thickness value="4.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.80"/>
+          <attvalue for="e1" value="4.00"/>
+          <attvalue for="e2" value="1.20"/>
+          <attvalue for="e3" value="true"/>
+        </attvalues>
+      </edge>
+      <edge id="114" source="c_0000" target="s_0038" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.33"/>
+          <attvalue for="e1" value="2.60"/>
+          <attvalue for="e2" value="2.00"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="115" source="c_0001" target="s_0013" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.09"/>
+          <attvalue for="e1" value="5.02"/>
+          <attvalue for="e2" value="1.95"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="116" source="c_0002" target="s_0002" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.62"/>
+          <attvalue for="e1" value="4.32"/>
+          <attvalue for="e2" value="0.99"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="117" source="c_0003" target="s_0017" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.33"/>
+          <attvalue for="e1" value="5.51"/>
+          <attvalue for="e2" value="1.64"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="118" source="c_0004" target="s_0017" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.94"/>
+          <attvalue for="e1" value="4.78"/>
+          <attvalue for="e2" value="0.93"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="119" source="c_0005" target="s_0042" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.36"/>
+          <attvalue for="e1" value="5.11"/>
+          <attvalue for="e2" value="1.64"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="120" source="c_0006" target="s_0026" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.30"/>
+          <attvalue for="e1" value="2.54"/>
+          <attvalue for="e2" value="1.21"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="121" source="c_0007" target="s_0031" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="2.24"/>
+          <attvalue for="e1" value="3.79"/>
+          <attvalue for="e2" value="1.05"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="122" source="c_0008" target="s_0043" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.99"/>
+          <attvalue for="e1" value="4.76"/>
+          <attvalue for="e2" value="1.21"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="123" source="c_0009" target="s_0032" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.03"/>
+          <attvalue for="e1" value="4.38"/>
+          <attvalue for="e2" value="1.72"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="124" source="c_0010" target="s_0030" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="1.83"/>
+          <attvalue for="e1" value="3.81"/>
+          <attvalue for="e2" value="1.99"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+      <edge id="125" source="c_0011" target="s_0020" weight="1.0">
+        <viz:color r="149" g="165" b="166" a="0.6"/>
+        <viz:thickness value="1.0"/>
+        <attvalues>
+          <attvalue for="e0" value="3.45"/>
+          <attvalue for="e1" value="2.22"/>
+          <attvalue for="e2" value="1.37"/>
+          <attvalue for="e3" value="false"/>
+        </attvalues>
+      </edge>
+    </edges>
+  </graph>
+</gexf>

@@ -16,17 +16,20 @@ Respeita integralmente as regras do jogo real:
 from __future__ import annotations
 
 import argparse
+from collections import deque
+import csv
 from dataclasses import dataclass
 import json
 from pathlib import Path
 import re
+import shutil
 import tempfile
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
 
-from src.algorithms import run_dijkstra
+from src.algorithms import run_bfs, run_dfs_branch_and_bound, run_dijkstra
 from src.layered_graph import build_layered_graph
 from src.loader import load_graph_from_csv
 from src.models import GameGraph
@@ -36,6 +39,7 @@ from scripts.celeste_sim import (
     Rect,
     RoomModel60Hz,
     SimPlayer,
+    _roll_macro,
     compute_doorway_targets,
     plan_to_goal_60hz,
     step_celeste_60hz,
@@ -85,6 +89,7 @@ class RoomMeta:
     bounds: tuple[int, int, int, int]
     entities: list[tuple[str, dict]]
     collectibles: list[CollectibleTarget]
+    walkable_grid: list[list[bool]] | None = None
 
 
 def load_chapter_metadata(bin_path: Path) -> dict[str, RoomMeta]:
@@ -100,6 +105,15 @@ def load_chapter_metadata(bin_path: Path) -> dict[str, RoomMeta]:
         bw = int(attrs.get("width", 320))
         bh = int(attrs.get("height", 184))
         bounds = (bx, by, bw, bh)
+        wt, ht = max(1, bw // 8), max(1, bh // 8)
+        solid_grid = [[False] * wt for _ in range(ht)]
+        for ch in lvl[2]:
+            if ch[0] == "solids":
+                raw_rows = str(ch[1].get("innerText", "")).splitlines()
+                for r, row in enumerate(raw_rows[:ht]):
+                    for c, tile_ch in enumerate(row[:wt]):
+                        solid_grid[r][c] = tile_ch != "0"
+                break
         ents: list[tuple[str, dict]] = []
         collectibles: list[CollectibleTarget] = []
         for ch in lvl[2]:
@@ -109,6 +123,14 @@ def load_chapter_metadata(bin_path: Path) -> dict[str, RoomMeta]:
                 ename = str(ent[0])
                 eattrs = dict(ent[1])
                 ents.append((ename, eattrs))
+                if ename == "dashBlock":
+                    ex = int(float(eattrs.get("x", 0.0)))
+                    ey = int(float(eattrs.get("y", 0.0)))
+                    ew = int(float(eattrs.get("width", 8.0)))
+                    eh = int(float(eattrs.get("height", 8.0)))
+                    for rr in range(max(0, ey // 8), min(ht, (ey + eh + 7) // 8)):
+                        for cc in range(max(0, ex // 8), min(wt, (ex + ew + 7) // 8)):
+                            solid_grid[rr][cc] = False
                 if ename in ("strawberry", "cassette"):
                     ex = float(eattrs.get("x", 0.0))
                     ey = float(eattrs.get("y", 0.0))
@@ -124,7 +146,7 @@ def load_chapter_metadata(bin_path: Path) -> dict[str, RoomMeta]:
                             winged=winged,
                         )
                     )
-        rooms[rid] = RoomMeta(rid, bounds, ents, collectibles)
+        rooms[rid] = RoomMeta(rid, bounds, ents, collectibles, walkable_grid=solid_grid)
     return rooms
 
 
@@ -168,6 +190,116 @@ def expand_stratgraph_room_walk(
             _append_room(rid)
 
     return full_walk
+
+
+def repair_physical_room_walk(
+    room_walk: list[str],
+    room_metas: dict[str, RoomMeta],
+) -> list[str]:
+    """Alinha a sequencia estrategica de salas as camaras fisicamente conectadas no `.bin`.
+
+    Nao altera o grafo estrategico nem os datasets: apenas insere desvios fisicos
+    curtos quando dois portais consecutivos da rota pertencem a subcamaras separadas
+    por paredes solidas (ex: `lvl_11` esquerdo/coleta vs direito/saida para `lvl_12`).
+    """
+    if len(room_walk) <= 1 or not all(
+        m.walkable_grid is not None for m in room_metas.values()
+    ):
+        return list(room_walk)
+
+    comp_map: dict[str, list[list[int]]] = {}
+    for rid, meta in room_metas.items():
+        grid = meta.walkable_grid
+        assert grid is not None
+        ht, wt = len(grid), len(grid[0])
+        cid = [[-1] * wt for _ in range(ht)]
+        ncomp = 0
+        for r in range(ht):
+            for c in range(wt):
+                if not grid[r][c] and cid[r][c] == -1:
+                    q = deque([(r, c)])
+                    cid[r][c] = ncomp
+                    while q:
+                        cr, cc = q.popleft()
+                        for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+                            nr, nc = cr + dr, cc + dc
+                            if 0 <= nr < ht and 0 <= nc < wt and not grid[nr][nc] and cid[nr][nc] == -1:
+                                cid[nr][nc] = ncomp
+                                q.append((nr, nc))
+                    ncomp += 1
+        comp_map[rid] = cid
+
+    comp_adj: dict[tuple[str, int], set[tuple[str, int]]] = {}
+    rids = list(room_metas.keys())
+    for r1 in rids:
+        x1, y1, w1, h1 = room_metas[r1].bounds
+        c1 = comp_map[r1]
+        for r2 in rids:
+            if r1 == r2:
+                continue
+            x2, y2, w2, h2 = room_metas[r2].bounds
+            c2 = comp_map[r2]
+            pairs: set[tuple[int, int]] = set()
+            if x1 + w1 == x2:
+                for y in range(max(y1, y2), min(y1 + h1, y2 + h2), 8):
+                    a, b = c1[(y - y1) // 8][w1 // 8 - 1], c2[(y - y2) // 8][0]
+                    if a >= 0 and b >= 0:
+                        pairs.add((a, b))
+            if x2 + w2 == x1:
+                for y in range(max(y1, y2), min(y1 + h1, y2 + h2), 8):
+                    a, b = c1[(y - y1) // 8][0], c2[(y - y2) // 8][w2 // 8 - 1]
+                    if a >= 0 and b >= 0:
+                        pairs.add((a, b))
+            if y1 + h1 == y2:
+                for x in range(max(x1, x2), min(x1 + w1, x2 + w2), 8):
+                    a, b = c1[h1 // 8 - 1][(x - x1) // 8], c2[0][(x - x2) // 8]
+                    if a >= 0 and b >= 0:
+                        pairs.add((a, b))
+            if y2 + h2 == y1:
+                for x in range(max(x1, x2), min(x1 + w1, x2 + w2), 8):
+                    a, b = c1[0][(x - x1) // 8], c2[h2 // 8 - 1][(x - x2) // 8]
+                    if a >= 0 and b >= 0:
+                        pairs.add((a, b))
+            for a, b in pairs:
+                comp_adj.setdefault((r1, a), set()).add((r2, b))
+
+    start_rid = room_walk[0]
+    start_cid = comp_map[start_rid]
+    start_comp = 0
+    for ename, eattrs in room_metas[start_rid].entities:
+        if ename == "player":
+            sr = max(0, min(len(start_cid) - 1, int((float(eattrs.get("y", 8)) - 4) // 8)))
+            sc = max(0, min(len(start_cid[0]) - 1, int(float(eattrs.get("x", 8)) // 8)))
+            if start_cid[sr][sc] >= 0:
+                start_comp = start_cid[sr][sc]
+            break
+
+    start_state = (0, start_rid, start_comp)
+    q = deque([start_state])
+    parent: dict[tuple[int, str, int], tuple[int, str, int] | None] = {start_state: None}
+    goal_state: tuple[int, str, int] | None = None
+    while q:
+        idx, rid, comp = q.popleft()
+        if idx == len(room_walk) - 1:
+            goal_state = (idx, rid, comp)
+            break
+        nxt_target = room_walk[idx + 1]
+        for nr, nc in sorted(comp_adj.get((rid, comp), ())):
+            nidx = idx + 1 if nr == nxt_target else idx
+            st = (nidx, nr, nc)
+            if st not in parent:
+                parent[st] = (idx, rid, comp)
+                q.append(st)
+
+    if goal_state is None:
+        return list(room_walk)
+    repaired: list[str] = []
+    cur: tuple[int, str, int] | None = goal_state
+    while cur is not None:
+        repaired.append(cur[1])
+        cur = parent[cur]
+    repaired.reverse()
+    return repaired
 
 
 @dataclass(slots=True)
@@ -479,6 +611,7 @@ def _stabilize_after_transition(
     base_deaths: int,
     entry_gs: dict,
     target_room: str,
+    upward_transition: bool = False,
 ) -> tuple[list[str], int, LiveSnapshot, dict]:
     """Avança quadros vazios até a transição de câmera terminar e a Madeline voltar a se mover."""
     lines = list(committed_lines)
@@ -489,7 +622,7 @@ def _stabilize_after_transition(
     last_gs = entry_gs
     transition_finished = False
 
-    for _ in range(16):
+    for it in range(16):
         lines.append("   3")
         frames += 3
         snap2, gs2 = client.run_tas_and_wait(header_cmd, lines, frames)
@@ -505,15 +638,33 @@ def _stabilize_after_transition(
         last_snap, last_gs = snap2, gs2
         px = float(gs2["Player"]["Position"]["X"])
         py = float(gs2["Player"]["Position"]["Y"])
+        stdash = "StDash" in snap2.pre
+        og = bool(gs2["Player"].get("OnGround", False))
         if not transition_finished and (abs(px - ex0) > 0.5 or abs(py - ey0) > 0.5):
             transition_finished = True
-        if transition_finished and (gs2["Player"].get("OnGround", False) or abs(py - ey0) >= 6.0):
-            return lines, frames, last_snap, last_gs
+        if transition_finished and not stdash:
+            if upward_transition:
+                if og or abs(py - ey0) >= 6.0:
+                    return lines, frames, last_snap, last_gs
+            else:
+                if og or it >= 14:
+                    return lines, frames, last_snap, last_gs
 
     return lines, frames, last_snap, last_gs
 
 
+def _is_near_zip_mover(room: RoomModel60Hz, sim: SimPlayer) -> bool:
+    if not room.zip_movers:
+        return False
+    px, py = sim.x, sim.y
+    return any(
+        zm.overlaps(px - 32.0, py - 56.0, 64.0, 80.0)
+        for zm in room.zip_movers
+    )
+
+
 def _live_micro_probes(
+    room: RoomModel60Hz,
     sim: SimPlayer,
     prefer_dx: float,
     prefer_dy: float,
@@ -532,6 +683,26 @@ def _live_micro_probes(
         [(10, ())],
         [(15, ("J",))],
     ]
+    if _is_near_zip_mover(room, sim):
+        # Sondas para acionar, acompanhar e saltar de zipMovers no momento certo
+        zip_probes: list[list[tuple[int, tuple[str, ...]]]] = [
+            [(14, ("J",)), (16, (d, "U", "G")), (20, ("G",))],
+            [(14, ("J",)), (16, (d, "U", "G")), (28, ("G",))],
+            [(14, ("J",)), (16, (d, "U", "G")), (16, ("G",)), (12, (d, "J")), (10, (d,))],
+            [(36, ("G",))],
+            [(22, ("G",))],
+            [(28, ("U", "G"))],
+            [(32, (d, "G"))],
+            [(12, (d, "J")), (12, (d,))],
+            [(12, ("J",)), (12, (d,))],
+        ]
+        if sim.dashes >= 1 and not forbid_dash:
+            zip_probes.extend([
+                [(14, ("J",)), (16, (d, "U", "G")), (20, ("G",)), (12, (d, "J")), (1, ("U", "X")), (13, ("U",))],
+                [(12, ("J",)), (1, ("U", "X")), (13, ("U",)), (10, (d,))],
+                [(12, (d, "J")), (1, (d, "U", "X")), (13, (d, "U")), (10, (d,))],
+            ])
+        probes = [*zip_probes, *probes]
     if not sim.on_ground:
         probes.extend([[(26, ())], [(24, (d,))], [(24, (opp,))]])
     if sim.dashes >= 1 and not forbid_dash:
@@ -551,6 +722,57 @@ def _live_micro_probes(
     return probes
 
 
+def _seeded_diverse_plans(
+    room: RoomModel60Hz,
+    sim: SimPlayer,
+    goal_rects: list[Rect],
+    prefer_dx: float,
+    forbid_dash: bool,
+) -> list[list[tuple[int, tuple[str, ...]]]]:
+    """Gera planos A* completos com diferentes aberturas (andar/pular/esperar) apos impasse."""
+    d = "R" if prefer_dx >= 0 else "L"
+    seeds: list[list[tuple[int, tuple[str, ...]]]] = (
+        [
+            [(2, (d,))],
+            [(4, (d,))],
+            [(12, (d, "J")), (6, (d,))],
+            [(14, (d, "J")), (6, (d,))],
+            [(10, (d, "J")), (8, (d, "U", "G"))],
+        ]
+        if sim.on_ground
+        else [
+            [(10, ())],
+            [(12, (d,))],
+            [(12, (d, "J")), (6, (d,))],
+        ]
+    )
+    out: list[list[tuple[int, tuple[str, ...]]]] = []
+    for seed in seeds:
+        cur = sim
+        pj = pd = False
+        for n, toks in seed:
+            for _ in range(n):
+                cur, pj, pd = step_celeste_60hz(room, cur, toks, pj, pd)
+                if cur.dead:
+                    break
+            if cur.dead:
+                break
+        if cur.dead:
+            continue
+        tails = plan_to_goal_60hz(
+            room,
+            cur,
+            goal_rects,
+            max_expansions=3200,
+            max_frames=420,
+            diverse_count=1,
+            forbid_dash=forbid_dash,
+        )
+        if tails:
+            out.append([*seed, *tails[0]])
+    return out
+
+
 def solve_chapter_live(
     dataset_dir: Path,
     alpha: float,
@@ -558,14 +780,22 @@ def solve_chapter_live(
     install_path: Path | None,
     max_rooms: int | None = None,
     area_id: int = 1,
-    allow_room_checkpoints: bool = True,
+    allow_room_checkpoints: bool = False,
     report_path: Path | None = None,
+    algo: str = "stratgraph",
+    contract_dead_ends_enabled: bool = True,
+    collect_berries: bool = True,
 ) -> dict:
     """Executa o sintetizador closed-loop StratGraph <-> Celeste ao vivo."""
     raw_graph = load_graph_from_csv(dataset_dir)
-    reduced_graph = contract_dead_ends(raw_graph)
+    reduced_graph = contract_dead_ends(raw_graph) if contract_dead_ends_enabled else raw_graph
     layered = build_layered_graph(reduced_graph, alpha=alpha)
-    dijkstra_res = run_dijkstra(layered)
+    if algo == "bfs":
+        route_res = run_bfs(layered)
+    elif algo == "dfs":
+        route_res = run_dfs_branch_and_bound(layered, timeout_seconds=1.5)
+    else:
+        route_res = run_dijkstra(layered)
 
     chapter_key = dataset_dir.name
     bin_name = dict(CHAPTER_FILES).get(chapter_key)
@@ -574,7 +804,14 @@ def solve_chapter_live(
     bin_path = DEFAULT_STEAM_MAPS_DIR / bin_name
     room_metas = load_chapter_metadata(bin_path)
 
-    room_walk = expand_stratgraph_room_walk(raw_graph, reduced_graph, dijkstra_res.path)
+    if contract_dead_ends_enabled:
+        room_walk = expand_stratgraph_room_walk(raw_graph, reduced_graph, route_res.path)
+    else:
+        room_walk = []
+        for node in route_res.path:
+            if not room_walk or room_walk[-1] != node.room_id:
+                room_walk.append(node.room_id)
+    room_walk = repair_physical_room_walk(room_walk, room_metas)
     if max_rooms is not None:
         room_walk = room_walk[: max(2, max_rooms)]
 
@@ -601,8 +838,8 @@ def solve_chapter_live(
     collected_uids: set[str] = set()
     script_sections: list[str] = [
         "# StratGraph Closed-Loop Live CelesteTAS",
-        f"# Capitulo: {chapter_key} | Alpha: {alpha} | Rota Dijkstra: {len(dijkstra_res.path)} nos ({dijkstra_res.collectibles_count} coletaveis teoricos)",
-        f"# Walk expandido ({len(room_walk)} visitas): {' -> '.join(room_walk)}",
+        f"# Capitulo: {chapter_key} | Algo: {algo} | Alpha: {alpha} | Rota: {len(route_res.path)} nos ({route_res.collectibles_count} coletaveis teoricos)",
+        f"# Walk ({len(room_walk)} visitas): {' -> '.join(room_walk)}",
         "",
         "RecordCount: 1",
         "Unsafe",
@@ -616,9 +853,9 @@ def solve_chapter_live(
     checkpoint_resumes: list[str] = []
 
     print(
-        f"[StratGraph] Iniciando sintese live: {len(room_walk)} salas | "
-        f"start={snap.room_name} pos=({gs['Player']['Position']['X']},{gs['Player']['Position']['Y']}) "
-        f"deaths={base_deaths}"
+        f"[StratGraph] Iniciando sintese live ({algo}, contract={contract_dead_ends_enabled}, "
+        f"berries={collect_berries}, checkpoints={allow_room_checkpoints}): {len(room_walk)} salas | "
+        f"start={snap.room_name} pos=({gs['Player']['Position']['X']},{gs['Player']['Position']['Y']})"
     )
 
     for step_idx in range(len(room_walk) - 1):
@@ -634,15 +871,24 @@ def solve_chapter_live(
             print(f"  [Aviso] Sala atual {_canonical_room(str((gs_now or {}).get('RoomName', '')))} != esperada {cur_rid}; interrompendo continuidade.")
             break
 
-        # Sub-objetivos na sala atual: 1) coletáveis pendentes da sala, 2) porta para nxt_rid
-        pending_collectibles = [
-            c for c in cur_meta.collectibles if c.uid not in collected_uids
-        ]
+        model0 = RoomModel60Hz.from_game_state(gs_now, cur_meta.entities)
+        # Sub-objetivos na sala atual: 1) coletáveis alcançáveis na subcâmara atual, 2) porta para nxt_rid
+        pending_collectibles = []
+        if collect_berries and cur_meta.collectibles:
+            px0 = float(gs_now["Player"]["Position"]["X"])
+            py0 = float(gs_now["Player"]["Position"]["Y"])
+            pr0 = max(0, min(model0.ht - 1, int((py0 - 4.0 - model0.by) // 8)))
+            pc0 = max(0, min(model0.wt - 1, int((px0 - model0.bx) // 8)))
+            for col in cur_meta.collectibles:
+                if col.uid in collected_uids:
+                    continue
+                c_field = model0.bfs_distance_field([(col.world_x, col.world_y)])
+                if c_field[pr0][pc0] < 10**5:
+                    pending_collectibles.append(col)
         objectives: list[tuple[str, list[Rect], bool, CollectibleTarget | None]] = []
         for col in pending_collectibles:
             objectives.append((f"coletar {col.uid}", [col.rect], col.winged, col))
 
-        model0 = RoomModel60Hz.from_game_state(gs_now, cur_meta.entities)
         door_rects = compute_doorway_targets(cur_meta.bounds, nxt_meta.bounds, model0)
         objectives.append((f"porta -> {nxt_rid}", door_rects, False, None))
 
@@ -665,11 +911,12 @@ def solve_chapter_live(
             touched_follower = False
             banned_at_frame: dict[int, set[tuple[str, ...]]] = {}
             banned_states: set[tuple[int, int, int]] = set()
+            visited_cells: set[tuple[int, int, bool, int]] = set()
             last_chosen_sig: tuple[int, tuple[str, ...]] | None = None
             last_chosen_state: tuple[int, int, int] | None = None
             rollbacks_used = 0
 
-            for it in range(36):
+            for it in range(44):
                 gs_now = client.get_game_state()
                 snap_now = client.get_info()
                 if gs_now is None:
@@ -718,26 +965,61 @@ def solve_chapter_live(
                 c0 = min(centers, key=lambda c: (c[0] - sim.x) ** 2 + (c[1] - sim.y) ** 2)
                 cur_h = room_model.heuristic_dist(sim.x, sim.y, field, c0)
 
+                near_zip = _is_near_zip_mover(room_model, sim)
+                visited_cells.add((round(sim.x / 6.0), round(sim.y / 6.0), sim.on_ground, sim.dashes))
                 plans = plan_to_goal_60hz(
                     room_model,
                     sim,
                     active_goals,
-                    max_expansions=4500,
+                    max_expansions=5200,
                     max_frames=460,
                     diverse_count=4,
                     forbid_dash=eff_forbid_dash,
                 )
-                # Também tenta waypoint intermediário BFS caso o plano direto tenha custo alto/nenhum hit
-                waypoints = room_model.extract_bfs_waypoints((sim.x, sim.y), field, step_tiles=8)
+                has_hit = any(
+                    _roll_macro(room_model, sim, pl, False, False, active_goals)[4]
+                    for pl in plans
+                )
+                if not has_hit or rollbacks_used >= 1:
+                    super_plans = plan_to_goal_60hz(
+                        room_model,
+                        sim,
+                        active_goals,
+                        max_expansions=12000,
+                        max_frames=460,
+                        diverse_count=3,
+                        forbid_dash=eff_forbid_dash,
+                        allow_super=True,
+                    )
+                    super_hits = [
+                        pl
+                        for pl in super_plans
+                        if _roll_macro(room_model, sim, pl, False, False, active_goals)[4]
+                    ]
+                    if super_hits and not has_hit:
+                        plans = super_hits + plans
+                    else:
+                        plans.extend(super_plans)
+                if rollbacks_used >= 1 or len(plans) < 2:
+                    plans.extend(
+                        _seeded_diverse_plans(
+                            room_model,
+                            sim,
+                            active_goals,
+                            c0[0] - sim.x,
+                            eff_forbid_dash,
+                        )
+                    )
+                # Tenta múltiplos waypoints intermediários BFS para vencer chaminés/salas longas
+                waypoints = room_model.extract_bfs_waypoints((sim.x, sim.y), field, step_tiles=7)
                 candidates: list[list[tuple[int, tuple[str, ...]]]] = list(plans)
-                if waypoints:
-                    wp = waypoints[0]
+                for wp in waypoints[:3]:
                     wp_plans = plan_to_goal_60hz(
                         room_model,
                         sim,
                         Rect(wp[0] - 8.0, wp[1] - 8.0, 16.0, 16.0),
-                        max_expansions=1500,
-                        max_frames=180,
+                        max_expansions=1800,
+                        max_frames=200,
                         diverse_count=2,
                         forbid_dash=eff_forbid_dash,
                     )
@@ -749,7 +1031,7 @@ def solve_chapter_live(
                 ]
                 tagged_cands.extend(
                     (False, probe)
-                    for probe in _live_micro_probes(sim, c0[0] - sim.x, c0[1] - sim.y, eff_forbid_dash)
+                    for probe in _live_micro_probes(room_model, sim, c0[0] - sim.x, c0[1] - sim.y, eff_forbid_dash)
                 )
                 if touched_follower:
                     if sim.on_ground:
@@ -767,10 +1049,10 @@ def solve_chapter_live(
                     if not cand_ops:
                         continue
                     horizon = sum(n for n, _ in cand_ops)
-                    if is_direct_plan and horizon <= 95:
+                    if is_direct_plan and horizon <= (235 if rollbacks_used >= 1 else 140):
                         cut_fr = horizon
                     else:
-                        cut_fr = _pick_safe_horizon(room_model, sim, cand_ops, min_fr=24, max_fr=85)
+                        cut_fr = _pick_safe_horizon(room_model, sim, cand_ops, min_fr=24, max_fr=160)
                     test_ops = _split_ops_prefix(cand_ops, cut_fr)
                     cand_sig = tuple(ops_to_lines(test_ops))
                     if cand_sig in banned_here:
@@ -795,7 +1077,14 @@ def solve_chapter_live(
                         committed_frames += delta_fr
                         pre_stab_len = len(committed_lines)
                         committed_lines, committed_frames, sn_stab, gs_stab = _stabilize_after_transition(
-                            client, header_cmd, committed_lines, committed_frames, base_deaths, gs_res, nxt_rid
+                            client,
+                            header_cmd,
+                            committed_lines,
+                            committed_frames,
+                            base_deaths,
+                            gs_res,
+                            nxt_rid,
+                            upward_transition=(nxt_meta.bounds[1] < cur_meta.bounds[1]),
                         )
                         stab_added = committed_lines[pre_stab_len:]
                         client.clear_state()
@@ -828,9 +1117,15 @@ def solve_chapter_live(
                         best_progress = (new_h - 1000.0, new_h, delta_fr, new_lines, sn_res, gs_res, True, cand_sig)
                         break
 
-                    # Filtra estados aéreos suicidas (ex: caindo direto sobre espinhos sem dash)
-                    if not is_grounded and not _has_safe_continuation(room_model, gs_res, sn_res.dashes):
-                        continue
+                    # Filtra estados aéreos suicidas (atualiza sólidos móveis se houver zipMover/dashBlock)
+                    if not is_grounded:
+                        check_rm = (
+                            RoomModel60Hz.from_game_state(gs_res, cur_meta.entities)
+                            if (room_model.zip_movers or room_model.dash_blocks)
+                            else room_model
+                        )
+                        if not _has_safe_continuation(check_rm, gs_res, sn_res.dashes):
+                            continue
 
                     touched_now = (
                         col_obj is not None
@@ -843,12 +1138,17 @@ def solve_chapter_live(
                     recharge_land = (not sim.on_ground) and is_grounded and (
                         sn_res.dashes > sim.dashes or new_h <= cur_h + 65.0
                     )
+                    zip_ride = near_zip and (abs(rx - sim.x) + abs(ry - sim.y) >= 8.0) and (new_h <= cur_h + 24.0)
+                    res_cell = (round(rx / 6.0), round(ry / 6.0), is_grounded, sn_res.dashes)
+                    if (res_cell in visited_cells) and not touched_now and (new_h >= cur_h - 8.0):
+                        continue
                     made_progress = (
                         touched_now
                         or (new_h < cur_h - 4.0 and is_grounded)
                         or (new_h < cur_h - 12.0)
                         or (is_grounded and new_h <= cur_h and cand_idx < 2)
                         or recharge_land
+                        or zip_ride
                     )
 
                     if made_progress:
@@ -896,14 +1196,15 @@ def solve_chapter_live(
                     else:
                         print(f"    iter {it}: h {cur_h:.1f} -> {new_h:.1f} pos=({rx:.1f},{ry:.1f}) og={pl_res.get('OnGround')} (+{delta_fr}f)")
                 if not committed_step:
-                    if committed_frames > ground_ckpt[1] and (col_obj is not None or rollbacks_used < 3):
+                    if committed_frames > ground_ckpt[1] and (col_obj is not None or rollbacks_used < 4):
                         if last_chosen_sig is not None:
                             banned_at_frame.setdefault(last_chosen_sig[0], set()).add(last_chosen_sig[1])
                         if last_chosen_state is not None:
                             banned_states.add(last_chosen_state)
                         last_chosen_sig = None
                         last_chosen_state = None
-                        committed_lines, committed_frames, sec_len, prev_uids = ground_ckpt
+                        ckpt_lines, committed_frames, sec_len, prev_uids = ground_ckpt
+                        committed_lines = list(ckpt_lines)
                         script_sections = script_sections[:sec_len]
                         collected_uids = set(prev_uids)
                         touched_follower = False
@@ -926,7 +1227,8 @@ def solve_chapter_live(
         if not room_ok:
             if allow_room_checkpoints:
                 # Restaura ultimo estado em solo limpo antes do impasse e retoma via console load
-                committed_lines, committed_frames, sec_len, prev_uids = ground_ckpt
+                ckpt_lines, committed_frames, sec_len, prev_uids = ground_ckpt
+                committed_lines = list(ckpt_lines)
                 script_sections = script_sections[:sec_len]
                 collected_uids = set(prev_uids)
                 client.clear_state()
@@ -958,7 +1260,10 @@ def solve_chapter_live(
                 room_visit_counts[nxt_rid] = room_visit_counts.get(nxt_rid, 0) + 1
                 continue
 
-            print(f"  [Parada honesta] Nao foi possivel atravessar {cur_rid} -> {nxt_rid} continuamente.")
+            committed_lines, committed_frames, sec_len, prev_uids = ground_ckpt
+            script_sections = script_sections[:sec_len]
+            collected_uids = set(prev_uids)
+            print(f"  [Parada honesta] Nao foi possivel atravessar {cur_rid} -> {nxt_rid} continuamente (0 teleportes).")
             break
         continuous_transitions += 1
         rooms_cleared.append(cur_rid)
@@ -967,7 +1272,8 @@ def solve_chapter_live(
     # Re-sincroniza no último frame comprometido vivo para garantir snapshot sem morte residual
     client.clear_state()
     final_snap, final_gs = client.run_tas_and_wait(header_cmd, committed_lines, committed_frames)
-    if final_gs and _canonical_room(str(final_gs.get("RoomName", ""))) == room_walk[-1]:
+    final_room_canon = _canonical_room(str((final_gs or {}).get("RoomName", "")))
+    if final_gs and final_room_canon == room_walk[-1]:
         rooms_cleared.append(room_walk[-1])
 
     total_frames_all = prior_frames + committed_frames
@@ -982,19 +1288,28 @@ def solve_chapter_live(
         install_path.write_text(final_text, encoding="utf-8")
 
     ok_syntax, issues, _parsed_frames = validate_celestetas_script(final_text)
+    reached_goal = final_room_canon == room_walk[-1]
+    effective_cost_live = round(total_frames_all / (1.0 + max(0.05, alpha) * total_live_berries), 2)
     summary = {
         "chapter": chapter_key,
+        "algo": algo,
         "alpha": alpha,
+        "contract_dead_ends": contract_dead_ends_enabled,
+        "collect_berries_enabled": collect_berries,
         "planned_walk_rooms": len(room_walk),
         "rooms_cleared_live": rooms_cleared,
         "continuous_transitions": continuous_transitions,
+        "teleports": len(checkpoint_resumes),
         "checkpoint_resumes": checkpoint_resumes,
+        "reached_goal": reached_goal,
         "total_frames": total_frames_all,
+        "duration_s": round(total_frames_all / 60.0, 2),
         "live_berries": total_live_berries,
         "live_deaths": total_live_deaths,
+        "effective_cost_live": effective_cost_live,
         "syntax_valid": ok_syntax,
         "syntax_issues": issues,
-        "final_room": _canonical_room(str((final_gs or {}).get("RoomName", ""))),
+        "final_room": final_room_canon,
         "out_path": out_path.as_posix(),
     }
     if report_path is not None:
@@ -1005,9 +1320,124 @@ def solve_chapter_live(
     return summary
 
 
+def compare_routes_live(
+    dataset_dir: Path,
+    out_path: Path,
+    install_path: Path | None,
+    report_path: Path | None = None,
+    comparison_json: Path = Path("results/live_route_comparison.json"),
+    comparison_csv: Path = Path("results/live_route_comparison.csv"),
+    max_rooms: int | None = None,
+    area_id: int = 1,
+    allow_room_checkpoints: bool = False,
+) -> dict:
+    """Testa múltiplas rotas candidatas no jogo real (0 mortes, 0 teleportes) e seleciona a mais efetiva."""
+    candidates_cfg: list[tuple[str, str, float, bool, bool]] = [
+        ("bfs_direta", "bfs", 0.05, False, False),
+        ("stratgraph_tronco_veloz", "stratgraph", 0.05, False, False),
+        ("stratgraph_tronco_coleta", "stratgraph", 0.05, False, True),
+        ("stratgraph_completo_a005", "stratgraph", 0.05, True, True),
+        ("stratgraph_completo_a050", "stratgraph", 0.50, True, True),
+    ]
+
+    results: list[dict] = []
+    work_dir = Path(tempfile.gettempdir()) / "stratgraph_route_candidates"
+    work_dir.mkdir(parents=True, exist_ok=True)
+
+    for label, algo_name, a_val, use_contract, do_berries in candidates_cfg:
+        cand_tas = work_dir / f"{dataset_dir.name}_{label}.tas"
+        print(f"\n==================== TORNEIO AO VIVO: {label} ====================")
+        res = solve_chapter_live(
+            dataset_dir=dataset_dir,
+            alpha=a_val,
+            out_path=cand_tas,
+            install_path=None,
+            max_rooms=max_rooms,
+            area_id=area_id,
+            allow_room_checkpoints=allow_room_checkpoints,
+            report_path=None,
+            algo=algo_name,
+            contract_dead_ends_enabled=use_contract,
+            collect_berries=do_berries,
+        )
+        res["route_label"] = label
+        res["_cand_tas"] = str(cand_tas)
+        results.append(res)
+
+    ranked = sorted(
+        results,
+        key=lambda r: (
+            0 if r["reached_goal"] else 1,
+            -int(r["continuous_transitions"]),
+            int(r["teleports"]),
+            int(r["live_deaths"]),
+            float(r["effective_cost_live"]),
+        ),
+    )
+    winner = ranked[0]
+    winner_tas = Path(winner.pop("_cand_tas"))
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(winner_tas, out_path)
+    if install_path is not None and install_path.parent.exists():
+        shutil.copyfile(winner_tas, install_path)
+
+    cleaned_rows: list[dict] = []
+    for r in ranked:
+        r.pop("_cand_tas", None)
+        cleaned_rows.append(
+            {
+                "route_label": r["route_label"],
+                "algo": r["algo"],
+                "alpha": r["alpha"],
+                "contract_dead_ends": r["contract_dead_ends"],
+                "collect_berries_enabled": r["collect_berries_enabled"],
+                "planned_walk_rooms": r["planned_walk_rooms"],
+                "rooms_cleared_count": len(r["rooms_cleared_live"]),
+                "continuous_transitions": r["continuous_transitions"],
+                "teleports": r["teleports"],
+                "reached_goal": r["reached_goal"],
+                "live_berries": r["live_berries"],
+                "live_deaths": r["live_deaths"],
+                "total_frames": r["total_frames"],
+                "duration_s": r["duration_s"],
+                "effective_cost_live": r["effective_cost_live"],
+                "final_room": r["final_room"],
+            }
+        )
+
+    winner_out = dict(winner)
+    winner_out["out_path"] = out_path.as_posix()
+    winner_out["tournament_candidates_tested"] = len(cleaned_rows)
+    if report_path is not None:
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(json.dumps(winner_out, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    comparison_json.parent.mkdir(parents=True, exist_ok=True)
+    comparison_json.write_text(
+        json.dumps({"winner": winner_out["route_label"], "ranking": cleaned_rows}, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    with comparison_csv.open("w", newline="", encoding="utf-8") as fh:
+        fieldnames = list(cleaned_rows[0].keys())
+        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(cleaned_rows)
+
+    print("\n=== Ranking Final (Torneio Live Sem Teleporte) ===")
+    for idx, row in enumerate(cleaned_rows, start=1):
+        print(
+            f"  #{idx} {row['route_label']:25s} | goal={str(row['reached_goal']):5s} | "
+            f"cont={row['continuous_transitions']:2d} | tp={row['teleports']} | "
+            f"berries={row['live_berries']} | deaths={row['live_deaths']} | "
+            f"frames={row['total_frames']:5d} ({row['duration_s']}s) | eff={row['effective_cost_live']}"
+        )
+    return {"winner": winner_out, "ranking": cleaned_rows}
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Sintetizador closed-loop StratGraph <-> Celeste ao vivo")
     parser.add_argument("--chapter", default="1_forsaken_city", help="Nome do dataset em datasets/celeste/")
+    parser.add_argument("--algo", choices=["stratgraph", "bfs", "dfs"], default="stratgraph", help="Algoritmo de rota")
     parser.add_argument("--alpha", type=float, default=0.05, help="Alpha do StratGraph (padrao: 0.05)")
     parser.add_argument(
         "--out",
@@ -1025,12 +1455,20 @@ def build_parser() -> argparse.ArgumentParser:
         help="Copia adicional opcional na pasta do Celeste",
     )
     parser.add_argument("--max-rooms", type=int, default=None, help="Limite opcional de visitas de sala")
+    parser.add_argument("--no-contract", dest="contract_dead_ends", action="store_false", default=True)
+    parser.add_argument("--no-berries", dest="collect_berries", action="store_false", default=True)
     parser.add_argument(
-        "--no-room-checkpoints",
+        "--allow-room-checkpoints",
         dest="allow_room_checkpoints",
-        action="store_false",
-        default=True,
-        help="Desabilita retomada via console load caso alguma sala exceda o limite continuo",
+        action="store_true",
+        default=False,
+        help="Permite teleporte via console load caso alguma sala exceda o limite continuo (desativado por padrao)",
+    )
+    parser.add_argument(
+        "--compare-routes",
+        action="store_true",
+        default=False,
+        help="Joga varias rotas candidatas no motor real e elege a mais efetiva",
     )
     return parser
 
@@ -1038,6 +1476,17 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     area_id = CHAPTER_AREA_IDS.get(args.chapter, 1)
+    if args.compare_routes:
+        compare_routes_live(
+            dataset_dir=Path("datasets/celeste") / args.chapter,
+            out_path=Path(args.out),
+            install_path=Path(args.install_to) if args.install_to else None,
+            report_path=Path(args.report_json) if args.report_json else None,
+            max_rooms=args.max_rooms,
+            area_id=area_id,
+            allow_room_checkpoints=args.allow_room_checkpoints,
+        )
+        return 0
     solve_chapter_live(
         dataset_dir=Path("datasets/celeste") / args.chapter,
         alpha=args.alpha,
@@ -1047,6 +1496,9 @@ def main(argv: list[str] | None = None) -> int:
         area_id=area_id,
         allow_room_checkpoints=args.allow_room_checkpoints,
         report_path=Path(args.report_json) if args.report_json else None,
+        algo=args.algo,
+        contract_dead_ends_enabled=args.contract_dead_ends,
+        collect_berries=args.collect_berries,
     )
     return 0
 

@@ -7,8 +7,9 @@ Esta pasta centraliza a documentação técnica, os requisitos acadêmicos e os 
 1. [Plano de Implementação](plano_implementacao.md) — cronograma, status atualizado, fases técnicas e plano de verificação do projeto.
 2. [Arquitetura e Modelagem Matemática](arquitetura_e_modelagem.md) — definição formal do dígrafo ponderado, contração de becos sem saída, grafo em camadas e papel dos algoritmos (BFS, DFS *Branch-and-Bound* e Dijkstra).
 3. [Guia de Execução (Linux e Windows)](execucao_linux_windows.md) — instruções objetivas para executar no **Ubuntu 24.04** e no **Windows**.
-4. [Esquema do Dataset (Zenodo / Mendeley Data)](../datasets/ESQUEMA_DATASET.md) — formato oficial de `vertices.csv` e `arestas.csv`.
-5. [Guia do Artigo IEEE / Overleaf](../article/GUIA_OVERLEAF.md) — checklist de compilação e envio no AVA.
+4. [Guia de Visualização no Gephi (.gexf)](gephi_guia.md) — como abrir, colorir e explorar os 66 grafos gerados com layout espacial real e rotas ótimas.
+5. [Esquema do Dataset (Zenodo / Mendeley Data)](../datasets/ESQUEMA_DATASET.md) — formato oficial de `vertices.csv` e `arestas.csv`.
+6. [Guia do Artigo IEEE / Overleaf](../article/GUIA_OVERLEAF.md) — checklist de compilação e envio no AVA.
 
 ## Checklist dos Requisitos Acadêmicos
 
