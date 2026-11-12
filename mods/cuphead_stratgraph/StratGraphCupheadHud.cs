@@ -2,18 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace StratGraph.CupheadMod
 {
     /// <summary>
-    /// Componente HUD e Executor TAS in-game para Cuphead (`level41` a `level46`)
-    /// compilado contra `Assembly-CSharp.dll` e `UnityEngine.IMGUIModule.dll`.
-    ///   1. Exibe o setor atual, coordenadas reais do player e alcovas de moedas contraídas;
-    ///   2. Ao pressionar `F5`, ativa/desativa o Modo Bot TAS, movimentando o jogador
-    ///      automaticamente ao longo das plataformas e moedas da rota ótima do StratGraph.
+    /// Componente HUD visual (somente exibição de rota — sem alteração de inputs ou trapaças)
+    /// para Cuphead (`level41` a `level46`) compilado contra `Assembly-CSharp.dll`.
+    ///   1. Desenha na tela os waypoints e linhas da rota ótima sobre o mundo real;
+    ///   2. Exibe o setor atual, camada (`L0`/`L1`) e moedas de alcovas contraídas;
+    ///   3. `[F5]` mostra/oculta o HUD e `[F6]` alterna ao vivo entre StratGraph (`L0 -> L1`) e BFS (`L0`).
     ///
     /// Autoria:
     ///   - Heitor Henrique Zonho
@@ -40,25 +39,10 @@ namespace StratGraph.CupheadMod
             new Dictionary<string, string>();
 
         private bool _hudVisible = true;
-        private bool _tasBotActive;
         private bool _useBfsRoute;
-        private int _currentWaypointIndex;
         private bool _armedLayerActive;
         private string _lastSlug = "";
-
-        private int _tasMoveX;
-        private int _tasMoveY;
-        private float _tasJumpCooldown;
-        private float _tasHoldJumpTimer;
-        private float _tasDashCooldown;
-        private float _tasParryCooldown;
-        private float _tasStuckTimer;
-        private Vector2 _lastPlayerPos;
-
-        private static MethodInfo _bufferInputMethod;
-        private static MethodInfo _startBasicMethod;
-        private static FieldInfo _basicField;
-        private static FieldInfo _firingField;
+        private Texture2D _lineTex;
 
         public static void Init()
         {
@@ -70,48 +54,6 @@ namespace StratGraph.CupheadMod
             GameObject go = new GameObject("StratGraphCupheadHudObject");
             DontDestroyOnLoad(go);
             _instance = go.AddComponent<StratGraphCupheadOverlay>();
-        }
-
-        public static int FilterAxisInt(int originalValue, int axis)
-        {
-            if (_instance == null || !_instance._tasBotActive)
-            {
-                return originalValue;
-            }
-            if (axis == 0)
-            {
-                return _instance._tasMoveX;
-            }
-            if (axis == 1)
-            {
-                return _instance._tasMoveY;
-            }
-            return originalValue;
-        }
-
-        public static bool FilterJumpButtonHeld(bool originalValue)
-        {
-            if (_instance != null && _instance._tasBotActive && _instance._tasHoldJumpTimer > 0f)
-            {
-                return true;
-            }
-            return originalValue;
-        }
-
-        public static void BeforeMotorHandleInput(LevelPlayerMotor motor)
-        {
-            if (_instance != null && motor != null)
-            {
-                _instance.DriveCupheadMotor(motor);
-            }
-        }
-
-        public static void AfterWeaponHandleFiring(LevelPlayerWeaponManager wm)
-        {
-            if (_instance != null && wm != null)
-            {
-                _instance.DriveCupheadWeapons(wm);
-            }
         }
 
         private static string ExtractJsonObjectBlock(string raw, string key)
@@ -165,6 +107,10 @@ namespace StratGraph.CupheadMod
 
         private void Awake()
         {
+            _lineTex = new Texture2D(1, 1);
+            _lineTex.SetPixel(0, 0, Color.white);
+            _lineTex.Apply();
+
             string dllDir = Path.GetDirectoryName(typeof(StratGraphCupheadOverlay).Assembly.Location) ?? ".";
             string jsonPath = Path.Combine(dllDir, "stratgraph_routes.json");
             LoadRoutesJson(jsonPath);
@@ -269,7 +215,7 @@ namespace StratGraph.CupheadMod
         {
             if (string.IsNullOrEmpty(sceneName))
             {
-                return "1_1f_forest_follies";
+                return "";
             }
             string s = sceneName.ToLowerInvariant();
             if (s.Contains("1_1f")) return "1_1f_forest_follies";
@@ -278,204 +224,87 @@ namespace StratGraph.CupheadMod
             if (s.Contains("2_2f")) return "2_2f_funhouse_frazzle";
             if (s.Contains("3_1f")) return "3_1f_perilous_piers";
             if (s.Contains("3_2f")) return "3_2f_rugged_ridge";
-            return "1_1f_forest_follies";
+            return "";
         }
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.F5))
             {
-                _tasBotActive = !_tasBotActive;
-                _currentWaypointIndex = -1;
-                _tasStuckTimer = 0f;
-                _tasMoveX = 0;
-                _tasMoveY = 0;
+                _hudVisible = !_hudVisible;
             }
             if (Input.GetKeyDown(KeyCode.F6))
             {
                 _useBfsRoute = !_useBfsRoute;
-                _currentWaypointIndex = -1;
-                _tasStuckTimer = 0f;
             }
         }
 
-        private void TriggerBufferedInput(LevelPlayerMotor motor, int bufferedType)
+        private void DrawGuiLine(Vector2 a, Vector2 b, Color color, float thickness)
         {
-            try
+            if (_lineTex == null)
             {
-                if (_bufferInputMethod == null)
-                {
-                    _bufferInputMethod = typeof(LevelPlayerMotor).GetMethod(
-                        "BufferInput",
-                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public
-                    );
-                }
-                if (_bufferInputMethod != null)
-                {
-                    Type enumType = _bufferInputMethod.GetParameters()[0].ParameterType;
-                    object enumVal = Enum.ToObject(enumType, bufferedType);
-                    _bufferInputMethod.Invoke(motor, new object[] { enumVal });
-                }
-            }
-            catch
-            {
-            }
-        }
-
-        private void DriveCupheadMotor(LevelPlayerMotor motor)
-        {
-            if (!_tasBotActive || motor == null || motor.transform == null)
-            {
-                _tasHoldJumpTimer = 0f;
                 return;
             }
+            Vector2 diff = b - a;
+            float len = diff.magnitude;
+            if (len < 1f)
+            {
+                return;
+            }
+            float angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+            Matrix4x4 savedMatrix = GUI.matrix;
+            Color savedColor = GUI.color;
 
-            string sceneName = SceneLoader.Exists ? (SceneLoader.SceneName ?? "Menu") : "Menu";
-            string slug = ResolveCurrentSlug(sceneName);
+            GUI.color = color;
+            GUIUtility.RotateAroundPivot(angle, a);
+            GUI.DrawTexture(new Rect(a.x, a.y - thickness * 0.5f, len, thickness), _lineTex);
+
+            GUI.matrix = savedMatrix;
+            GUI.color = savedColor;
+        }
+
+        private void DrawWorldRouteOverlay(string slug, Color accent)
+        {
+            Camera cam = Camera.main;
+            if (cam == null)
+            {
+                return;
+            }
 
             Dictionary<string, List<Vector2>> activeDict = _useBfsRoute
                 ? _bfsWaypointsBySlug
                 : _tasWaypointsBySlug;
-
-            List<Vector2> waypoints;
-            if (!activeDict.TryGetValue(slug, out waypoints) || waypoints.Count == 0)
+            List<Vector2> wpts;
+            if (!activeDict.TryGetValue(slug, out wpts) || wpts.Count < 2)
             {
                 return;
             }
 
-            Vector2 current = new Vector2(motor.transform.position.x, motor.transform.position.y);
-            if ((current - _lastPlayerPos).sqrMagnitude > 250000f)
+            Vector2? prevScreen = null;
+            for (int i = 0; i < wpts.Count; i++)
             {
-                // Respawn ou transição de sala: realinha no waypoint mais próximo
-                _currentWaypointIndex = -1;
-                _tasHoldJumpTimer = 0f;
-            }
+                Vector3 sp = cam.WorldToScreenPoint(new Vector3(wpts[i].x, wpts[i].y, 0f));
+                Vector2 guiPt = new Vector2(sp.x, Screen.height - sp.y);
+                bool onScreen = sp.z > 0f && guiPt.x >= -120f && guiPt.x <= Screen.width + 120f &&
+                                guiPt.y >= -120f && guiPt.y <= Screen.height + 120f;
 
-            if (_currentWaypointIndex < 0 || _currentWaypointIndex >= waypoints.Count)
-            {
-                int bestIdx = 0;
-                float bestDist = float.MaxValue;
-                for (int i = 0; i < waypoints.Count; i++)
+                if (prevScreen.HasValue && (onScreen ||
+                    (prevScreen.Value.x >= -120f && prevScreen.Value.x <= Screen.width + 120f)))
                 {
-                    float d = (waypoints[i] - current).sqrMagnitude;
-                    if (d < bestDist)
+                    DrawGuiLine(prevScreen.Value, guiPt, accent, 3f);
+                }
+
+                if (onScreen && i % 2 == 0)
+                {
+                    Color savedColor = GUI.color;
+                    GUI.color = Color.white;
+                    if (_lineTex != null)
                     {
-                        bestDist = d;
-                        bestIdx = i;
+                        GUI.DrawTexture(new Rect(guiPt.x - 3f, guiPt.y - 3f, 6f, 6f), _lineTex);
                     }
+                    GUI.color = savedColor;
                 }
-                _currentWaypointIndex = bestIdx;
-            }
-
-            while (_currentWaypointIndex < waypoints.Count - 1 &&
-                   Mathf.Abs(waypoints[_currentWaypointIndex].x - current.x) <= 44f &&
-                   Mathf.Abs(waypoints[_currentWaypointIndex].y - current.y) <= 48f)
-            {
-                _currentWaypointIndex++;
-                _tasStuckTimer = 0f;
-            }
-
-            Vector2 target = waypoints[_currentWaypointIndex];
-            Vector2 delta = target - current;
-            float dt = Time.fixedDeltaTime > 0f ? Time.fixedDeltaTime : 0.016f;
-
-            if (_tasJumpCooldown > 0f) _tasJumpCooldown -= dt;
-            if (_tasHoldJumpTimer > 0f) _tasHoldJumpTimer -= dt;
-            if (_tasDashCooldown > 0f) _tasDashCooldown -= dt;
-            if (_tasParryCooldown > 0f) _tasParryCooldown -= dt;
-
-            if ((current - _lastPlayerPos).sqrMagnitude < 4f)
-            {
-                _tasStuckTimer += dt;
-            }
-            else
-            {
-                _tasStuckTimer = Mathf.Max(0f, _tasStuckTimer - dt * 0.5f);
-            }
-            _lastPlayerPos = current;
-
-            // 1. Eixos direcionais reais do controle (lidos por HandleWalking e HandleLooking)
-            _tasMoveX = Mathf.Abs(delta.x) > 10f ? (delta.x >= 0f ? 1 : -1) : 1;
-            _tasMoveY = delta.y > 70f ? 1 : 0;
-
-            // 2. Pulo real do Cuphead (BufferInput(BufferedInput.Jump = 0) + Hold de Jump via Rewired)
-            if (motor.Grounded && _tasJumpCooldown <= 0f &&
-                (delta.y > 18f || _tasStuckTimer > 0.12f || (Mathf.Abs(delta.x) > 155f && delta.y >= -15f)))
-            {
-                TriggerBufferedInput(motor, 0);
-                _tasJumpCooldown = 0.26f;
-                _tasHoldJumpTimer = delta.y > 55f ? 0.28f : 0.22f;
-            }
-            else if (motor.Grounded && _tasJumpCooldown < 0.16f)
-            {
-                _tasHoldJumpTimer = 0f;
-            }
-
-            // 3. Parry real no ar (BufferInput(BufferedInput.Jump = 0) quando fora do chão)
-            if (!motor.Grounded && _tasParryCooldown <= 0f && delta.y > 35f)
-            {
-                TriggerBufferedInput(motor, 0);
-                _tasParryCooldown = 0.24f;
-            }
-
-            // 4. Dash real no ar ou em lacunas largas (sem overshoot em plataformas curtas)
-            if (!motor.Dashing && _tasDashCooldown <= 0f &&
-                (Mathf.Abs(delta.x) > 195f || (!motor.Grounded && Mathf.Abs(delta.x) > 110f && Mathf.Abs(delta.y) < 35f)))
-            {
-                TriggerBufferedInput(motor, 1);
-                _tasDashCooldown = 0.52f;
-            }
-
-            // Sem impulsos artificiais: se o bot errar, o jogo aplica dano/morte normalmente.
-        }
-
-        private void DriveCupheadWeapons(LevelPlayerWeaponManager wm)
-        {
-            if (!_tasBotActive || wm == null)
-            {
-                return;
-            }
-            try
-            {
-                if (_startBasicMethod == null)
-                {
-                    _startBasicMethod = typeof(LevelPlayerWeaponManager).GetMethod(
-                        "StartBasic",
-                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public
-                    );
-                }
-                if (_basicField == null)
-                {
-                    _basicField = typeof(LevelPlayerWeaponManager).GetField(
-                        "basic",
-                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public
-                    );
-                }
-                if (_startBasicMethod != null)
-                {
-                    _startBasicMethod.Invoke(wm, null);
-                }
-                if (_basicField != null)
-                {
-                    object basicState = _basicField.GetValue(wm);
-                    if (basicState != null)
-                    {
-                        if (_firingField == null)
-                        {
-                            _firingField = basicState.GetType().GetField(
-                                "firing",
-                                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
-                            );
-                        }
-                        if (_firingField != null)
-                        {
-                            _firingField.SetValue(basicState, true);
-                        }
-                    }
-                }
-            }
-            catch
-            {
+                prevScreen = guiPt;
             }
         }
 
@@ -489,12 +318,26 @@ namespace StratGraph.CupheadMod
             string sceneName = SceneLoader.Exists ? (SceneLoader.SceneName ?? "Menu") : "Menu";
             string slug = ResolveCurrentSlug(sceneName);
 
+            if (string.IsNullOrEmpty(slug))
+            {
+                GUI.Box(new Rect(18f, 18f, 540f, 34f), "");
+                GUI.Label(
+                    new Rect(28f, 24f, 520f, 24f),
+                    "[StratGraph Guia Visual] Entre em uma fase Run-and-Gun (1-1F .. 3-2F). [F5] HUD"
+                );
+                return;
+            }
+
             if (_lastSlug != slug)
             {
                 _lastSlug = slug;
                 _armedLayerActive = false;
-                _currentWaypointIndex = 0;
             }
+
+            Color accent = _useBfsRoute
+                ? new Color(1f, 0.36f, 0.47f, 0.85f)
+                : (_armedLayerActive ? new Color(0f, 1f, 0.53f, 0.85f) : new Color(0f, 0.90f, 1f, 0.85f));
+            DrawWorldRouteOverlay(slug, accent);
 
             Vector2 playerPos = Vector2.zero;
             try
@@ -546,13 +389,12 @@ namespace StratGraph.CupheadMod
                 summary = "StratGraph (Dijkstra L0->L1 + Contração) vs BFS";
             }
 
-            GUI.Box(new Rect(18f, 18f, 680f, 132f), "");
+            GUI.Box(new Rect(18f, 18f, 680f, 126f), "");
             GUI.Label(
                 new Rect(30f, 24f, 660f, 24f),
                 string.Format(
-                    "[StratGraph TAS] {0} | [F5] Bot: {1} | [F6] Rota: {2}",
+                    "[StratGraph Guia Visual] {0} | [F5] HUD | [F6] Rota: {1}",
                     slug,
-                    _tasBotActive ? "ATIVO" : "OFF",
                     _useBfsRoute ? "BFS (L0 + Coletáveis)" : "StratGraph (L0->L1 + Coletáveis)"
                 )
             );

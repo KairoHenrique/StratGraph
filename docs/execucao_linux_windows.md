@@ -33,14 +33,8 @@ python -m src.main --dataset datasets\celeste\1_forsaken_city --alpha 0.05
 # Abrir o Simulador Visual 2D TAS (HTML5 Canvas)
 python -m scripts.simulate_route --open
 
-# Calibragem física com cache em datasets/physics_calibration.json (opcional usar --force para recalibrar)
-python -m scripts.calibrate_physics
-
-# Compilar e instalar os Mods In-Game com Bot TAS (F5/F6) em Celeste e Cuphead na Steam
+# Compilar e instalar os Mods opcionais de Guia Visual HUD (F5/F6) em Celeste e Cuphead na Steam
 python -m scripts.build_mods --install-games
-
-# Forçar recalibração e recompilar mods
-python -m scripts.build_mods --calibrate --install-games
 
 # Remover os Mods e restaurar os binários originais (.stratgraph.bak)
 python -m scripts.build_mods --uninstall-games
@@ -48,7 +42,7 @@ python -m scripts.build_mods --uninstall-games
 
 ## 3. Dependências Opcionais (Gráficos do Artigo e Testes)
 
-Tanto no Linux quanto no Windows, para rodar os 12 testes automatizados e regerar os gráficos do artigo (`scripts/`):
+Tanto no Linux quanto no Windows, para rodar os 11 testes automatizados e regerar os gráficos do artigo (`scripts/`):
 
 ```bash
 pip install -r requirements-dev.txt

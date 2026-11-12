@@ -1,6 +1,6 @@
 # Mods de Teste *In-Game* — StratGraph (*Celeste* & *Cuphead*)
 
-Esta pasta contém o código-fonte em C# (.NET Framework 4.0) dos dois mods de telemetria *in-game* do **StratGraph**, que leem o arquivo `stratgraph_routes.json` exportado pelo motor em Python (`src/`) e desenham na tela do jogo a rota ótima em camadas ($L_0 \to L_1$), o estado da arma e os becos sem saída contraídos.
+Esta pasta contém o código-fonte em C# (.NET Framework 4.0) dos dois mods opcionais de **Guia Visual HUD *in-game*** do **StratGraph**, que leem `stratgraph_routes.json` exportado pelo motor em Python (`src/`) e apenas projetam na tela do jogo a trajetória calculada, a camada atual ($L_0 \to L_1$) e os becos contraídos (`[F5]` exibe/oculta o HUD e `[F6]` alterna `StratGraph` vs `BFS`) para validação humana manual com física e morte 100% reais.
 
 ## Estrutura
 

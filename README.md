@@ -15,8 +15,8 @@ Otimização de rotas estratégicas em mapas de jogos digitais modelados como **
 ├── docs/                 # Documentação técnica, modelagem matemática e guias de execução
 ├── datasets/             # Mapas tratados em CSV (Celeste, Cuphead e benchmarks sintéticos)
 ├── scripts/              # Extratores A* físicos, benchmarks, gráficos, simulador 2D e builder de mods
-├── mods/                 # Mods C# In-Game com HUD e Bot TAS (F5/F6) para Celeste e Cuphead
-├── tests/                # Testes unitários e de integração (12 testes automatizados)
+├── mods/                 # Mods C# opcionais de HUD visual (F5/F6) para guia manual em Celeste e Cuphead
+├── tests/                # Testes unitários e de integração (11 testes automatizados)
 ├── results/              # Resultados experimentais (CSV/JSON), simulador HTML5 e pacotes .zip
 └── article/              # Artigo científico LaTeX (IEEE Conference Template), referências e figuras
 ```
@@ -35,33 +35,20 @@ python3 -m src.main --dataset datasets/celeste/1_forsaken_city --alpha 0.05
 python -m src.main --dataset datasets/celeste/1_forsaken_city --alpha 0.05
 ```
 
-## Calibração de Física & Cache (`datasets/`)
+## Simulador Visual 2D e Mods Opcionais de Guia Visual (*Celeste* & *Cuphead*)
 
-Na primeira execução (ou com `--force`), o calibrador extrai e valida as constantes físicas reais de **Celeste** (1 dash por salto, gravidade/pulo, ancoragem de piso e desvio não-letal de espinhos/spinners em A* de espaço de estados) e **Cuphead** (plataformas, saltos segurados e moedas), salvando `datasets/physics_calibration.json` e os `waypoints.json`. Nas execuções seguintes, o cache em `datasets/` é reutilizado automaticamente sem recalibrar:
-
-```powershell
-# Reutiliza calibração em cache se já existir em datasets/physics_calibration.json
-python -m scripts.calibrate_physics
-
-# Força recalibração completa e regeneração dos datasets
-python -m scripts.calibrate_physics --force
-```
-
-## Simulador Visual 2D TAS e Mods *In-Game* (*Celeste* & *Cuphead*)
+> **Nota para avaliação acadêmica:** O avaliador **não** precisa dos jogos instalados. Todo o motor em Python (`src/`) e os grafos extraídos (`datasets/`) rodam integralmente *offline* no terminal Ubuntu 24.04 / Windows.
 
 * **Simulador Visual Interativo 2D (HTML5 Canvas — Linux e Windows):**
   Anima os agentes de **BFS**, **DFS *Branch-and-Bound***, **Dijkstra `--no-contract`** e **StratGraph ($L_0 \to L_1$ + Contração de Becos)** percorrendo os *waypoints* físicos reais ($A^*$ em espaço de estados no grid 8×8 `<solids>` de *Celeste* e plataformas de *Cuphead*):
   ```bash
   python -m scripts.simulate_route --open
   ```
-* **Mods de Teste *In-Game* com Bot TAS Sem Trapaças (Steam / Windows):**
-  Compila os mods em C# ([`mods/celeste_stratgraph/`](mods/celeste_stratgraph/StratGraphCelesteHud.cs) e [`mods/cuphead_stratgraph/`](mods/cuphead_stratgraph/StratGraphCupheadHud.cs)) e instala nos binários da Steam (com backup automático `.stratgraph.bak`). O bot injeta controles reais (incluindo pulo segurado via `VirtualButton.get_Check` / Rewired e escalada dentro da estamina, com **dano/morte reais e apenas 1 dash**). Dentro do jogo, **`F5`** liga/desliga o **Bot TAS** e **`F6`** alterna ao vivo entre a **Rota StratGraph ($L_0 \to L_1$)** e a **Rota BFS ($L_0$)** (ambas coletando os itens):
+* **Mods Opcionais de Guia Visual HUD *In-Game* (Steam / Windows):**
+  Compila os mods em C# ([`mods/celeste_stratgraph/`](mods/celeste_stratgraph/StratGraphCelesteHud.cs) e [`mods/cuphead_stratgraph/`](mods/cuphead_stratgraph/StratGraphCupheadHud.cs)) para desenho passivo da rota na tela (sem automação de botões ou trapaças — o jogador humano joga normalmente seguindo o traçado visual). Dentro do jogo, **`F5`** mostra/oculta o guia HUD e **`F6`** alterna ao vivo entre a **Rota StratGraph ($L_0 \to L_1$)** e a **Rota BFS ($L_0$)**:
   ```powershell
-  # Compilar e instalar nos jogos da Steam (calibra caso ainda não esteja em cache)
+  # Compilar e instalar apenas o overlay HUD nos jogos da Steam
   python -m scripts.build_mods --install-games
-
-  # Forçar recalibração + recompilar mods
-  python -m scripts.build_mods --calibrate --install-games
 
   # Restaurar binários originais da Steam quando desejar
   python -m scripts.build_mods --uninstall-games

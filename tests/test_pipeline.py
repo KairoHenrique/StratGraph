@@ -229,20 +229,5 @@ def test_simulator_and_mods_export() -> None:
     assert len(data["cuphead_1_1f_forest_follies"]["tas_waypoints_flat"]) > 50
 
 
-def test_physics_calibration_cache() -> None:
-    """Verifica o cache de calibração física e a geração de trajetórias calibradas."""
-    import json
-
-    from scripts.calibrate_physics import CALIBRATION_FILE, is_calibration_cached
-
-    assert is_calibration_cached()
-    payload = json.loads(CALIBRATION_FILE.read_text(encoding="utf-8"))
-    assert payload.get("calibrated") is True
-    assert payload["celeste_physics"]["max_dashes"] == 1.0
-    assert payload["celeste_audit"]["zero_death_compliance_pct"] >= 90.0
-    wpts = json.loads(Path("datasets/celeste/1_forsaken_city/waypoints.json").read_text(encoding="utf-8"))
-    assert wpts.get("calibrated") is True
-
-
 
 

@@ -22,5 +22,5 @@ Conforme o enunciado em [pratica (1).pdf](pratica%20(1).pdf):
   - [x] Ordem de autoria: alunos em ordem alfabética (`Heitor Henrique Zonho`, `Kairo Henrique Ferreira Martins`) e **Michel Pires da Silva** como último autor obrigatório.
   - [x] Texto estruturado com Resumo (217 palavras, limite de 250), Introdução (funil e roteiro), Referencial Teórico, Metodologia (**fluxograma obrigatório** incluso em `article/figures/fluxograma_proposta.pdf`), Resultados e Discussão (gráficos, sensibilidade $\alpha$ e tabelas reais) e Conclusão, com DOI do dataset e GitHub citados nas referências.
   - [ ] Compilação final no Overleaf (`results/stratgraph_overleaf.zip`) e conferência das referências no Google Scholar (`scholar.google.com`).
-- [x] **Extras de Demonstração Visual (Fase 7):** Simulador Visual 2D TAS (`scripts/simulate_route.py`) e Mods de teste *in-game* com Bot TAS (`mods/` e `scripts/build_mods.py`) para *Celeste* e *Cuphead*.
+- [x] **Extras de Demonstração Visual (Fase 7):** Simulador Visual 2D (`scripts/simulate_route.py`) e Mods opcionais de Guia Visual HUD *in-game* (`mods/` e `scripts/build_mods.py`) para *Celeste* e *Cuphead*.
 - [ ] **Etapa Final — Entrega no AVA e Pitch:** enviar PDF final até **22/11/2026** e apresentação oral de 10 min sem slides a partir de **25/11/2026**.
