@@ -606,7 +606,6 @@ def solve_chapter_live(
         "",
         "RecordCount: 1",
         "Unsafe",
-        "Set, CelesteTAS.SimplifiedGraphics, true",
         "",
         f"console load {area_id} {short_start}",
         "  95",
@@ -975,7 +974,7 @@ def solve_chapter_live(
     total_live_berries = prior_berries + max(0, final_snap.berries - seg_berry_base)
     total_live_deaths = prior_deaths + max(0, final_snap.deaths - base_deaths)
 
-    script_sections.append("***")
+    script_sections.append(f"# FIM DA ROTA LIVE: {chapter_key} | Quadros: {total_frames_all}")
     final_text = "\n".join(script_sections) + "\n"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(final_text, encoding="utf-8")

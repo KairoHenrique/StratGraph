@@ -4,7 +4,6 @@
 
 RecordCount: 1
 Unsafe
-Set, CelesteTAS.SimplifiedGraphics, true
 
 console load 1 1
   95
@@ -2119,4 +2118,4 @@ console load 1 12a
 # [Checkpoint StratGraph] Retomada em lvl_end apos limite continuo (lvl_12a -> lvl_end)
 console load 1 end
   95
-***
+# FIM DA ROTA LIVE: 1_forsaken_city | Quadros: 16492
