@@ -1,0 +1,820 @@
+# StratGraph -> CelesteTAS (All Collectibles - 100%, alpha=0.05)
+# Capitulo: 3_celestial_resort (Area ID: 3) | Algoritmo: StratGraph (Dijkstra L0->L1 + Contracao)
+# Custo Real: 1456.24 | Custo Efetivo: 545.49 | Coletaveis: 24 | Passou por ARMA: SIM
+#
+# Nota: Como o StratGraph modela desvios em grafo (ARMA + becos contraidos),
+# cada sala e ancorada via `#lvl_<sala>` e `console load` (requer `Unsafe`) para
+# execucao reprodutivel por segmento no CelesteTAS Studio / Everest.
+
+RecordCount: 1
+Unsafe
+Set, CelesteTAS.SimplifiedGraphics, true
+
+#lvl_s0
+# [Passo 1/24] Sala: lvl_s0 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+console load 3 s0
+  18
+
+#lvl_s1
+# [Passo 2/24] Sala: lvl_s1 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+   5,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,X
+   5,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,U,X
+  18,R
+   8
+   5,R
+
+#lvl_s2
+# [Passo 3/24] Sala: lvl_s2 | Camada: L0 | Valor Sala: 10.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,L,J
+   9,L,U,X
+  45,L
+  10,R,J
+   9,R,X
+  46,R
+  10,R,J
+   9,R,U,X
+  32,R
+  22,L
+   9,R,D,X
+  23,R
+   9,R,D,X
+  31,R
+   9,R,D,X
+  35,R
+   9,R,D,X
+  32,R
+  10,L,J
+   9,L,U,X
+  25,L
+  10,L,J
+   9,L,X
+  26,L
+  10,L,J
+   9,L,X
+  21,L
+
+#lvl_s3
+# [Passo 4/24] Sala: lvl_s3 | Camada: L0 | Valor Sala: 5.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  21,R
+  10,R,J
+   9,R,X
+  21,R
+  10,R,J
+   9,R,U,X
+  32,R
+  10,R,J
+   9,R,U,X
+  13,R
+  10,R,J
+   9,R,U,X
+  34,R
+  10,R,J
+   9,R,U,X
+  22,R
+  10,R,J
+   9,R,U,X
+  28,R
+  10,R,J
+   9,R,U,X
+  31,R
+  10,R,J
+   9,R,U,X
+  12,R
+  10,L,J
+   9,L,U,X
+  17,L
+  33
+  67,L
+   9,L,D,X
+  35,L
+
+#lvl_0x-a
+# [Passo 5/24] Sala: lvl_0x-a | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: SIM
+  27,R
+  10,R,J
+   9,R,U,X
+  29,R
+  10,R,J
+   9,R,X
+   9,R,J
+  51,R
+
+#lvl_0x-a
+# [Passo 6/24] Sala: lvl_0x-a | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+console load 3 0x-a
+  18
+
+#lvl_0x-b
+# [Passo 7/24] Sala: lvl_0x-b | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+  10,R,J
+   9,R,U,X
+  45,R
+
+#lvl_00-b
+# [Passo 8/24] Sala: lvl_00-b | Camada: L1 | Valor Sala: 5.0 | Arma Ativa: SIM
+   9,L,D,X
+  45,L
+   9,L,D,X
+  45,L
+  18
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  50,R
+  10,R,J
+   9,R,U,X
+  98,R
+   9,R,J
+  40,R
+# [Beco Contraido -> Coletar lvl_01-b (+0.0) e retornar a lvl_00-b]
+#lvl_01-b
+ 111,R
+   9,R,J
+  75,R
+  10,L,J
+   9,L,X
+   9,L,J
+  16,L
+   9,L,X
+  27,L
+  10,L,J
+   9,L,X
+   5,L
+   9,L,J
+  16,L
+  10,L,J
+   9,L,X
+  54,L
+  10,L,J
+   9,L,U,X
+   6,L
+  42,R
+  10,R,J
+   9,R,X
+  27,R
+# [Beco Contraido -> Coletar lvl_02-b (+0.0) e retornar a lvl_00-b]
+#lvl_02-b
+console load 3 02-b
+  24,R,J
+console load 3 00-b
+  12
+# [Beco Contraido -> Coletar lvl_02-a (+0.0) e retornar a lvl_00-b]
+#lvl_02-a
+console load 3 02-a
+  24,R,J
+console load 3 00-b
+  12
+# [Beco Contraido -> Coletar lvl_00-a (+5.0) e retornar a lvl_00-b]
+#lvl_00-a
+console load 3 00-a
+  24,R,J
+console load 3 00-b
+  12
+
+#lvl_00-c
+# [Passo 9/24] Sala: lvl_00-c | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+   9,L,J
+   6,L
+  22,L,U,G
+  15,U,G
+   9,L,J
+   6,L
+  29,U,G
+  15,L,U,G
+  27,L
+   9,L,J
+  64,L
+
+#lvl_01-c
+# [Passo 10/24] Sala: lvl_01-c | Camada: L1 | Valor Sala: 12.0 | Arma Ativa: SIM
+  10,R,J
+   9,R,U,X
+   8,R
+  10,R,J
+   9,R,X
+  11,R
+  10,R,J
+   9,R,U,X
+  18,R
+  10,R,J
+   9,R,U,X
+  15,R
+  10,R,J
+   9,R,U,X
+ 134,R
+   9,R,J
+  16,R
+   9,R,J
+  16,R
+   9,R,J
+  11,R
+   9,R,J
+  11,R
+
+#lvl_02-c
+# [Passo 11/24] Sala: lvl_02-c | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+   7,R,U,G
+   5,R
+   9,R,X
+  11,R
+   9,R,D,X
+   8,R
+   9,R,X
+  11,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,X
+   5,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,X
+   5,R
+  10,R,J
+   9,R,X
+  10,R
+# [Beco Contraido -> Coletar lvl_03-b (+10.0) e retornar a lvl_02-c]
+#lvl_03-b
+  21,R
+  42
+   9,L,D,X
+  24,L
+  10,L,J
+   9,L,U,X
+  22,L
+  10,R,J
+   9,R,U,X
+  11,R
+   9,L,J
+   6,L
+   9,L,D,X
+  27,L
+  10,R,J
+   9,R,X
+  42,R
+  10,R,J
+   9,R,X
+  10,R,J
+   9,R,X
+   6,R
+  10,R,J
+   9,R,U,X
+  10,R,J
+   9,R,U,X
+   7,R
+  10,R,J
+   9,R,U,X
+  21,U,G
+   7,L,U,G
+   5,L
+   7,L,U,G
+   5,L
+# [Beco Contraido -> Coletar lvl_04-b (+5.0) e retornar a lvl_02-c]
+#lvl_04-b
+console load 3 04-b
+  24,R,J
+console load 3 02-c
+  12
+# [Beco Contraido -> Coletar lvl_03-a (+0.0) e retornar a lvl_02-c]
+#lvl_03-a
+console load 3 03-a
+  24,R,J
+console load 3 02-c
+  12
+# [Beco Contraido -> Coletar lvl_05-a (+0.0) e retornar a lvl_02-c]
+#lvl_05-a
+console load 3 05-a
+  24,R,J
+console load 3 02-c
+  12
+# [Beco Contraido -> Coletar lvl_06-a (+5.0) e retornar a lvl_02-c]
+#lvl_06-a
+console load 3 06-a
+  24,R,J
+console load 3 02-c
+  12
+# [Beco Contraido -> Coletar lvl_07-a (+0.0) e retornar a lvl_02-c]
+#lvl_07-a
+console load 3 07-a
+  24,R,J
+console load 3 02-c
+  12
+# [Beco Contraido -> Coletar lvl_07-b (+5.0) e retornar a lvl_02-c]
+#lvl_07-b
+console load 3 07-b
+  24,R,J
+console load 3 02-c
+  12
+# [Beco Contraido -> Coletar lvl_06-b (+5.0) e retornar a lvl_02-c]
+#lvl_06-b
+console load 3 06-b
+  24,R,J
+console load 3 02-c
+  12
+# [Beco Contraido -> Coletar lvl_06-c (+5.0) e retornar a lvl_02-c]
+#lvl_06-c
+console load 3 06-c
+  24,R,J
+console load 3 02-c
+  12
+# [Beco Contraido -> Coletar lvl_05-c (+5.0) e retornar a lvl_02-c]
+#lvl_05-c
+console load 3 05-c
+  24,R,J
+console load 3 02-c
+  12
+
+#lvl_04-c
+# [Passo 12/24] Sala: lvl_04-c | Camada: L1 | Valor Sala: 5.0 | Arma Ativa: SIM
+  22,R
+   9,R,J
+  29,R
+  10,R,J
+   9,R,U,X
+  28,R
+  10,R,J
+   9,R,U,X
+  65,R
+  10,R,J
+   9,R,X
+  31,R
+   7,R,U,G
+   9,L,X
+  32,L
+  10,L,J
+   9,L,U,X
+  29,L
+   9,L,D,X
+  25,L
+   9,L,D,X
+  31,L
+
+#lvl_04-d
+# [Passo 13/24] Sala: lvl_04-d | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+  10,R,J
+   9,R,U,X
+  31,R
+  10,R,J
+   9,R,U,X
+  56,R
+   9,R,J
+  16,R
+  10,R,J
+   9,R,U,X
+  27,R
+   7,U,G
+  10,L,J
+   9,L,U,X
+  28,L
+  10,R,J
+   9,R,U,X
+  13,R
+   9,R,D,X
+  27,R
+   9,R,J
+   2,R
+  10,R,J
+   9,R,X
+  32,R
+  10,R,J
+   9,R,U,X
+  43,R
+  10,R,J
+   9,R,U,X
+  11,R
+# [Beco Contraido -> Coletar lvl_06-d (+5.0) e retornar a lvl_04-d]
+#lvl_06-d
+   7,R,U,G
+   5,R
+  10,R,J
+   9,R,X
+  15,R
+   9,R,D,X
+  13,R
+  10,R,J
+   9,R,U,X
+  17,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,X
+  15,R
+   9,R,D,X
+  18,R
+   9,R,X
+  17,R
+   9,R,D,X
+  18,R
+   9,R,X
+  17,R
+  10,L,J
+   9,L,X
+  45,L
+  10,L,J
+   9,L,X
+  45,L
+  10,L,J
+   9,L,X
+  45,L
+  10,L,J
+   9,L,X
+  45,L
+  10,L,J
+   9,L,U,X
+  55,L
+# [Beco Contraido -> Coletar lvl_08-d (+0.0) e retornar a lvl_04-d]
+#lvl_08-d
+console load 3 08-d
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_09-d (+0.0) e retornar a lvl_04-d]
+#lvl_09-d
+console load 3 09-d
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_09-b (+0.0) e retornar a lvl_04-d]
+#lvl_09-b
+console load 3 09-b
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_08-x (+5.0) e retornar a lvl_04-d]
+#lvl_08-x
+console load 3 08-x
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_10-c (+0.0) e retornar a lvl_04-d]
+#lvl_10-c
+console load 3 10-c
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_11-c (+15.0) e retornar a lvl_04-d]
+#lvl_11-c
+console load 3 11-c
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_12-c (+5.0) e retornar a lvl_04-d]
+#lvl_12-c
+console load 3 12-c
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_10-d (+0.0) e retornar a lvl_04-d]
+#lvl_10-d
+console load 3 10-d
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_11-d (+5.0) e retornar a lvl_04-d]
+#lvl_11-d
+console load 3 11-d
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_10-x (+0.0) e retornar a lvl_04-d]
+#lvl_10-x
+console load 3 10-x
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_10-y (+5.0) e retornar a lvl_04-d]
+#lvl_10-y
+console load 3 10-y
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_11-x (+0.0) e retornar a lvl_04-d]
+#lvl_11-x
+console load 3 11-x
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_11-y (+0.0) e retornar a lvl_04-d]
+#lvl_11-y
+console load 3 11-y
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_12-y (+5.0) e retornar a lvl_04-d]
+#lvl_12-y
+console load 3 12-y
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_11-a (+0.0) e retornar a lvl_04-d]
+#lvl_11-a
+console load 3 11-a
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_13-a (+0.0) e retornar a lvl_04-d]
+#lvl_13-a
+console load 3 13-a
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_13-b (+5.0) e retornar a lvl_04-d]
+#lvl_13-b
+console load 3 13-b
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_12-x (+0.0) e retornar a lvl_04-d]
+#lvl_12-x
+console load 3 12-x
+  24,R,J
+console load 3 04-d
+  12
+# [Beco Contraido -> Coletar lvl_13-x (+5.0) e retornar a lvl_04-d]
+#lvl_13-x
+console load 3 13-x
+  24,R,J
+console load 3 04-d
+  12
+
+#lvl_02-d
+# [Passo 14/24] Sala: lvl_02-d | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+   9,L,D,X
+  20,L
+  10,L,J
+   9,L,X
+  31,L
+   9,L,X
+  31,L
+   9,L,X
+  45,L
+   9,L,D,X
+  93,L
+   7,L,U,G
+   9,L,J
+   2,L
+   7,L,U,G
+   9,L,J
+   2,L
+
+#lvl_00-d
+# [Passo 15/24] Sala: lvl_00-d | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+   9,L,D,X
+  45,L
+  10,L,J
+   9,L,U,X
+  45,L
+  10,L,J
+   9,L,U,X
+  45,L
+  10,L,J
+   9,L,X
+  45,L
+   9,L,X
+  65,L
+
+#lvl_roof00
+# [Passo 16/24] Sala: lvl_roof00 | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+  10,L,J
+   9,L,X
+  10,L,J
+   9,L,X
+  10,L,J
+   9,L,U,X
+   4,L
+  11,L,J
+  14,L
+  10,L,J
+   9,L,U,X
+   7,U,G
+
+#lvl_roof01
+# [Passo 17/24] Sala: lvl_roof01 | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  50,R
+  21
+   5,R
+
+#lvl_roof02
+# [Passo 18/24] Sala: lvl_roof02 | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+  10,R,J
+   9,R,U,X
+  28,R
+  10,R,J
+   9,R,U,X
+  23,R
+  10,R,J
+   9,R,U,X
+  18,R
+  10,R,J
+   9,R,X
+  21,R
+   9,R,X
+  46,R
+  11
+   5,L
+   2
+   5,L
+
+#lvl_roof03
+# [Passo 19/24] Sala: lvl_roof03 | Camada: L1 | Valor Sala: 5.0 | Arma Ativa: SIM
+  10,R,J
+   9,R,U,X
+  27,R
+  10,R,J
+   9,R,X
+  26,R
+  10,R,J
+   9,R,X
+  31,R
+  10,R,J
+   9,R,X
+  26,R
+  10,R,J
+   9,R,U,X
+  41,R
+   9,R,D,X
+  45,R
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  44,R
+   9,R,J
+   6,R
+   9,L,D,X
+  45,L
+  10,L,J
+   9,L,X
+  45,L
+  10,L,J
+   9,L,X
+  45,L
+   9,L,D,X
+  45,L
+
+#lvl_roof04
+# [Passo 20/24] Sala: lvl_roof04 | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+  10,R,J
+   9,R,U,X
+  45,R
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+   9,R,X
+  55,R
+
+#lvl_roof05
+# [Passo 21/24] Sala: lvl_roof05 | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,X
+  15,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,U,X
+  16,R
+   2
+   5,R
+
+#lvl_roof06b
+# [Passo 22/24] Sala: lvl_roof06b | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+  10,R,J
+   9,R,U,X
+  45,R
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,U,X
+  50,R
+  16
+   5,R
+
+#lvl_roof06
+# [Passo 23/24] Sala: lvl_roof06 | Camada: L1 | Valor Sala: 10.0 | Arma Ativa: SIM
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  41,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  50,R
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,X
+  10,R
+   9,L,D,X
+  45,L
+   9,L,X
+  45,L
+  10,L,J
+   9,L,X
+  45,L
+   9,L,X
+  45,L
+
+#lvl_roof07
+# [Passo 24/24] Sala: lvl_roof07 | Camada: L1 | Valor Sala: 0.0 | Arma Ativa: SIM
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,U,X
+  50,R
+   2
+  10,R
+   2
+   5,R
+
+# FIM DA ROTA: 3_celestial_resort | Total de quadros estimados (60 FPS): 10464

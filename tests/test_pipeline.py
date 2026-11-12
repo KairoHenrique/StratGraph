@@ -229,5 +229,30 @@ def test_simulator_and_mods_export() -> None:
     assert len(data["cuphead_1_1f_forest_follies"]["tas_waypoints_flat"]) > 50
 
 
+def test_celeste_tas_export(tmp_path: Path) -> None:
+    """Valida a exportação e sintaxe CelesteTAS (60 FPS, 100% coleta) nos 8 capítulos."""
+    from scripts.export_celeste_tas import export_all_chapters, validate_celestetas_script
+
+    reports = export_all_chapters(alpha=0.05, out_dir=tmp_path)
+    assert len(reports) == 16  # 8 capítulos x {bfs, stratgraph}
+    assert (tmp_path / "README_CELESTETAS.md").is_file()
+
+    by_chapter: dict[str, dict[str, object]] = {}
+    for rep in reports:
+        assert rep.tas_path.is_file()
+        content = rep.tas_path.read_text(encoding="utf-8")
+        ok, errs, parsed_frames = validate_celestetas_script(content)
+        assert ok, f"Erros TAS em {rep.tas_path.name}: {errs}"
+        assert parsed_frames == rep.total_frames
+        assert parsed_frames > 0
+        raw = load_graph_from_csv(Path("datasets/celeste") / rep.chapter)
+        assert rep.collectibles == len(raw.original_collectibles)
+        by_chapter.setdefault(rep.chapter, {})[rep.algo_name] = rep
+
+    for chapter, pair in by_chapter.items():
+        bfs_rep = pair["bfs"]
+        sg_rep = pair["stratgraph"]
+        assert sg_rep.used_weapon, f"{chapter} StratGraph TAS não ativou ARMA"
+        assert sg_rep.eff_cost < bfs_rep.eff_cost, f"{chapter} StratGraph não reduziu custo efetivo"
 
 

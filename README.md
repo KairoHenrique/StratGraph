@@ -14,9 +14,10 @@ Otimização de rotas estratégicas em mapas de jogos digitais modelados como **
 ├── src/                  # Núcleo algorítmico em Python 3.12 (apenas biblioteca padrão)
 ├── docs/                 # Documentação técnica, modelagem matemática e guias de execução
 ├── datasets/             # Mapas tratados em CSV (Celeste, Cuphead e benchmarks sintéticos)
-├── scripts/              # Extratores A* físicos, benchmarks, gráficos, simulador 2D e builder de mods
-├── mods/                 # Mods C# opcionais de HUD visual (F5/F6) para guia manual em Celeste e Cuphead
-├── tests/                # Testes unitários e de integração (11 testes automatizados)
+├── scripts/              # Extratores A* físicos, benchmarks, gráficos, simulador 2D, exportador TAS e mods
+├── tas/                  # Scripts CelesteTAS (.tas, 60 FPS) por capítulo para validação no Everest / Celeste Studio
+├── mods/                 # Mods C# opcionais de HUD visual (F5/F6) — foco em guia visual manual (Cuphead / legado)
+├── tests/                # Testes unitários e de integração (12 testes automatizados)
 ├── results/              # Resultados experimentais (CSV/JSON), simulador HTML5 e pacotes .zip
 └── article/              # Artigo científico LaTeX (IEEE Conference Template), referências e figuras
 ```
@@ -35,23 +36,26 @@ python3 -m src.main --dataset datasets/celeste/1_forsaken_city --alpha 0.05
 python -m src.main --dataset datasets/celeste/1_forsaken_city --alpha 0.05
 ```
 
-## Simulador Visual 2D e Mods Opcionais de Guia Visual (*Celeste* & *Cuphead*)
+## Simulador Visual 2D, Exportação CelesteTAS e Guia HUD (*Celeste* & *Cuphead*)
 
-> **Nota para avaliação acadêmica:** O avaliador **não** precisa dos jogos instalados. Todo o motor em Python (`src/`) e os grafos extraídos (`datasets/`) rodam integralmente *offline* no terminal Ubuntu 24.04 / Windows.
+> **Nota para avaliação acadêmica:** O avaliador **não** precisa dos jogos, Everest ou CelesteTAS instalados. Todo o motor em Python (`src/`), os grafos extraídos (`datasets/`) e os testes (`tests/`) rodam integralmente *offline* no terminal Ubuntu 24.04 / Windows.
 
 * **Simulador Visual Interativo 2D (HTML5 Canvas — Linux e Windows):**
   Anima os agentes de **BFS**, **DFS *Branch-and-Bound***, **Dijkstra `--no-contract`** e **StratGraph ($L_0 \to L_1$ + Contração de Becos)** percorrendo os *waypoints* físicos reais ($A^*$ em espaço de estados no grid 8×8 `<solids>` de *Celeste* e plataformas de *Cuphead*):
   ```bash
   python -m scripts.simulate_route --open
   ```
-* **Mods Opcionais de Guia Visual HUD *In-Game* (Steam / Windows):**
-  Compila os mods em C# ([`mods/celeste_stratgraph/`](mods/celeste_stratgraph/StratGraphCelesteHud.cs) e [`mods/cuphead_stratgraph/`](mods/cuphead_stratgraph/StratGraphCupheadHud.cs)) para desenho passivo da rota na tela (sem automação de botões ou trapaças — o jogador humano joga normalmente seguindo o traçado visual). Dentro do jogo, **`F5`** mostra/oculta o guia HUD e **`F6`** alterna ao vivo entre a **Rota StratGraph ($L_0 \to L_1$)** e a **Rota BFS ($L_0$)**:
+* **Exportação CelesteTAS 60 FPS ([`scripts/export_celeste_tas.py`](scripts/export_celeste_tas.py) → [`tas/celeste/`](tas/celeste/README_CELESTETAS.md)):**
+  Converte as rotas ótimas (`stratgraph` vs `bfs`) dos 8 capítulos de *Celeste* em arquivos `.tas` (60 FPS) validados sintaticamente para uso no **Everest + CelesteTAS (`CelesteStudio.exe`)**, utilizando rótulos `#lvl_<sala>` e âncoras `console load <id> <sala>` (`Unsafe`) por segmento de sala (enquanto *playthrough* contínua *single-segment* sem cortes requer sintonia subpixel dentro do próprio *Celeste Studio*):
+  ```bash
+  python -m scripts.export_celeste_tas
+  ```
+* **Mod Opcional de Guia Visual HUD *In-Game* (Steam / Windows — foco *Cuphead*):**
+  Como *Cuphead* não possui ferramenta equivalente ao *CelesteTAS*, [`mods/cuphead_stratgraph/`](mods/cuphead_stratgraph/StratGraphCupheadHud.cs) oferece desenho passivo da rota na tela (`F5` exibe/oculta HUD e `F6` alterna `StratGraph` vs `BFS`). Para *Celeste*, mantenha o binário vanilla restaurado ao usar **Everest + CelesteTAS**:
   ```powershell
-  # Compilar e instalar apenas o overlay HUD nos jogos da Steam
-  python -m scripts.build_mods --install-games
-
-  # Restaurar binários originais da Steam quando desejar
-  python -m scripts.build_mods --uninstall-games
+  # Compilar DLLs / instalar HUD e garantir Celeste.exe vanilla limpo para Everest + CelesteTAS
+  python -m scripts.build_mods
+  python -m scripts.build_mods --uninstall-celeste
   ```
 
 ### Dependências opcionais (gráficos do artigo e testes)

@@ -1,0 +1,888 @@
+# StratGraph -> CelesteTAS (All Collectibles - 100%, alpha=0.05)
+# Capitulo: 1_forsaken_city (Area ID: 1) | Algoritmo: BFS (Baseline L0 + Contracao)
+# Custo Real: 746.70 | Custo Efetivo: 533.11 | Coletaveis: 21 | Passou por ARMA: NAO
+#
+# Nota: Como o StratGraph modela desvios em grafo (ARMA + becos contraidos),
+# cada sala e ancorada via `#lvl_<sala>` e `console load` (requer `Unsafe`) para
+# execucao reprodutivel por segmento no CelesteTAS Studio / Everest.
+
+RecordCount: 1
+Unsafe
+Set, CelesteTAS.SimplifiedGraphics, true
+
+#lvl_1
+# [Passo 1/20] Sala: lvl_1 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+console load 1 1
+  18
+
+#lvl_2
+# [Passo 2/20] Sala: lvl_2 | Camada: L0 | Valor Sala: 5.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,U,X
+   7,R
+  10,R,J
+   9,R,U,X
+  13,R
+  10,R,J
+   9,R,U,X
+  11,R
+  10,R,J
+   9,R,X
+   5,R
+  10,R,J
+   9,R,U,X
+   4,R
+   7,U,G
+   9,R,J
+   6,R
+   9,R,J
+   2,R
+  51,R,U,G
+   9,R,J
+   2,R
+  15
+  55,L
+
+#lvl_3
+# [Passo 3/20] Sala: lvl_3 | Camada: L0 | Valor Sala: 5.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,U,X
+  15,R
+  10,R,J
+   9,R,U,X
+  25,R
+   9,R,X
+  12,R
+  10,R,J
+   9,R,U,X
+   9,R
+  10,R,J
+   9,R,U,X
+  17,R
+   7,U,G
+  10,R,J
+   9,R,U,X
+   2,R
+   9,R,X
+  11,R
+  10,R,J
+   9,R,U,X
+  13,R
+  10,R,J
+   9,R,X
+   6,R
+   2
+  10,L,J
+   9,L,X
+   5,L
+   9,L,D,X
+  11,L
+  10,L,J
+   9,L,X
+  10,L
+   9,L,X
+   2,L
+
+#lvl_4
+# [Passo 4/20] Sala: lvl_4 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,U,X
+   7,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,U,X
+  13,R
+  10,R,J
+   9,R,U,X
+  15,R
+  10,R,J
+   9,R,U,X
+  13,R
+   7,U,G
+
+#lvl_3b
+# [Passo 5/20] Sala: lvl_3b | Camada: L0 | Valor Sala: 5.0 | Arma Ativa: NAO
+   9,R,J
+   6,R
+  11,R,J
+  14,R
+  11,R,J
+  14,R
+   9,R,J
+   6,R
+  11,R,J
+   2,R
+   7,U,G
+   9,R,J
+   6,R
+   9,R,J
+  11,R
+   9,R,J
+   2,R
+  29,U,G
+  15
+  41,L
+
+#lvl_5
+# [Passo 6/20] Sala: lvl_5 | Camada: L0 | Valor Sala: 5.0 | Arma Ativa: NAO
+   9,R,J
+   6,R
+  10,R,J
+   9,R,U,X
+  13,R
+  36,U,G
+  11,R,J
+   4,R
+   9,R,J
+  16,R
+   7,U,G
+  10,R,J
+   9,R,U,X
+  13,R
+  10,L,J
+   9,L,U,X
+   6,L
+  10,L,J
+   9,L,U,X
+   6,L
+  10,L,J
+   9,L,U,X
+   2,L
+  15,L,U,G
+  83,R
+   9,L,D,X
+  17,L
+# [Beco Contraido -> Coletar lvl_5a (+5.0) e retornar a lvl_5]
+#lvl_5a
+  10,R,J
+   9,R,U,X
+  24,R
+  10,R,J
+   9,R,U,X
+  17,R
+  10,R,J
+   9,R,U,X
+  44,R
+   9,R,D,X
+  29,R
+  10,R,J
+   9,R,U,X
+   7,R
+  10,R,J
+  18,R,X
+   7,R
+  10,R,J
+   9,R,X
+   7,R,U,G
+   9,L,X
+  10,L,J
+   9,L,U,X
+   7,L
+  10,L,J
+   9,L,X
+   9,L,D,X
+  11,L
+   7,L,U,G
+   5,L
+  10,L,J
+   9,L,U,X
+  24,L
+  10,L,J
+   9,L,U,X
+  13,L
+  10,L,J
+   9,L,U,X
+  12,L
+  10,L,J
+   9,L,U,X
+  21,L
+  10,L,J
+   9,L,U,X
+  13,L
+  34,R
+  29
+  31,R
+   9,L,D,X
+  24,L
+# [Beco Contraido -> Coletar lvl_5z (+5.0) e retornar a lvl_5]
+#lvl_5z
+   7,L,U,G
+   7,U,G
+  14,L,U,G
+  37,L
+   9,L,J
+  58,L
+   9,R,J
+  84,R
+   7,U,G
+   5,R
+  10,R,J
+   9,R,X
+  11,R
+  10,R,J
+   9,R,U,X
+   9,R
+  10,L,J
+   9,L,U,X
+   9,L
+  10,R,J
+   9,R,U,X
+  11,R
+  11,L,J
+  14,L
+  34,R
+  25
+  31,R
+   9,L,D,X
+  24,L
+
+#lvl_6
+# [Passo 7/20] Sala: lvl_6 | Camada: L0 | Valor Sala: 5.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,U,X
+  31,R
+  10,R,J
+   9,R,U,X
+  31,R
+  10,R,J
+   9,R,U,X
+  17,R
+  10,R,J
+   9,R,U,X
+  24,R
+  10,L,J
+   9,L,U,X
+  17,L
+   7,U,G
+  10,R,J
+   9,R,U,X
+  28,R
+  10,R,J
+   9,R,U,X
+  13,R
+   9,R,D,X
+  21,R
+   9,R,D,X
+  23,R
+  10,L,J
+   9,L,U,X
+  23,L
+  10,L,J
+   9,L,U,X
+  52,L
+   9,L,D,X
+  28,L
+# [Beco Contraido -> Coletar lvl_6z (+0.0) e retornar a lvl_6]
+#lvl_6z
+   9,R,J
+   6,R
+  22,R,U,G
+  29,U,G
+   9,L,J
+  28,L
+   2
+   7,U,G
+   5,R
+  10,R,J
+   9,R,U,X
+  20,R
+   9,R,D,X
+  18,R
+   9,R,D,X
+  11,R
+   9,R,X
+  16,R
+  10,L,J
+   9,L,X
+  10,L
+  10,L,J
+   9,L,U,X
+  20,L
+  10,L,J
+   9,L,U,X
+  45,L
+   9,L,D,X
+  21,L
+# [Beco Contraido -> Coletar lvl_7zb (+5.0) e retornar a lvl_6]
+#lvl_7zb
+console load 1 7zb
+  24,R,J
+console load 1 6
+  12
+
+#lvl_6a
+# [Passo 8/20] Sala: lvl_6a | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,U,X
+  24,R
+  10,R,J
+   9,R,U,X
+  17,R
+  10,R,J
+   9,R,U,X
+  17,R
+   9,R,D,X
+  23,R
+  10,R,J
+   9,R,X
+  21,R
+   6
+   5,R
+
+#lvl_6b
+# [Passo 9/20] Sala: lvl_6b | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  25,R
+  10,R,J
+   9,R,U,X
+  28,R
+  10,R,J
+   9,R,U,X
+  25,R
+  10,R,J
+   9,R,X
+  26,R
+  10,R,J
+   9,R,U,X
+  33,R
+   8
+   5,R
+# [Beco Contraido -> Coletar lvl_s0 (+0.0) e retornar a lvl_6b]
+#lvl_s0
+  10,R,J
+   9,R,U,X
+   2,R
+  10,R,J
+   9,R,U,X
+   6,R
+  10,L,J
+   9,L,U,X
+  13,L
+  11,L,J
+   4,L
+  10,L,J
+   9,L,U,X
+   7,L
+   4
+  14,U,G
+  18,R
+  11
+   8,L
+  62
+# [Beco Contraido -> Coletar lvl_s1 (+5.0) e retornar a lvl_6b]
+#lvl_s1
+console load 1 s1
+  24,R,J
+console load 1 6b
+  12
+
+#lvl_6c
+# [Passo 10/20] Sala: lvl_6c | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,X
+  16,R
+  10,R,J
+   9,R,U,X
+  22,R
+  10,R,J
+   9,R,U,X
+  24,R
+  10,R,J
+   9,R,U,X
+  13,R
+  10,R,J
+   9,R,U,X
+  33,R
+   6
+   5,R
+# [Beco Contraido -> Coletar lvl_7z (+5.0) e retornar a lvl_6c]
+#lvl_7z
+   9,R,J
+   6,R
+  51,U,G
+  29,L,U,G
+   9,L,J
+  11,L
+   9,L,X
+   6,L
+  10,L,J
+   9,L,X
+   5,L
+  10,L,J
+   9,L,U,X
+   7,L
+  10,L,J
+   9,L,U,X
+  13,L
+   7,U,G
+   9,R,D,X
+  17,R
+   9,R,X
+   7,R
+  10,R,J
+   9,R,X
+   5,R
+  10,R,J
+   9,R,X
+   5,R
+   7,U,G
+  21,R
+  16
+  10,R
+  26,L
+
+#lvl_7
+# [Passo 11/20] Sala: lvl_7 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  11,R
+   9,R,X
+  12,R
+  10,R,J
+   9,R,U,X
+  13,R
+  10,R,J
+   9,R,U,X
+  20,R
+  11,R,J
+  14,R
+   7,U,G
+
+#lvl_8
+# [Passo 12/20] Sala: lvl_8 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,J
+   9,U,X
+  10,R,J
+   9,R,U,X
+   4,R
+  10,R,J
+   9,R,U,X
+  13,R
+   9,R,J
+  16,R
+  10,R,J
+   9,R,U,X
+   7,U,G
+# [Beco Contraido -> Coletar lvl_7a (+5.0) e retornar a lvl_8]
+#lvl_7a
+  11,R,J
+   9,R
+  10,R,J
+   9,R,X
+   5,R
+   9,R,X
+  11,R
+  10,R,J
+   9,R,U,X
+  31,R
+   2
+  34,R
+   9,R,D,X
+  28,R
+   9,R,X
+  11,R
+  10,R,J
+   9,R,U,X
+  17,R
+  21,L
+   9,L,X
+  17,L
+  10,L,J
+   9,L,X
+  11,L
+  10,L,J
+   9,L,X
+  16,L
+  10,L,J
+   9,L,U,X
+  13,L
+   7,R,U,G
+   9,R,J
+   2,R
+   7,R,U,G
+  29,U,G
+   9,L,J
+   2,L
+   9,L,J
+  39,L
+   9,L,J
+  89,L
+# [Beco Contraido -> Coletar lvl_8zb (+5.0) e retornar a lvl_8]
+#lvl_8zb
+  22,L,U,G
+  22,U,G
+  15,L,U,G
+  22,R,U,G
+   9,L,J
+   7,L
+   9,L,J
+  59,L
+   9,L,J
+  11,L
+   9,L,J
+  11,L
+   9,L,J
+  59,L
+   9,L,J
+  11,L
+  10,R,J
+   9,R,X
+  10,R
+   9,R,X
+   6,R
+   9,R,D,X
+  24,R
+  10,R,J
+   9,R,X
+   5,R
+   9,R,X
+  28,R
+  29
+   8,R
+# [Beco Contraido -> Coletar lvl_9z (+5.0) e retornar a lvl_8]
+#lvl_9z
+   9,R,J
+  11,R
+  10,R,J
+   9,R,X
+   5,R
+  10,R,J
+   9,R,U,X
+  15,R
+  10,R,J
+   9,R,U,X
+  11,R
+  10,J
+   9,U,X
+   7,U,G
+   9,L,J
+   2,L
+   9,L,J
+  36,L
+   7,L,U,G
+  21,R
+   9,R,J
+  40,R
+  10,L
+  36
+ 136,L
+
+#lvl_8b
+# [Passo 13/20] Sala: lvl_8b | Camada: L0 | Valor Sala: 5.0 | Arma Ativa: NAO
+  11,R,J
+  14,R
+  10,R,J
+   9,R,X
+  10,R
+   9,R,X
+  16,R
+  10,R,J
+   9,R,U,X
+  27,R
+  10,R,J
+   9,R,U,X
+  18,R
+   9,R,D,X
+   8,R
+  10,R,J
+   9,R,X
+  10,R,J
+   9,R,X
+   6,R
+  11,R,J
+   2,R
+   9,R,J
+   2,R
+  24,L
+  10,L,J
+   9,L,X
+   5,L
+   9,L,X
+  10,L,J
+   9,L,U,X
+   7,L
+
+#lvl_9
+# [Passo 14/20] Sala: lvl_9 | Camada: L0 | Valor Sala: 5.0 | Arma Ativa: NAO
+   9,R,D,X
+  22,R
+   9,R,D,X
+  22,R
+  10,R,J
+   9,R,U,X
+  15,R
+  10,R,J
+   9,R,U,X
+  24,R
+  10,J
+   9,U,X
+   7,U,G
+  10,R,J
+   9,R,U,X
+   6,R
+   9,R,D,X
+   8,R
+   9,R,X
+   6,R
+  10,R,J
+   9,R,U,X
+   8,R
+   5,L
+   9,L,X
+   6,L
+  10,L,J
+   9,L,X
+   6,L
+  10,L,J
+   9,L,U,X
+  28,L
+
+#lvl_9b
+# [Passo 15/20] Sala: lvl_9b | Camada: L0 | Valor Sala: 5.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,U,X
+   8,R
+  10,R,J
+   9,R,U,X
+  18,R
+  10,R,J
+   9,R,U,X
+  11,R
+  10,R,J
+   9,R,U,X
+  12,R
+  10,R,J
+   9,R,X
+  15,R
+   9,R,X
+  11,R
+   9,R,X
+  12,R
+   9,R,X
+  16,R
+  10,R,J
+   9,R,U,X
+  15,R
+  10,R,J
+   9,R,U,X
+   4,R
+  34,L
+   9,L,D,X
+  18,L
+  10,L,J
+   9,L,X
+  10,L
+  10,L,J
+   9,L,X
+  10,L
+# [Beco Contraido -> Coletar lvl_9c (+5.0) e retornar a lvl_9b]
+#lvl_9c
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,U,X
+   8,R
+  10,R,J
+   9,R,U,X
+  17,R
+  10,R,J
+   9,R,U,X
+   9,R
+   9,R,J
+  16,R
+  10,R,J
+   9,R,X
+   9,R,J
+  16,R
+  10,R,J
+   9,R,X
+   5,R
+  10,L,J
+   9,L,X
+  27,L
+  10,L,J
+   9,L,X
+  20,L
+ 191,L
+
+#lvl_10
+# [Passo 16/20] Sala: lvl_10 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  11,R,J
+   2,R
+  11,R,J
+   4,R
+   9,L,J
+  11,L
+  11,L,J
+   4,L
+  43,U,G
+# [Beco Contraido -> Coletar lvl_10z (+0.0) e retornar a lvl_10]
+#lvl_10z
+   9,L,J
+  16,L
+  10,L,J
+   9,L,X
+  10,L,J
+   9,L,X
+   6,L
+  10,L,J
+   9,L,X
+  10,L,J
+   9,L,U,X
+   7,L
+   4
+  14,U,G
+ 166,R
+# [Beco Contraido -> Coletar lvl_10zb (+5.0) e retornar a lvl_10]
+#lvl_10zb
+console load 1 10zb
+  24,R,J
+console load 1 10
+  12
+
+#lvl_11
+# [Passo 17/20] Sala: lvl_11 | Camada: L0 | Valor Sala: 5.0 | Arma Ativa: NAO
+  11,L,J
+   2,L
+  10,L,J
+   9,L,U,X
+  36,R,U,G
+  10,J
+   9,U,X
+  43,U,G
+   9,R,J
+   6,R
+  15,U,G
+  16,L
+   9,L,J
+  99,L
+# [Beco Contraido -> Coletar lvl_11z (+12.0) e retornar a lvl_11]
+#lvl_11z
+  37,U,G
+  15,L,U,G
+   9,L,J
+  22,L
+   9,L,J
+  16,L
+   9,L,J
+  11,L
+   9,L,J
+  11,L
+  22,U,G
+   5,R
+  10,L
+  65,R
+   7,U,G
+   5,R
+   9,R,D,X
+  11,R
+  10,R,J
+   9,R,X
+   5,R
+  10,R,J
+   9,R,U,X
+   6,R
+   9,R,X
+  27,R
+  10,L,J
+   9,L,U,X
+   8,L
+  10,L,J
+   9,L,X
+   9,L,D,X
+  20,L
+   9,L,X
+   2,L
+
+#lvl_12
+# [Passo 18/20] Sala: lvl_12 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,U,X
+  45,R
+   7,U,G
+# [Beco Contraido -> Coletar lvl_12z (+5.0) e retornar a lvl_12]
+#lvl_12z
+  10,R,J
+   9,R,U,X
+   9,R
+  10,R,J
+   9,R,U,X
+  15,R
+  10,R,J
+   9,R,U,X
+   6,R
+  10,L,J
+   9,L,X
+   6,L
+  10,L,J
+   9,L,U,X
+  12,L
+   9,L,D,X
+   8,L
+   9,L,X
+   2,L
+  10,L,J
+   9,L,X
+  10,L
+  10,L,J
+   9,L,U,X
+  11,L
+   9,R,D,X
+  11,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,U,X
+   7,R
+  10,R,J
+   9,R,U,X
+   2,R
+   7,U,G
+  73,R
+  84,L
+
+#lvl_12a
+# [Passo 19/20] Sala: lvl_12a | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,U,X
+  15,R
+  10,R,J
+   9,R,U,X
+  25,R
+   9,R,D,X
+  25,R
+  10,R,J
+   9,R,U,X
+  17,R
+  10,R,J
+   9,R,U,X
+  28,R
+   6
+   5,R
+
+#lvl_end
+# [Passo 20/20] Sala: lvl_end | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,U,X
+   8,R
+  10,L,J
+   9,L,U,X
+   6,L
+  10,R,J
+   9,R,U,X
+   6,R
+  10,R,J
+   9,R,U,X
+  27,R
+  10,L,J
+   9,L,U,X
+  13,L
+   7,U,G
+
+# FIM DA ROTA: 1_forsaken_city | Total de quadros estimados (60 FPS): 10306

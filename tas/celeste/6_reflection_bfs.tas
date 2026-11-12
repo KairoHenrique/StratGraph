@@ -1,0 +1,928 @@
+# StratGraph -> CelesteTAS (All Collectibles - 100%, alpha=0.05)
+# Capitulo: 6_reflection (Area ID: 6) | Algoritmo: BFS (Baseline L0 + Contracao)
+# Custo Real: 910.48 | Custo Efetivo: 882.59 | Coletaveis: 2 | Passou por ARMA: NAO
+#
+# Nota: Como o StratGraph modela desvios em grafo (ARMA + becos contraidos),
+# cada sala e ancorada via `#lvl_<sala>` e `console load` (requer `Unsafe`) para
+# execucao reprodutivel por segmento no CelesteTAS Studio / Everest.
+
+RecordCount: 1
+Unsafe
+Set, CelesteTAS.SimplifiedGraphics, true
+
+#lvl_04b
+# [Passo 1/47] Sala: lvl_04b | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+console load 6 04b
+  18
+# [Beco Contraido -> Coletar lvl_04c (+15.0) e retornar a lvl_04b]
+#lvl_04c
+   7,L,U,G
+  39,L
+   7
+  15,U,G
+   9,R,J
+   2,R
+   7,R,U,G
+  11,R
+   7,U,G
+  15,R
+
+#lvl_04
+# [Passo 2/47] Sala: lvl_04 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,U,X
+  23,R
+   9,R,X
+  16,R
+  10,R,J
+   9,R,X
+  21,R
+  10,R,J
+   9,R,X
+  16,R
+  10,R,J
+   9,R,X
+  62,R
+  36,L
+ 108
+   9,R,D,X
+  45,R
+   9,R,D,X
+  42,R
+   9,R,D,X
+  45,R
+   9,R,D,X
+  45,R
+# [Beco Contraido -> Coletar lvl_04e (+12.0) e retornar a lvl_04]
+#lvl_04e
+  10,L,J
+   9,L,U,X
+  35,L
+   9,L,X
+  12,L
+   9,L,D,X
+  18,L
+  10,L,J
+   9,L,U,X
+  17,L
+  10,L,J
+   9,L,X
+  26,L
+   9,L,D,X
+  45,L
+  10,L,J
+   9,L,X
+  45,L
+  10,L,J
+   9,L,X
+  45,L
+  10,L,J
+   9,L,X
+  45,L
+   5,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+   7,U,G
+  32,R
+  10,R,J
+   9,R,X
+  47,R
+  10,R,J
+   9,R,U,X
+   4,R
+   9,R,J
+  78,R
+
+#lvl_05
+# [Passo 3/47] Sala: lvl_05 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,L,J
+   9,L,U,X
+  45,L
+  10,L,J
+   9,L,U,X
+  45,L
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  50,R
+  36
+   5,R
+
+#lvl_06
+# [Passo 4/47] Sala: lvl_06 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  50,R
+  33
+  31,R
+  44
+
+#lvl_07
+# [Passo 5/47] Sala: lvl_07 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  50,R
+  36
+   5,R
+
+#lvl_08a
+# [Passo 6/47] Sala: lvl_08a | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,X
+   7,R
+   9,R,D,X
+  24,R
+  10,R,J
+   9,R,X
+   5,R
+   9,R,X
+  11,R
+  10,R,J
+   9,R,X
+  15,R
+   2
+   5,R
+
+#lvl_09
+# [Passo 7/47] Sala: lvl_09 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,X
+  31,R
+   9,R,D,X
+  39,R
+  10,R,J
+   9,R,X
+  31,R
+  10,R,J
+   9,R,X
+  26,R
+  10,R,J
+   9,R,U,X
+  36,R
+   9,R,J
+  11,R
+  51,R,U,G
+   9,R,J
+   2,R
+  22,U,G
+  29,L,U,G
+   9,L,J
+   6,L
+  29,R,U,G
+   9,L,J
+   6,L
+
+#lvl_10a
+# [Passo 8/47] Sala: lvl_10a | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  24,R
+   9,R,D,X
+  31,R
+   9,R,D,X
+  18,R
+   9,R,D,X
+  22,R
+   9,R,D,X
+  30,R
+  15
+  15,R
+   2
+   5,R
+
+#lvl_11
+# [Passo 9/47] Sala: lvl_11 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  36,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  70,R
+
+#lvl_12a
+# [Passo 10/47] Sala: lvl_12a | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+   9,R,D,X
+  69,R
+   9,R,D,X
+  68,R
+
+#lvl_13
+# [Passo 11/47] Sala: lvl_13 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  31,R
+  10,R,J
+   9,R,X
+  31,R
+  10,R,J
+   9,R,X
+  31,R
+  10,R,J
+   9,R,X
+  31,R
+  10,R,J
+   9,R,X
+  36,R
+   9,R,J
+   6,R
+ 116,R,U,G
+  29,L,U,G
+  58,U,G
+  22,L,U,G
+
+#lvl_14a
+# [Passo 12/47] Sala: lvl_14a | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  36
+   9,R,D,X
+  35,R
+   9,R,D,X
+  28,R
+   9,R,D,X
+  21,R
+  10,R,J
+   9,R,X
+  36,R
+
+#lvl_15
+# [Passo 13/47] Sala: lvl_15 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  18,R
+   9,R,D,X
+  18,R
+  10,R,J
+   9,R,X
+  21,R
+  10,R,J
+   9,R,U,X
+  31,R
+  10,R,J
+   9,R,U,X
+  45,R
+
+#lvl_16a
+# [Passo 14/47] Sala: lvl_16a | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+   8,R
+   9,R,X
+   6,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,X
+   5,R
+  10,R,J
+   9,R,U,X
+  17,R
+
+#lvl_17
+# [Passo 15/47] Sala: lvl_17 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  45,R
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  41,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,U,X
+  50,R
+   9,R,J
+   2,R
+   9,R,J
+   2,R
+   9,R,J
+   2,R
+  15,U,G
+  15,R,U,G
+  30,L,U,G
+  15,U,G
+   7,L,U,G
+
+#lvl_18a
+# [Passo 16/47] Sala: lvl_18a | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  24,R
+  10,R,J
+   9,R,U,X
+  17,R
+  10,R,J
+   9,R,X
+  52,R
+   9,R,D,X
+  55,R
+
+#lvl_19
+# [Passo 17/47] Sala: lvl_19 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,X
+  45,R
+   9,R,X
+  45,R
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,U,X
+  50,R
+   9,R,J
+   6,R
+  36,U,G
+  29,L,U,G
+  29,R,U,G
+  65,U,G
+   9,R,J
+   2,R
+  36,U,G
+   9,L,J
+   2,L
+
+#lvl_20
+# [Passo 18/47] Sala: lvl_20 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  45,R
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  50,R
+  10
+   5,R
+
+#lvl_b-00
+# [Passo 19/47] Sala: lvl_b-00 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  50,R
+  12
+   5,R
+
+#lvl_b-01
+# [Passo 20/47] Sala: lvl_b-01 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  50,R
+  12
+   5,R
+
+#lvl_b-02
+# [Passo 21/47] Sala: lvl_b-02 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+   9,R,D,X
+  45,R
+   9,R,D,X
+  45,R
+  20
+
+#lvl_b-02b
+# [Passo 22/47] Sala: lvl_b-02b | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  45,R
+  36,L
+   9,R,D,X
+  45,R
+   9,R,D,X
+  45,R
+   9,R,D,X
+ 224,R
+
+#lvl_b-03
+# [Passo 23/47] Sala: lvl_b-03 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  36,R
+  36,L
+   9,R,D,X
+  45,R
+  36
+   9,R,D,X
+  50,R
+   2
+   5,R
+
+#lvl_boss-00
+# [Passo 24/47] Sala: lvl_boss-00 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  45,R
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  55,R
+
+#lvl_boss-01
+# [Passo 25/47] Sala: lvl_boss-01 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  41,R
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  41,R
+  10,R,J
+   9,R,U,X
+  45,R
+   9,R,D,X
+  32,R
+   2
+  20,L
+   7
+   8,L
+  25
+  16,R
+
+#lvl_boss-02
+# [Passo 26/47] Sala: lvl_boss-02 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+   9,R,D,X
+  45,R
+   2
+  20,L
+   7
+   8,L
+  25
+  16,R
+
+#lvl_boss-03
+# [Passo 27/47] Sala: lvl_boss-03 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  41,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  33,R
+   9,R,D,X
+  45,R
+  17
+  13,L
+   2
+   5,L
+
+#lvl_boss-04
+# [Passo 28/47] Sala: lvl_boss-04 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  45,R
+   9,R,D,X
+  31,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  41,R
+   9,R,D,X
+  44,R
+   2
+   8,R
+  18
+  31,L
+
+#lvl_boss-05
+# [Passo 29/47] Sala: lvl_boss-05 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+   8,R
+  10,R,J
+   9,R,X
+   5,R
+  10,R,J
+   9,R,X
+  11,R
+  10,R,J
+   9,R,U,X
+  17,R
+  10,R,J
+   9,R,X
+  16,R
+
+#lvl_boss-06
+# [Passo 30/47] Sala: lvl_boss-06 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  25,R
+  10,R,J
+   9,R,U,X
+  13,R
+  10,R,J
+   9,R,U,X
+  66,R
+   2
+   8,R
+  30
+  26,L
+
+#lvl_boss-07
+# [Passo 31/47] Sala: lvl_boss-07 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,X
+  21,R
+  10,R,J
+   9,R,X
+  21,R
+   9,R,X
+  26,R
+  10,R,J
+   9,R,X
+  21,R
+   9,R,D,X
+  20,R
+   2
+   8,R
+  25
+  23,L
+
+#lvl_boss-08
+# [Passo 32/47] Sala: lvl_boss-08 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  44,R
+   9,R,D,X
+  45,R
+   2
+   5,R
+  15
+   5,L
+   2
+   5,L
+
+#lvl_boss-09
+# [Passo 33/47] Sala: lvl_boss-09 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  60,R
+  36,L
+   9,R,D,X
+  41,R
+   9,R,D,X
+  36,R
+  17
+  13,L
+   2
+   5,L
+
+#lvl_boss-10
+# [Passo 34/47] Sala: lvl_boss-10 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,U,X
+  38,R
+   9,R,X
+  21,R
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  55,R
+
+#lvl_boss-11
+# [Passo 35/47] Sala: lvl_boss-11 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,X
+  22,R
+  10,R,J
+   9,R,X
+  26,R
+   9,R,X
+  22,R
+  10,R,J
+   9,R,X
+  26,R
+  10,R,J
+   9,R,U,X
+  35,R
+   6
+   5,R
+
+#lvl_boss-12
+# [Passo 36/47] Sala: lvl_boss-12 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+   9,R,D,X
+  45,R
+   2
+   5,R
+  10
+   5,L
+   2
+   5,L
+
+#lvl_boss-13
+# [Passo 37/47] Sala: lvl_boss-13 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  28,R
+   9,R,D,X
+  45,R
+  36
+  72,R
+   2
+  10,L
+  14
+   8,L
+  21
+  16,R
+
+#lvl_boss-14
+# [Passo 38/47] Sala: lvl_boss-14 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  41,R
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  41,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  48,R
+   2
+   5,R
+
+#lvl_boss-15
+# [Passo 39/47] Sala: lvl_boss-15 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,X
+  10,R
+  10,R,J
+   9,R,X
+  11,R
+   9,R,X
+  11,R
+  10,R,J
+   9,R,U,X
+  19,R
+
+#lvl_boss-16
+# [Passo 40/47] Sala: lvl_boss-16 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+   5,R
+  10,R,J
+   9,R,X
+   5,R
+  10,R,J
+   9,R,X
+  10,R
+   9,R,D,X
+  36,R
+   2
+  13,L
+   9
+   5,L
+  16
+   5,R
+
+#lvl_boss-17
+# [Passo 41/47] Sala: lvl_boss-17 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  45,R
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,U,X
+  55,R
+
+#lvl_boss-18
+# [Passo 42/47] Sala: lvl_boss-18 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+   9,R,X
+  45,R
+   9,R,D,X
+  45,R
+  14
+
+#lvl_boss-19
+# [Passo 43/47] Sala: lvl_boss-19 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  45,R
+   9,R,D,X
+  45,R
+  36
+  36,R
+   9,R,D,X
+  50,R
+   2
+   5,R
+
+#lvl_boss-20
+# [Passo 44/47] Sala: lvl_boss-20 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+   9,R,D,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+   9,R,D,X
+  50,R
+   2
+   5,R
+
+#lvl_after-00
+# [Passo 45/47] Sala: lvl_after-00 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,X
+  45,R
+  10,R,J
+   9,R,X
+  45,R
+   9,R,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+   7,U,G
+  28,L,U,G
+   9,L,J
+   2,L
+  14,L,U,G
+   7,U,G
+   5,L
+
+#lvl_after-01
+# [Passo 46/47] Sala: lvl_after-01 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,L,J
+   9,L,U,X
+  31,L
+  10,L,J
+   9,L,U,X
+  17,L
+  10,R,J
+   9,R,U,X
+  17,R
+  10,J
+   9,U,X
+  10,R,J
+   9,R,U,X
+  17,R
+   7,U,G
+   7,R,U,G
+   7,U,G
+
+#lvl_after-02
+# [Passo 47/47] Sala: lvl_after-02 | Camada: L0 | Valor Sala: 0.0 | Arma Ativa: NAO
+  10,R,J
+   9,R,U,X
+  45,R
+  10,R,J
+   9,R,U,X
+  45,R
+  10,L,J
+   9,L,U,X
+  45,L
+  10,J
+   9,U,X
+  10,L,J
+   9,L,U,X
+  45,L
+   7,U,G
+
+# FIM DA ROTA: 6_reflection | Total de quadros estimados (60 FPS): 14910

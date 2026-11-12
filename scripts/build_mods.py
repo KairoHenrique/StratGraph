@@ -389,27 +389,38 @@ class Program
         print(f"[Celeste] Mod instalado na Steam! (Backup salvo em {cel_bak.name})")
 
 
+def _restore_steam_backup(bak_path: Path, target_path: Path, cleanup_files: tuple[Path, ...], label: str) -> None:
+    """Restaura um binário original a partir de `.stratgraph.bak` e remove artefatos auxiliares."""
+    if not bak_path.is_file():
+        print(f"[{label}] Nenhum backup encontrado em {bak_path.name}; nada a restaurar.")
+        return
+    shutil.copy2(bak_path, target_path)
+    bak_path.unlink()
+    for p in cleanup_files:
+        if p.is_file():
+            p.unlink()
+    print(f"[{label}] Backup original restaurado com sucesso.")
+
+
+def uninstall_celeste_from_steam() -> None:
+    """Restaura o binário vanilla de Celeste (`Celeste.exe`) preservado em `.stratgraph.bak`."""
+    _restore_steam_backup(
+        CELESTE_EXE.with_suffix(".exe.stratgraph.bak"),
+        CELESTE_EXE,
+        (CELESTE_DIR / "StratGraphCelesteMod.dll", CELESTE_DIR / "stratgraph_routes.json"),
+        "Celeste",
+    )
+
+
 def uninstall_mods_from_steam_games() -> None:
     """Restaura os backups originais (`.stratgraph.bak`) de Cuphead e Celeste."""
-    cup_bak = CUPHEAD_ASM_DLL.with_suffix(".dll.stratgraph.bak")
-    if cup_bak.is_file():
-        shutil.copy2(cup_bak, CUPHEAD_ASM_DLL)
-        cup_bak.unlink()
-        for f in ("StratGraphCupheadMod.dll", "stratgraph_routes.json"):
-            p = CUPHEAD_MANAGED_DIR / f
-            if p.is_file():
-                p.unlink()
-        print("[Cuphead] Backup original restaurado com sucesso.")
-
-    cel_bak = CELESTE_EXE.with_suffix(".exe.stratgraph.bak")
-    if cel_bak.is_file():
-        shutil.copy2(cel_bak, CELESTE_EXE)
-        cel_bak.unlink()
-        for f in ("StratGraphCelesteMod.dll", "stratgraph_routes.json"):
-            p = CELESTE_DIR / f
-            if p.is_file():
-                p.unlink()
-        print("[Celeste] Backup original restaurado com sucesso.")
+    _restore_steam_backup(
+        CUPHEAD_ASM_DLL.with_suffix(".dll.stratgraph.bak"),
+        CUPHEAD_ASM_DLL,
+        (CUPHEAD_MANAGED_DIR / "StratGraphCupheadMod.dll", CUPHEAD_MANAGED_DIR / "stratgraph_routes.json"),
+        "Cuphead",
+    )
+    uninstall_celeste_from_steam()
 
 
 def main() -> int:
@@ -422,6 +433,11 @@ def main() -> int:
         help="Injeta os mods diretamente nos jogos da Steam (com backup automático .stratgraph.bak).",
     )
     parser.add_argument(
+        "--uninstall-celeste",
+        action="store_true",
+        help="Restaura o binário vanilla de Celeste (recomendado ao validar com Everest + CelesteTAS).",
+    )
+    parser.add_argument(
         "--uninstall-games",
         action="store_true",
         help="Restaura os binários originais de Celeste e Cuphead na Steam.",
@@ -430,6 +446,9 @@ def main() -> int:
 
     if args.uninstall_games:
         uninstall_mods_from_steam_games()
+        return 0
+    if args.uninstall_celeste:
+        uninstall_celeste_from_steam()
         return 0
 
     routes_json = export_mod_routes_json()

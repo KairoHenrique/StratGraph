@@ -20,6 +20,9 @@ python3 -m src.main --dataset datasets/cuphead/1_1f_forest_follies --alpha 0.05
 
 # Gerar e abrir o Simulador Visual 2D TAS no navegador
 python3 -m scripts.simulate_route --open
+
+# Exportar os 16 scripts CelesteTAS (.tas, 60 FPS) para tas/celeste/
+python3 -m scripts.export_celeste_tas
 ```
 
 ## 2. Windows (PowerShell / Terminal)
@@ -33,16 +36,17 @@ python -m src.main --dataset datasets\celeste\1_forsaken_city --alpha 0.05
 # Abrir o Simulador Visual 2D TAS (HTML5 Canvas)
 python -m scripts.simulate_route --open
 
-# Compilar e instalar os Mods opcionais de Guia Visual HUD (F5/F6) em Celeste e Cuphead na Steam
-python -m scripts.build_mods --install-games
+# Exportar os 16 scripts CelesteTAS (.tas, 60 FPS) para Everest / Celeste Studio
+python -m scripts.export_celeste_tas
 
-# Remover os Mods e restaurar os binários originais (.stratgraph.bak)
-python -m scripts.build_mods --uninstall-games
+# Compilar os Mods C# em mods/dist/ e garantir Celeste.exe vanilla limpo (Everest/CelesteTAS)
+python -m scripts.build_mods
+python -m scripts.build_mods --uninstall-celeste
 ```
 
 ## 3. Dependências Opcionais (Gráficos do Artigo e Testes)
 
-Tanto no Linux quanto no Windows, para rodar os 11 testes automatizados e regerar os gráficos do artigo (`scripts/`):
+Tanto no Linux quanto no Windows, para rodar os 12 testes automatizados e regerar os gráficos do artigo (`scripts/`):
 
 ```bash
 pip install -r requirements-dev.txt
