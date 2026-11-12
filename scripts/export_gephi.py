@@ -1,9 +1,10 @@
-"""Exportador de Grafos para Gephi (.gexf) do StratGraph.
+"""Exportador Generico de Grafos para Gephi (.gexf) do StratGraph.
 
-Gera arquivos `.gexf` (Graph Exchange XML Format) 100% compativeis com Gephi 0.9 e 0.10:
-  1. `<dataset>_base.gexf`: Grafo base com tipos de sala, pesos e coordenadas reais;
-  2. `<dataset>_layered.gexf`: Grafo em camadas (L0 = sem arma, L1 = com arma);
-  3. `<dataset>_optimal_route.gexf`: Grafo com a rota otima do StratGraph destacada.
+Gera arquivos `.gexf` (Graph Exchange XML Format) 100% compativeis com Gephi 0.9 e 0.10
+para qualquer dataset padronizado em CSV (`vertices.csv` e `arestas.csv`):
+  1. `<dataset>_base.gexf`: Grafo base com tipos de sala, pesos e layout topologico 2D;
+  2. `<dataset>_optimal_route.gexf`: Grafo com a rota otima do StratGraph destacada;
+  3. `<dataset>_layered.gexf`: Grafo em camadas (L0 = sem arma/power-up, L1 = com arma/power-up).
 
 Autoria:
     - Heitor Henrique Zonho
@@ -14,12 +15,13 @@ Autoria:
 from __future__ import annotations
 
 import argparse
+from collections import deque
+import csv
 import html
 import math
 from pathlib import Path
-import xml.etree.ElementTree as ET
 
-from src.algorithms import run_bfs, run_dijkstra
+from src.algorithms import run_dijkstra
 from src.layered_graph import build_layered_graph
 from src.loader import load_graph_from_csv
 from src.models import GameGraph, LayeredNode, RoomType
@@ -38,28 +40,93 @@ COLOR_PALETTE: dict[str, tuple[int, int, int]] = {
 }
 
 
-def _get_spatial_positions(dataset_dir: Path) -> dict[str, tuple[float, float]]:
-    """Tenta extrair coordenadas 2D espaciais reais do mapa, senao calcula layout radial/grade."""
+def _compute_generic_positions(graph: GameGraph, dataset_dir: Path) -> dict[str, tuple[float, float]]:
+    """Calcula coordenadas 2D genericas a partir da topologia do grafo (ou de positions.csv opcional)."""
     coords: dict[str, tuple[float, float]] = {}
-    chapter_name = dataset_dir.name
-    # Tenta obter do .bin de Celeste caso disponivel
-    try:
-        from scripts.extract_celeste_maps import CHAPTER_FILES, DEFAULT_STEAM_MAPS_DIR, parse_celeste_bin
-        bin_name = dict(CHAPTER_FILES).get(chapter_name)
-        if bin_name:
-            bin_path = DEFAULT_STEAM_MAPS_DIR / bin_name
-            if bin_path.is_file():
-                _, root = parse_celeste_bin(bin_path)
-                for lvl in [c for c in root[2] if c[0] == "levels"][0][2]:
-                    attrs = lvl[1]
-                    nm = str(attrs.get("name", ""))
-                    rid = nm if nm.startswith("lvl_") else f"lvl_{nm}"
-                    bx = float(attrs.get("x", 0.0))
-                    by = float(attrs.get("y", 0.0))
-                    # Inverte eixo Y do Celeste (telas tem Y negativo) para orientacao cartesiana natural
-                    coords[rid] = (bx * 0.1, -by * 0.1)
-    except Exception:
-        pass
+
+    # 1. Suporte opcional a arquivo generico positions.csv (id_sala,x,y) dentro do dataset
+    pos_csv = dataset_dir / "positions.csv"
+    if pos_csv.is_file():
+        with pos_csv.open("r", encoding="utf-8", newline="") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                rid = str(row.get("id_sala", "")).strip()
+                if rid and rid in graph.vertices:
+                    try:
+                        coords[rid] = (float(row["x"]), float(row["y"]))
+                    except (KeyError, ValueError, TypeError):
+                        continue
+        if len(coords) == len(graph.vertices):
+            return coords
+
+    # 2. Layout topologico generico por camadas de profundidade BFS (INICIO -> FIM)
+    depth: dict[str, int] = {}
+    if graph.start_id in graph.vertices:
+        depth[graph.start_id] = 0
+        q: deque[str] = deque([graph.start_id])
+        while q:
+            u = q.popleft()
+            for edge in graph.adjacency.get(u, []):
+                if edge.destination not in depth:
+                    depth[edge.destination] = depth[u] + 1
+                    q.append(edge.destination)
+
+    max_depth = max(depth.values(), default=0)
+    for nid in sorted(graph.vertices):
+        if nid not in depth:
+            depth[nid] = max_depth + 1
+
+    # Agrupa vertices por camada de profundidade
+    layers: dict[int, list[str]] = {}
+    for nid, d in depth.items():
+        layers.setdefault(d, []).append(nid)
+
+    # Ordenacao deterministica com prioridade para nos iniciais/finais/rota
+    for d in layers:
+        layers[d].sort()
+
+    x_step = 240.0
+    y_step = 150.0
+    for d, nids in sorted(layers.items()):
+        count = len(nids)
+        for idx, nid in enumerate(nids):
+            if nid not in coords:
+                y_offset = (idx - (count - 1) / 2.0) * y_step
+                coords[nid] = (d * x_step, y_offset)
+
+    # 3. Refinamento baricentrico em Y para reduzir cruzamentos de arestas (grafos ate 600 nos)
+    n_verts = len(graph.vertices)
+    if 2 < n_verts <= 600:
+        undirected: dict[str, list[str]] = {nid: [] for nid in graph.vertices}
+        for u, edges in graph.adjacency.items():
+            for e in edges:
+                if e.destination != u:
+                    undirected[u].append(e.destination)
+                    undirected[e.destination].append(u)
+
+        for _ in range(15):
+            new_y: dict[str, float] = {}
+            for d, nids in sorted(layers.items()):
+                if d == 0:
+                    for nid in nids:
+                        new_y[nid] = coords[nid][1]
+                    continue
+                scored: list[tuple[float, str]] = []
+                for nid in nids:
+                    nbrs = undirected.get(nid, [])
+                    if nbrs:
+                        avg_y = sum(coords[nb][1] for nb in nbrs) / len(nbrs)
+                    else:
+                        avg_y = coords[nid][1]
+                    scored.append((avg_y, nid))
+                scored.sort(key=lambda item: (item[0], item[1]))
+                count = len(scored)
+                for idx, (_, nid) in enumerate(scored):
+                    target_y = (idx - (count - 1) / 2.0) * y_step
+                    new_y[nid] = target_y
+            for nid, ny in new_y.items():
+                coords[nid] = (coords[nid][0], ny)
+
     return coords
 
 
@@ -291,7 +358,7 @@ def export_dataset_gephi_bundle(dataset_dir: Path, output_dir: Path, alpha: floa
     layered = build_layered_graph(contracted, alpha=alpha)
     dres = run_dijkstra(layered)
 
-    positions = _get_spatial_positions(dataset_dir)
+    positions = _compute_generic_positions(raw_graph, dataset_dir)
     ds_name = dataset_dir.name
     out_dir = output_dir / ds_name
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -343,7 +410,7 @@ def main() -> int:
         "--dataset",
         type=Path,
         default=None,
-        help="Caminho para uma pasta de dataset (ex: datasets/celeste/1_forsaken_city)",
+        help="Caminho para uma pasta de dataset contendo vertices.csv e arestas.csv (ex: datasets/sample_toy)",
     )
     parser.add_argument(
         "--out-dir",
@@ -365,3 +432,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

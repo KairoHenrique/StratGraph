@@ -20,7 +20,7 @@
     <nodes>
       <node id="lvl_00" label="lvl_00 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-16.00" y="8.80" z="0.0"/>
+        <viz:position x="240.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -31,7 +31,7 @@
       </node>
       <node id="lvl_01" label="lvl_01 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="16.00" y="28.00" z="0.0"/>
+        <viz:position x="480.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -42,7 +42,7 @@
       </node>
       <node id="lvl_02" label="lvl_02 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="91.20" y="28.80" z="0.0"/>
+        <viz:position x="720.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -53,7 +53,7 @@
       </node>
       <node id="lvl_0x" label="lvl_0x [INICIO]">
         <viz:color r="46" g="204" b="113" a="1.0"/>
-        <viz:position x="-48.00" y="8.80" z="0.0"/>
+        <viz:position x="0.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="INICIO"/>
@@ -64,7 +64,7 @@
       </node>
       <node id="lvl_a-00" label="lvl_a-00 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="146.40" y="29.60" z="0.0"/>
+        <viz:position x="960.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -75,7 +75,7 @@
       </node>
       <node id="lvl_a-01" label="lvl_a-01 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="207.20" y="36.80" z="0.0"/>
+        <viz:position x="1200.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -86,7 +86,7 @@
       </node>
       <node id="lvl_a-02" label="lvl_a-02 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="248.00" y="42.40" z="0.0"/>
+        <viz:position x="1440.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -97,7 +97,7 @@
       </node>
       <node id="lvl_a-03" label="lvl_a-03 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="272.00" y="81.60" z="0.0"/>
+        <viz:position x="1680.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -108,7 +108,7 @@
       </node>
       <node id="lvl_b-00" label="lvl_b-00 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="272.00" y="100.00" z="0.0"/>
+        <viz:position x="1920.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -119,7 +119,7 @@
       </node>
       <node id="lvl_b-01" label="lvl_b-01 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="304.00" y="100.00" z="0.0"/>
+        <viz:position x="2160.00" y="-150.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -130,7 +130,7 @@
       </node>
       <node id="lvl_b-02" label="lvl_b-02 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="346.40" y="108.00" z="0.0"/>
+        <viz:position x="2400.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -141,7 +141,7 @@
       </node>
       <node id="lvl_b-03" label="lvl_b-03 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="404.00" y="108.00" z="0.0"/>
+        <viz:position x="2640.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -152,7 +152,7 @@
       </node>
       <node id="lvl_b-04" label="lvl_b-04 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="448.80" y="115.20" z="0.0"/>
+        <viz:position x="2880.00" y="-150.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -163,7 +163,7 @@
       </node>
       <node id="lvl_b-05" label="lvl_b-05 [ARMA]">
         <viz:color r="241" g="196" b="15" a="1.0"/>
-        <viz:position x="446.40" y="133.60" z="0.0"/>
+        <viz:position x="240.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="ARMA"/>
@@ -174,7 +174,7 @@
       </node>
       <node id="lvl_b-06" label="lvl_b-06 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="234.40" y="100.00" z="0.0"/>
+        <viz:position x="2160.00" y="0.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -185,7 +185,7 @@
       </node>
       <node id="lvl_b-07" label="lvl_b-07 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="272.00" y="199.20" z="0.0"/>
+        <viz:position x="2400.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -196,7 +196,7 @@
       </node>
       <node id="lvl_b-07b" label="lvl_b-07b [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="272.00" y="167.20" z="0.0"/>
+        <viz:position x="2160.00" y="150.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -207,7 +207,7 @@
       </node>
       <node id="lvl_c-00" label="lvl_c-00 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="275.20" y="217.60" z="0.0"/>
+        <viz:position x="2640.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -218,7 +218,7 @@
       </node>
       <node id="lvl_c-00b" label="lvl_c-00b [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="357.60" y="236.00" z="0.0"/>
+        <viz:position x="2880.00" y="150.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -229,7 +229,7 @@
       </node>
       <node id="lvl_c-01" label="lvl_c-01 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="367.20" y="217.60" z="0.0"/>
+        <viz:position x="2880.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -240,7 +240,7 @@
       </node>
       <node id="lvl_c-02" label="lvl_c-02 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="433.60" y="217.60" z="0.0"/>
+        <viz:position x="3120.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -251,7 +251,7 @@
       </node>
       <node id="lvl_c-03" label="lvl_c-03 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="529.60" y="217.60" z="0.0"/>
+        <viz:position x="3360.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -262,7 +262,7 @@
       </node>
       <node id="lvl_c-03b" label="lvl_c-03b [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="531.20" y="236.00" z="0.0"/>
+        <viz:position x="3600.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -273,7 +273,7 @@
       </node>
       <node id="lvl_c-04" label="lvl_c-04 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="623.20" y="217.60" z="0.0"/>
+        <viz:position x="3600.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -284,7 +284,7 @@
       </node>
       <node id="lvl_d-00" label="lvl_d-00 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="684.80" y="229.60" z="0.0"/>
+        <viz:position x="3840.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -295,7 +295,7 @@
       </node>
       <node id="lvl_d-01" label="lvl_d-01 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="684.80" y="299.20" z="0.0"/>
+        <viz:position x="4080.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -306,7 +306,7 @@
       </node>
       <node id="lvl_d-02" label="lvl_d-02 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="684.80" y="362.40" z="0.0"/>
+        <viz:position x="4320.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -317,7 +317,7 @@
       </node>
       <node id="lvl_d-03" label="lvl_d-03 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="684.80" y="418.40" z="0.0"/>
+        <viz:position x="4560.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -328,7 +328,7 @@
       </node>
       <node id="lvl_d-04" label="lvl_d-04 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="684.80" y="475.20" z="0.0"/>
+        <viz:position x="4800.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -339,7 +339,7 @@
       </node>
       <node id="lvl_d-05" label="lvl_d-05 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="684.80" y="532.00" z="0.0"/>
+        <viz:position x="5040.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -350,7 +350,7 @@
       </node>
       <node id="lvl_d-06" label="lvl_d-06 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="684.80" y="578.40" z="0.0"/>
+        <viz:position x="5280.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -361,7 +361,7 @@
       </node>
       <node id="lvl_d-07" label="lvl_d-07 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="684.80" y="727.20" z="0.0"/>
+        <viz:position x="5520.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -372,7 +372,7 @@
       </node>
       <node id="lvl_d-08" label="lvl_d-08 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="684.80" y="745.60" z="0.0"/>
+        <viz:position x="5760.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -383,7 +383,7 @@
       </node>
       <node id="lvl_d-09" label="lvl_d-09 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="832.80" y="745.60" z="0.0"/>
+        <viz:position x="6000.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -394,7 +394,7 @@
       </node>
       <node id="lvl_d-10" label="lvl_d-10 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="893.60" y="745.60" z="0.0"/>
+        <viz:position x="6240.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -405,7 +405,7 @@
       </node>
       <node id="lvl_d-10b" label="lvl_d-10b [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="976.00" y="745.60" z="0.0"/>
+        <viz:position x="6480.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -416,7 +416,7 @@
       </node>
       <node id="lvl_d-10c" label="lvl_d-10c [FIM]">
         <viz:color r="231" g="76" b="60" a="1.0"/>
-        <viz:position x="1065.60" y="745.60" z="0.0"/>
+        <viz:position x="6720.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="FIM"/>
@@ -427,7 +427,7 @@
       </node>
       <node id="lvl_d-11" label="lvl_d-11 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="1260.80" y="745.60" z="0.0"/>
+        <viz:position x="6960.00" y="0.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -438,7 +438,7 @@
       </node>
       <node id="lvl_space" label="lvl_space [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="1392.80" y="752.00" z="0.0"/>
+        <viz:position x="7200.00" y="0.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>

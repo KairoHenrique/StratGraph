@@ -20,7 +20,7 @@
     <nodes>
       <node id="s_0000" label="s_0000 [INICIO]">
         <viz:color r="46" g="204" b="113" a="1.0"/>
-        <viz:position x="3750.00" y="0.00" z="0.0"/>
+        <viz:position x="0.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="INICIO"/>
@@ -31,7 +31,7 @@
       </node>
       <node id="s_0001" label="s_0001 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3746.71" y="157.03" z="0.0"/>
+        <viz:position x="240.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -42,7 +42,7 @@
       </node>
       <node id="s_0002" label="s_0002 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3736.85" y="313.79" z="0.0"/>
+        <viz:position x="480.00" y="150.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -53,7 +53,7 @@
       </node>
       <node id="s_0003" label="s_0003 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3720.43" y="470.00" z="0.0"/>
+        <viz:position x="480.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -64,7 +64,7 @@
       </node>
       <node id="s_0004" label="s_0004 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3697.49" y="625.38" z="0.0"/>
+        <viz:position x="720.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -75,7 +75,7 @@
       </node>
       <node id="s_0005" label="s_0005 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3668.05" y="779.67" z="0.0"/>
+        <viz:position x="960.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -86,7 +86,7 @@
       </node>
       <node id="s_0006" label="s_0006 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3632.19" y="932.59" z="0.0"/>
+        <viz:position x="960.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -97,7 +97,7 @@
       </node>
       <node id="s_0007" label="s_0007 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3589.95" y="1083.87" z="0.0"/>
+        <viz:position x="1200.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -108,7 +108,7 @@
       </node>
       <node id="s_0008" label="s_0008 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3541.41" y="1233.25" z="0.0"/>
+        <viz:position x="1440.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -119,7 +119,7 @@
       </node>
       <node id="s_0009" label="s_0009 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3486.66" y="1380.47" z="0.0"/>
+        <viz:position x="1440.00" y="225.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -130,7 +130,7 @@
       </node>
       <node id="s_0010" label="s_0010 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3425.80" y="1525.26" z="0.0"/>
+        <viz:position x="1680.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -141,7 +141,7 @@
       </node>
       <node id="s_0011" label="s_0011 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3358.92" y="1667.38" z="0.0"/>
+        <viz:position x="1920.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -152,7 +152,7 @@
       </node>
       <node id="s_0012" label="s_0012 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3286.15" y="1806.58" z="0.0"/>
+        <viz:position x="1920.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -163,7 +163,7 @@
       </node>
       <node id="s_0013" label="s_0013 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3207.62" y="1942.60" z="0.0"/>
+        <viz:position x="2160.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -174,7 +174,7 @@
       </node>
       <node id="s_0014" label="s_0014 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3123.45" y="2075.22" z="0.0"/>
+        <viz:position x="2400.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -185,7 +185,7 @@
       </node>
       <node id="s_0015" label="s_0015 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="3033.81" y="2204.19" z="0.0"/>
+        <viz:position x="2400.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -196,7 +196,7 @@
       </node>
       <node id="s_0016" label="s_0016 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="2938.85" y="2329.30" z="0.0"/>
+        <viz:position x="2640.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -207,7 +207,7 @@
       </node>
       <node id="s_0017" label="s_0017 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="2838.73" y="2450.33" z="0.0"/>
+        <viz:position x="2880.00" y="150.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -218,7 +218,7 @@
       </node>
       <node id="s_0018" label="s_0018 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="2733.63" y="2567.05" z="0.0"/>
+        <viz:position x="2880.00" y="-150.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -229,7 +229,7 @@
       </node>
       <node id="s_0019" label="s_0019 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="2623.74" y="2679.27" z="0.0"/>
+        <viz:position x="3120.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -240,7 +240,7 @@
       </node>
       <node id="s_0020" label="s_0020 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="2509.24" y="2786.79" z="0.0"/>
+        <viz:position x="3360.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -251,7 +251,7 @@
       </node>
       <node id="s_0021" label="s_0021 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="2390.34" y="2889.42" z="0.0"/>
+        <viz:position x="3360.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -262,7 +262,7 @@
       </node>
       <node id="s_0022" label="s_0022 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="2267.25" y="2986.99" z="0.0"/>
+        <viz:position x="3600.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -273,7 +273,7 @@
       </node>
       <node id="s_0023" label="s_0023 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="2140.18" y="3079.31" z="0.0"/>
+        <viz:position x="3840.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -284,7 +284,7 @@
       </node>
       <node id="s_0024" label="s_0024 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="2009.35" y="3166.23" z="0.0"/>
+        <viz:position x="3840.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -295,7 +295,7 @@
       </node>
       <node id="s_0025" label="s_0025 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="1875.00" y="3247.60" z="0.0"/>
+        <viz:position x="4080.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -306,7 +306,7 @@
       </node>
       <node id="s_0026" label="s_0026 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="1737.36" y="3323.26" z="0.0"/>
+        <viz:position x="4320.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -317,7 +317,7 @@
       </node>
       <node id="s_0027" label="s_0027 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="1596.67" y="3393.10" z="0.0"/>
+        <viz:position x="4320.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -328,7 +328,7 @@
       </node>
       <node id="s_0028" label="s_0028 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="1453.18" y="3456.99" z="0.0"/>
+        <viz:position x="4560.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -339,7 +339,7 @@
       </node>
       <node id="s_0029" label="s_0029 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="1307.15" y="3514.81" z="0.0"/>
+        <viz:position x="4800.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -350,7 +350,7 @@
       </node>
       <node id="s_0030" label="s_0030 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="1158.81" y="3566.46" z="0.0"/>
+        <viz:position x="4800.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -361,7 +361,7 @@
       </node>
       <node id="s_0031" label="s_0031 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="1008.45" y="3611.86" z="0.0"/>
+        <viz:position x="5040.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -372,7 +372,7 @@
       </node>
       <node id="s_0032" label="s_0032 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="856.32" y="3650.92" z="0.0"/>
+        <viz:position x="5280.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -383,7 +383,7 @@
       </node>
       <node id="s_0033" label="s_0033 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="702.68" y="3683.58" z="0.0"/>
+        <viz:position x="5280.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -394,7 +394,7 @@
       </node>
       <node id="s_0034" label="s_0034 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="547.81" y="3709.77" z="0.0"/>
+        <viz:position x="5520.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -405,7 +405,7 @@
       </node>
       <node id="s_0035" label="s_0035 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="391.98" y="3729.46" z="0.0"/>
+        <viz:position x="5760.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -416,7 +416,7 @@
       </node>
       <node id="s_0036" label="s_0036 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="235.46" y="3742.60" z="0.0"/>
+        <viz:position x="5760.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -427,7 +427,7 @@
       </node>
       <node id="s_0037" label="s_0037 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="78.53" y="3749.18" z="0.0"/>
+        <viz:position x="6000.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -438,7 +438,7 @@
       </node>
       <node id="s_0038" label="s_0038 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-78.53" y="3749.18" z="0.0"/>
+        <viz:position x="6240.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -449,7 +449,7 @@
       </node>
       <node id="s_0039" label="s_0039 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-235.46" y="3742.60" z="0.0"/>
+        <viz:position x="6240.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -460,7 +460,7 @@
       </node>
       <node id="s_0040" label="s_0040 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-391.98" y="3729.46" z="0.0"/>
+        <viz:position x="6480.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -471,7 +471,7 @@
       </node>
       <node id="s_0041" label="s_0041 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-547.81" y="3709.77" z="0.0"/>
+        <viz:position x="6720.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -482,7 +482,7 @@
       </node>
       <node id="s_0042" label="s_0042 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-702.68" y="3683.58" z="0.0"/>
+        <viz:position x="6720.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -493,7 +493,7 @@
       </node>
       <node id="s_0043" label="s_0043 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-856.32" y="3650.92" z="0.0"/>
+        <viz:position x="6960.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -504,7 +504,7 @@
       </node>
       <node id="s_0044" label="s_0044 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="-1008.45" y="3611.86" z="0.0"/>
+        <viz:position x="7200.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -515,7 +515,7 @@
       </node>
       <node id="s_0045" label="s_0045 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-1158.81" y="3566.46" z="0.0"/>
+        <viz:position x="7200.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -526,7 +526,7 @@
       </node>
       <node id="s_0046" label="s_0046 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-1307.15" y="3514.81" z="0.0"/>
+        <viz:position x="7440.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -537,7 +537,7 @@
       </node>
       <node id="s_0047" label="s_0047 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-1453.18" y="3456.99" z="0.0"/>
+        <viz:position x="7680.00" y="150.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -548,7 +548,7 @@
       </node>
       <node id="s_0048" label="s_0048 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-1596.67" y="3393.10" z="0.0"/>
+        <viz:position x="7680.00" y="-150.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -559,7 +559,7 @@
       </node>
       <node id="s_0049" label="s_0049 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="-1737.36" y="3323.26" z="0.0"/>
+        <viz:position x="7920.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -570,7 +570,7 @@
       </node>
       <node id="s_0050" label="s_0050 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-1875.00" y="3247.60" z="0.0"/>
+        <viz:position x="8160.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -581,7 +581,7 @@
       </node>
       <node id="s_0051" label="s_0051 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2009.35" y="3166.23" z="0.0"/>
+        <viz:position x="8160.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -592,7 +592,7 @@
       </node>
       <node id="s_0052" label="s_0052 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2140.18" y="3079.31" z="0.0"/>
+        <viz:position x="8400.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -603,7 +603,7 @@
       </node>
       <node id="s_0053" label="s_0053 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="-2267.25" y="2986.99" z="0.0"/>
+        <viz:position x="8640.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -614,7 +614,7 @@
       </node>
       <node id="s_0054" label="s_0054 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2390.34" y="2889.42" z="0.0"/>
+        <viz:position x="8640.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -625,7 +625,7 @@
       </node>
       <node id="s_0055" label="s_0055 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2509.24" y="2786.79" z="0.0"/>
+        <viz:position x="8880.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -636,7 +636,7 @@
       </node>
       <node id="s_0056" label="s_0056 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2623.74" y="2679.27" z="0.0"/>
+        <viz:position x="9120.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -647,7 +647,7 @@
       </node>
       <node id="s_0057" label="s_0057 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2733.63" y="2567.05" z="0.0"/>
+        <viz:position x="9120.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -658,7 +658,7 @@
       </node>
       <node id="s_0058" label="s_0058 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2838.73" y="2450.33" z="0.0"/>
+        <viz:position x="9360.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -669,7 +669,7 @@
       </node>
       <node id="s_0059" label="s_0059 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="-2938.85" y="2329.30" z="0.0"/>
+        <viz:position x="9600.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -680,7 +680,7 @@
       </node>
       <node id="s_0060" label="s_0060 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3033.81" y="2204.19" z="0.0"/>
+        <viz:position x="9600.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -691,7 +691,7 @@
       </node>
       <node id="s_0061" label="s_0061 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3123.45" y="2075.22" z="0.0"/>
+        <viz:position x="9840.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -702,7 +702,7 @@
       </node>
       <node id="s_0062" label="s_0062 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3207.62" y="1942.60" z="0.0"/>
+        <viz:position x="10080.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -713,7 +713,7 @@
       </node>
       <node id="s_0063" label="s_0063 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3286.15" y="1806.58" z="0.0"/>
+        <viz:position x="10080.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -724,7 +724,7 @@
       </node>
       <node id="s_0064" label="s_0064 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3358.92" y="1667.38" z="0.0"/>
+        <viz:position x="10320.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -735,7 +735,7 @@
       </node>
       <node id="s_0065" label="s_0065 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="-3425.80" y="1525.26" z="0.0"/>
+        <viz:position x="10560.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -746,7 +746,7 @@
       </node>
       <node id="s_0066" label="s_0066 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3486.66" y="1380.47" z="0.0"/>
+        <viz:position x="10560.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -757,7 +757,7 @@
       </node>
       <node id="s_0067" label="s_0067 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3541.41" y="1233.25" z="0.0"/>
+        <viz:position x="10800.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -768,7 +768,7 @@
       </node>
       <node id="s_0068" label="s_0068 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3589.95" y="1083.87" z="0.0"/>
+        <viz:position x="11040.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -779,7 +779,7 @@
       </node>
       <node id="s_0069" label="s_0069 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3632.19" y="932.59" z="0.0"/>
+        <viz:position x="11040.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -790,7 +790,7 @@
       </node>
       <node id="s_0070" label="s_0070 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3668.05" y="779.67" z="0.0"/>
+        <viz:position x="11280.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -801,7 +801,7 @@
       </node>
       <node id="s_0071" label="s_0071 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="-3697.49" y="625.38" z="0.0"/>
+        <viz:position x="11520.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -812,7 +812,7 @@
       </node>
       <node id="s_0072" label="s_0072 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3720.43" y="470.00" z="0.0"/>
+        <viz:position x="11520.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -823,7 +823,7 @@
       </node>
       <node id="s_0073" label="s_0073 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3736.85" y="313.79" z="0.0"/>
+        <viz:position x="11760.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -834,7 +834,7 @@
       </node>
       <node id="s_0074" label="s_0074 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3746.71" y="157.03" z="0.0"/>
+        <viz:position x="12000.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -845,7 +845,7 @@
       </node>
       <node id="s_0075" label="s_0075 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3750.00" y="0.00" z="0.0"/>
+        <viz:position x="12000.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -856,7 +856,7 @@
       </node>
       <node id="s_0076" label="s_0076 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3746.71" y="-157.03" z="0.0"/>
+        <viz:position x="12240.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -867,7 +867,7 @@
       </node>
       <node id="s_0077" label="s_0077 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3736.85" y="-313.79" z="0.0"/>
+        <viz:position x="12480.00" y="150.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -878,7 +878,7 @@
       </node>
       <node id="s_0078" label="s_0078 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3720.43" y="-470.00" z="0.0"/>
+        <viz:position x="12480.00" y="-150.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -889,7 +889,7 @@
       </node>
       <node id="s_0079" label="s_0079 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3697.49" y="-625.38" z="0.0"/>
+        <viz:position x="12720.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -900,7 +900,7 @@
       </node>
       <node id="s_0080" label="s_0080 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3668.05" y="-779.67" z="0.0"/>
+        <viz:position x="12960.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -911,7 +911,7 @@
       </node>
       <node id="s_0081" label="s_0081 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3632.19" y="-932.59" z="0.0"/>
+        <viz:position x="12960.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -922,7 +922,7 @@
       </node>
       <node id="s_0082" label="s_0082 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="-3589.95" y="-1083.87" z="0.0"/>
+        <viz:position x="13200.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -933,7 +933,7 @@
       </node>
       <node id="s_0083" label="s_0083 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3541.41" y="-1233.25" z="0.0"/>
+        <viz:position x="13440.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -944,7 +944,7 @@
       </node>
       <node id="s_0084" label="s_0084 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="-3486.66" y="-1380.47" z="0.0"/>
+        <viz:position x="13440.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -955,7 +955,7 @@
       </node>
       <node id="s_0085" label="s_0085 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3425.80" y="-1525.26" z="0.0"/>
+        <viz:position x="13680.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -966,7 +966,7 @@
       </node>
       <node id="s_0086" label="s_0086 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3358.92" y="-1667.38" z="0.0"/>
+        <viz:position x="13920.00" y="150.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -977,7 +977,7 @@
       </node>
       <node id="s_0087" label="s_0087 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3286.15" y="-1806.58" z="0.0"/>
+        <viz:position x="13920.00" y="-150.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -988,7 +988,7 @@
       </node>
       <node id="s_0088" label="s_0088 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3207.62" y="-1942.60" z="0.0"/>
+        <viz:position x="14160.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -999,7 +999,7 @@
       </node>
       <node id="s_0089" label="s_0089 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3123.45" y="-2075.22" z="0.0"/>
+        <viz:position x="14400.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1010,7 +1010,7 @@
       </node>
       <node id="s_0090" label="s_0090 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-3033.81" y="-2204.19" z="0.0"/>
+        <viz:position x="14400.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1021,7 +1021,7 @@
       </node>
       <node id="s_0091" label="s_0091 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="-2938.85" y="-2329.30" z="0.0"/>
+        <viz:position x="14640.00" y="-150.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1032,7 +1032,7 @@
       </node>
       <node id="s_0092" label="s_0092 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2838.73" y="-2450.33" z="0.0"/>
+        <viz:position x="14880.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1043,7 +1043,7 @@
       </node>
       <node id="s_0093" label="s_0093 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2733.63" y="-2567.05" z="0.0"/>
+        <viz:position x="14880.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1054,7 +1054,7 @@
       </node>
       <node id="s_0094" label="s_0094 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2623.74" y="-2679.27" z="0.0"/>
+        <viz:position x="15120.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1065,7 +1065,7 @@
       </node>
       <node id="s_0095" label="s_0095 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2509.24" y="-2786.79" z="0.0"/>
+        <viz:position x="15360.00" y="225.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1076,7 +1076,7 @@
       </node>
       <node id="s_0096" label="s_0096 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2390.34" y="-2889.42" z="0.0"/>
+        <viz:position x="15360.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1087,7 +1087,7 @@
       </node>
       <node id="s_0097" label="s_0097 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2267.25" y="-2986.99" z="0.0"/>
+        <viz:position x="15600.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1098,7 +1098,7 @@
       </node>
       <node id="s_0098" label="s_0098 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-2140.18" y="-3079.31" z="0.0"/>
+        <viz:position x="15840.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1109,7 +1109,7 @@
       </node>
       <node id="s_0099" label="s_0099 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="-2009.35" y="-3166.23" z="0.0"/>
+        <viz:position x="15840.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1120,7 +1120,7 @@
       </node>
       <node id="s_0100" label="s_0100 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-1875.00" y="-3247.60" z="0.0"/>
+        <viz:position x="16080.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1131,7 +1131,7 @@
       </node>
       <node id="s_0101" label="s_0101 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-1737.36" y="-3323.26" z="0.0"/>
+        <viz:position x="16320.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1142,7 +1142,7 @@
       </node>
       <node id="s_0102" label="s_0102 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-1596.67" y="-3393.10" z="0.0"/>
+        <viz:position x="16320.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1153,7 +1153,7 @@
       </node>
       <node id="s_0103" label="s_0103 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-1453.18" y="-3456.99" z="0.0"/>
+        <viz:position x="16560.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1164,7 +1164,7 @@
       </node>
       <node id="s_0104" label="s_0104 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-1307.15" y="-3514.81" z="0.0"/>
+        <viz:position x="16800.00" y="0.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1175,7 +1175,7 @@
       </node>
       <node id="s_0105" label="s_0105 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-1158.81" y="-3566.46" z="0.0"/>
+        <viz:position x="16800.00" y="150.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1186,7 +1186,7 @@
       </node>
       <node id="s_0106" label="s_0106 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-1008.45" y="-3611.86" z="0.0"/>
+        <viz:position x="17040.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1197,7 +1197,7 @@
       </node>
       <node id="s_0107" label="s_0107 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-856.32" y="-3650.92" z="0.0"/>
+        <viz:position x="17280.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1208,7 +1208,7 @@
       </node>
       <node id="s_0108" label="s_0108 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-702.68" y="-3683.58" z="0.0"/>
+        <viz:position x="17280.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1219,7 +1219,7 @@
       </node>
       <node id="s_0109" label="s_0109 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-547.81" y="-3709.77" z="0.0"/>
+        <viz:position x="17520.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1230,7 +1230,7 @@
       </node>
       <node id="s_0110" label="s_0110 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="-391.98" y="-3729.46" z="0.0"/>
+        <viz:position x="17760.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1241,7 +1241,7 @@
       </node>
       <node id="s_0111" label="s_0111 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-235.46" y="-3742.60" z="0.0"/>
+        <viz:position x="17760.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1252,7 +1252,7 @@
       </node>
       <node id="s_0112" label="s_0112 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-78.53" y="-3749.18" z="0.0"/>
+        <viz:position x="18000.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1263,7 +1263,7 @@
       </node>
       <node id="s_0113" label="s_0113 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="78.53" y="-3749.18" z="0.0"/>
+        <viz:position x="18240.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1274,7 +1274,7 @@
       </node>
       <node id="s_0114" label="s_0114 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="235.46" y="-3742.60" z="0.0"/>
+        <viz:position x="18240.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -1285,7 +1285,7 @@
       </node>
       <node id="s_0115" label="s_0115 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="391.98" y="-3729.46" z="0.0"/>
+        <viz:position x="18480.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1296,7 +1296,7 @@
       </node>
       <node id="s_0116" label="s_0116 [FIM]">
         <viz:color r="231" g="76" b="60" a="1.0"/>
-        <viz:position x="547.81" y="-3709.77" z="0.0"/>
+        <viz:position x="18720.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="FIM"/>
@@ -1307,7 +1307,7 @@
       </node>
       <node id="w_0000" label="w_0000 [ARMA]">
         <viz:color r="241" g="196" b="15" a="1.0"/>
-        <viz:position x="702.68" y="-3683.58" z="0.0"/>
+        <viz:position x="2880.00" y="0.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="ARMA"/>
@@ -1318,7 +1318,7 @@
       </node>
       <node id="w_0001" label="w_0001 [ARMA]">
         <viz:color r="241" g="196" b="15" a="1.0"/>
-        <viz:position x="856.32" y="-3650.92" z="0.0"/>
+        <viz:position x="5520.00" y="-75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="ARMA"/>
@@ -1329,7 +1329,7 @@
       </node>
       <node id="w_0002" label="w_0002 [ARMA]">
         <viz:color r="241" g="196" b="15" a="1.0"/>
-        <viz:position x="1008.45" y="-3611.86" z="0.0"/>
+        <viz:position x="7920.00" y="75.00" z="0.0"/>
         <viz:size value="28.0"/>
         <attvalues>
           <attvalue for="0" value="ARMA"/>
@@ -1340,7 +1340,7 @@
       </node>
       <node id="c_0000" label="c_0000 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="1158.81" y="-3566.46" z="0.0"/>
+        <viz:position x="7680.00" y="0.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1351,7 +1351,7 @@
       </node>
       <node id="c_0001" label="c_0001 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="1307.15" y="-3514.81" z="0.0"/>
+        <viz:position x="5040.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1362,7 +1362,7 @@
       </node>
       <node id="c_0002" label="c_0002 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="1453.18" y="-3456.99" z="0.0"/>
+        <viz:position x="16080.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1373,7 +1373,7 @@
       </node>
       <node id="c_0003" label="c_0003 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="1596.67" y="-3393.10" z="0.0"/>
+        <viz:position x="12480.00" y="0.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1384,7 +1384,7 @@
       </node>
       <node id="c_0004" label="c_0004 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="1737.36" y="-3323.26" z="0.0"/>
+        <viz:position x="16800.00" y="-150.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1395,7 +1395,7 @@
       </node>
       <node id="c_0005" label="c_0005 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="1875.00" y="-3247.60" z="0.0"/>
+        <viz:position x="2640.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1406,7 +1406,7 @@
       </node>
       <node id="c_0006" label="c_0006 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="2009.35" y="-3166.23" z="0.0"/>
+        <viz:position x="14640.00" y="0.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1417,7 +1417,7 @@
       </node>
       <node id="c_0007" label="c_0007 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="2140.18" y="-3079.31" z="0.0"/>
+        <viz:position x="13920.00" y="0.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1428,7 +1428,7 @@
       </node>
       <node id="c_0008" label="c_0008 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="2267.25" y="-2986.99" z="0.0"/>
+        <viz:position x="1680.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1439,7 +1439,7 @@
       </node>
       <node id="c_0009" label="c_0009 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="2390.34" y="-2889.42" z="0.0"/>
+        <viz:position x="11280.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1450,7 +1450,7 @@
       </node>
       <node id="c_0010" label="c_0010 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="2509.24" y="-2786.79" z="0.0"/>
+        <viz:position x="15360.00" y="-225.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1461,7 +1461,7 @@
       </node>
       <node id="c_0011" label="c_0011 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="2623.74" y="-2679.27" z="0.0"/>
+        <viz:position x="12240.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1472,7 +1472,7 @@
       </node>
       <node id="c_0012" label="c_0012 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="2733.63" y="-2567.05" z="0.0"/>
+        <viz:position x="4080.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1483,7 +1483,7 @@
       </node>
       <node id="c_0013" label="c_0013 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="2838.73" y="-2450.33" z="0.0"/>
+        <viz:position x="3120.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1494,7 +1494,7 @@
       </node>
       <node id="c_0014" label="c_0014 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="2938.85" y="-2329.30" z="0.0"/>
+        <viz:position x="8400.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1505,7 +1505,7 @@
       </node>
       <node id="c_0015" label="c_0015 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3033.81" y="-2204.19" z="0.0"/>
+        <viz:position x="16080.00" y="225.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1516,7 +1516,7 @@
       </node>
       <node id="c_0016" label="c_0016 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3123.45" y="-2075.22" z="0.0"/>
+        <viz:position x="13200.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1527,7 +1527,7 @@
       </node>
       <node id="c_0017" label="c_0017 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3207.62" y="-1942.60" z="0.0"/>
+        <viz:position x="17520.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1538,7 +1538,7 @@
       </node>
       <node id="c_0018" label="c_0018 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3286.15" y="-1806.58" z="0.0"/>
+        <viz:position x="16080.00" y="-225.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1549,7 +1549,7 @@
       </node>
       <node id="c_0019" label="c_0019 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3358.92" y="-1667.38" z="0.0"/>
+        <viz:position x="1440.00" y="-225.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1560,7 +1560,7 @@
       </node>
       <node id="c_0020" label="c_0020 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3425.80" y="-1525.26" z="0.0"/>
+        <viz:position x="13680.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1571,7 +1571,7 @@
       </node>
       <node id="c_0021" label="c_0021 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3486.66" y="-1380.47" z="0.0"/>
+        <viz:position x="6960.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1582,7 +1582,7 @@
       </node>
       <node id="c_0022" label="c_0022 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3541.41" y="-1233.25" z="0.0"/>
+        <viz:position x="9360.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1593,7 +1593,7 @@
       </node>
       <node id="c_0023" label="c_0023 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3589.95" y="-1083.87" z="0.0"/>
+        <viz:position x="18480.00" y="75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1604,7 +1604,7 @@
       </node>
       <node id="c_0024" label="c_0024 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3632.19" y="-932.59" z="0.0"/>
+        <viz:position x="15360.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1615,7 +1615,7 @@
       </node>
       <node id="c_0025" label="c_0025 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3668.05" y="-779.67" z="0.0"/>
+        <viz:position x="1440.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1626,7 +1626,7 @@
       </node>
       <node id="c_0026" label="c_0026 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3697.49" y="-625.38" z="0.0"/>
+        <viz:position x="14640.00" y="150.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1637,7 +1637,7 @@
       </node>
       <node id="c_0027" label="c_0027 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3720.43" y="-470.00" z="0.0"/>
+        <viz:position x="16560.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1648,7 +1648,7 @@
       </node>
       <node id="c_0028" label="c_0028 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3736.85" y="-313.79" z="0.0"/>
+        <viz:position x="480.00" y="-150.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -1659,7 +1659,7 @@
       </node>
       <node id="c_0029" label="c_0029 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="3746.71" y="-157.03" z="0.0"/>
+        <viz:position x="17040.00" y="-75.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>

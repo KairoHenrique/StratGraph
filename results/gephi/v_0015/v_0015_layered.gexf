@@ -29,7 +29,7 @@
       </node>
       <node id="(s_0001, L0)" label="(s_0001, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="240.00" y="-120.00" z="0.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="s_0001"/>
@@ -39,7 +39,7 @@
       </node>
       <node id="(s_0002, L0)" label="(s_0002, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="480.00" y="30.00" z="0.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="s_0002"/>
@@ -49,7 +49,7 @@
       </node>
       <node id="(s_0003, L0)" label="(s_0003, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="480.00" y="-120.00" z="0.00"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="s_0003"/>
@@ -59,7 +59,7 @@
       </node>
       <node id="(s_0004, L0)" label="(s_0004, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="720.00" y="-195.00" z="0.00"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="s_0004"/>
@@ -69,7 +69,7 @@
       </node>
       <node id="(s_0005, L0)" label="(s_0005, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="960.00" y="-195.00" z="0.00"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="s_0005"/>
@@ -79,7 +79,7 @@
       </node>
       <node id="(s_0006, L0)" label="(s_0006, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="960.00" y="-45.00" z="0.00"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="s_0006"/>
@@ -89,7 +89,7 @@
       </node>
       <node id="(s_0007, L0)" label="(s_0007, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="1200.00" y="-45.00" z="0.00"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="s_0007"/>
@@ -99,7 +99,7 @@
       </node>
       <node id="(s_0008, L0)" label="(s_0008, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="1440.00" y="-195.00" z="0.00"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="s_0008"/>
@@ -109,7 +109,7 @@
       </node>
       <node id="(s_0009, L0)" label="(s_0009, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="1440.00" y="-45.00" z="0.00"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="s_0009"/>
@@ -119,7 +119,7 @@
       </node>
       <node id="(s_0010, L0)" label="(s_0010, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="1680.00" y="-45.00" z="0.00"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="s_0010"/>
@@ -129,7 +129,7 @@
       </node>
       <node id="(w_0000, L0)" label="(w_0000, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="720.00" y="-45.00" z="0.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="w_0000"/>
@@ -149,7 +149,7 @@
       </node>
       <node id="(s_0001, L1)" label="(s_0001, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="240.00" y="120.00" z="150.00"/>
         <viz:size value="20.0"/>
         <attvalues>
           <attvalue for="0" value="s_0001"/>
@@ -159,7 +159,7 @@
       </node>
       <node id="(s_0002, L1)" label="(s_0002, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="480.00" y="270.00" z="150.00"/>
         <viz:size value="20.0"/>
         <attvalues>
           <attvalue for="0" value="s_0002"/>
@@ -169,7 +169,7 @@
       </node>
       <node id="(s_0003, L1)" label="(s_0003, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="480.00" y="120.00" z="150.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="s_0003"/>
@@ -179,7 +179,7 @@
       </node>
       <node id="(s_0004, L1)" label="(s_0004, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="720.00" y="45.00" z="150.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="s_0004"/>
@@ -189,7 +189,7 @@
       </node>
       <node id="(s_0005, L1)" label="(s_0005, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="960.00" y="45.00" z="150.00"/>
         <viz:size value="20.0"/>
         <attvalues>
           <attvalue for="0" value="s_0005"/>
@@ -199,7 +199,7 @@
       </node>
       <node id="(s_0006, L1)" label="(s_0006, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="960.00" y="195.00" z="150.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="s_0006"/>
@@ -209,7 +209,7 @@
       </node>
       <node id="(s_0007, L1)" label="(s_0007, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="1200.00" y="195.00" z="150.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="s_0007"/>
@@ -219,7 +219,7 @@
       </node>
       <node id="(s_0008, L1)" label="(s_0008, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="1440.00" y="45.00" z="150.00"/>
         <viz:size value="20.0"/>
         <attvalues>
           <attvalue for="0" value="s_0008"/>
@@ -229,7 +229,7 @@
       </node>
       <node id="(s_0009, L1)" label="(s_0009, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="1440.00" y="195.00" z="150.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="s_0009"/>
@@ -239,7 +239,7 @@
       </node>
       <node id="(s_0010, L1)" label="(s_0010, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="1680.00" y="195.00" z="150.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="s_0010"/>
@@ -249,7 +249,7 @@
       </node>
       <node id="(w_0000, L1)" label="(w_0000, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="720.00" y="195.00" z="150.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="w_0000"/>

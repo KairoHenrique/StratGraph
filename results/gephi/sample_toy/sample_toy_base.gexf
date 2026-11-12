@@ -20,7 +20,7 @@
     <nodes>
       <node id="S0" label="S0 [INICIO]">
         <viz:color r="46" g="204" b="113" a="1.0"/>
-        <viz:position x="300.00" y="0.00" z="0.0"/>
+        <viz:position x="0.00" y="0.00" z="0.0"/>
         <viz:size value="22.0"/>
         <attvalues>
           <attvalue for="0" value="INICIO"/>
@@ -31,7 +31,7 @@
       </node>
       <node id="S1" label="S1 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="150.00" y="259.81" z="0.0"/>
+        <viz:position x="240.00" y="0.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -42,7 +42,7 @@
       </node>
       <node id="S2" label="S2 [COLETAVEL]">
         <viz:color r="155" g="89" b="182" a="1.0"/>
-        <viz:position x="-150.00" y="259.81" z="0.0"/>
+        <viz:position x="480.00" y="-150.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COLETAVEL"/>
@@ -53,7 +53,7 @@
       </node>
       <node id="S3" label="S3 [ARMA]">
         <viz:color r="241" g="196" b="15" a="1.0"/>
-        <viz:position x="-300.00" y="0.00" z="0.0"/>
+        <viz:position x="480.00" y="150.00" z="0.0"/>
         <viz:size value="22.0"/>
         <attvalues>
           <attvalue for="0" value="ARMA"/>
@@ -64,7 +64,7 @@
       </node>
       <node id="S4" label="S4 [COMUM]">
         <viz:color r="52" g="152" b="219" a="1.0"/>
-        <viz:position x="-150.00" y="-259.81" z="0.0"/>
+        <viz:position x="480.00" y="0.00" z="0.0"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="COMUM"/>
@@ -75,7 +75,7 @@
       </node>
       <node id="S5" label="S5 [FIM]">
         <viz:color r="231" g="76" b="60" a="1.0"/>
-        <viz:position x="150.00" y="-259.81" z="0.0"/>
+        <viz:position x="720.00" y="0.00" z="0.0"/>
         <viz:size value="22.0"/>
         <attvalues>
           <attvalue for="0" value="FIM"/>

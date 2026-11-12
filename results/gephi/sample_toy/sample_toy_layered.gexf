@@ -29,7 +29,7 @@
       </node>
       <node id="(S1, L0)" label="(S1, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="240.00" y="-120.00" z="0.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="S1"/>
@@ -39,7 +39,7 @@
       </node>
       <node id="(S3, L0)" label="(S3, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="480.00" y="30.00" z="0.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="S3"/>
@@ -49,7 +49,7 @@
       </node>
       <node id="(S4, L0)" label="(S4, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="480.00" y="-120.00" z="0.00"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="S4"/>
@@ -59,7 +59,7 @@
       </node>
       <node id="(S5, L0)" label="(S5, L0)">
         <viz:color r="41" g="128" b="185" a="1.0"/>
-        <viz:position x="0.00" y="-120.00" z="0.00"/>
+        <viz:position x="720.00" y="-120.00" z="0.00"/>
         <viz:size value="16.0"/>
         <attvalues>
           <attvalue for="0" value="S5"/>
@@ -79,7 +79,7 @@
       </node>
       <node id="(S1, L1)" label="(S1, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="240.00" y="120.00" z="150.00"/>
         <viz:size value="20.0"/>
         <attvalues>
           <attvalue for="0" value="S1"/>
@@ -89,7 +89,7 @@
       </node>
       <node id="(S3, L1)" label="(S3, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="480.00" y="270.00" z="150.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="S3"/>
@@ -99,7 +99,7 @@
       </node>
       <node id="(S4, L1)" label="(S4, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="480.00" y="120.00" z="150.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="S4"/>
@@ -109,7 +109,7 @@
       </node>
       <node id="(S5, L1)" label="(S5, L1)">
         <viz:color r="243" g="156" b="18" a="1.0"/>
-        <viz:position x="0.00" y="120.00" z="150.00"/>
+        <viz:position x="720.00" y="120.00" z="150.00"/>
         <viz:size value="26.0"/>
         <attvalues>
           <attvalue for="0" value="S5"/>
