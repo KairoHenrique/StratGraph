@@ -26,6 +26,7 @@ import shutil
 import subprocess
 import zipfile
 
+from scripts.calibrate_physics import run_calibration
 from scripts.extract_celeste_maps import CHAPTER_FILES
 from scripts.extract_cuphead_maps import CUPHEAD_RUN_AND_GUN_SCENES
 from src.algorithms import run_bfs, run_dijkstra
@@ -307,6 +308,7 @@ class Program
             var overlayType = modAsm.MainModule.GetType("StratGraph.CupheadMod.StratGraphCupheadOverlay");
             var initRef = asm.MainModule.ImportReference(overlayType.Methods.First(m => m.Name == "Init"));
             var filterAxisRef = asm.MainModule.ImportReference(overlayType.Methods.First(m => m.Name == "FilterAxisInt"));
+            var filterJumpHeldRef = asm.MainModule.ImportReference(overlayType.Methods.First(m => m.Name == "FilterJumpButtonHeld"));
             var beforeMotorRef = asm.MainModule.ImportReference(overlayType.Methods.First(m => m.Name == "BeforeMotorHandleInput"));
             var afterWeaponRef = asm.MainModule.ImportReference(overlayType.Methods.First(m => m.Name == "AfterWeaponHandleFiring"));
 
@@ -346,6 +348,28 @@ class Program
                 ilMotor.InsertBefore(first, ilMotor.Create(OpCodes.Call, beforeMotorRef));
             }
 
+            var handleJumping = lpmType?.Methods.FirstOrDefault(m => m.Name == "HandleJumping");
+            if (handleJumping != null && handleJumping.HasBody)
+            {
+                var ilJump = handleJumping.Body.GetILProcessor();
+                var targets = new List<Instruction>();
+                var instrs = handleJumping.Body.Instructions;
+                for (int idx = 1; idx < instrs.Count; idx++)
+                {
+                    if (instrs[idx].OpCode == OpCodes.Callvirt &&
+                        instrs[idx].Operand is MethodReference mr &&
+                        mr.Name == "GetButton" &&
+                        instrs[idx - 1].OpCode == OpCodes.Ldc_I4_2)
+                    {
+                        targets.Add(instrs[idx]);
+                    }
+                }
+                foreach (var callInstr in targets)
+                {
+                    ilJump.InsertAfter(callInstr, ilJump.Create(OpCodes.Call, filterJumpHeldRef));
+                }
+            }
+
             var lpwmType = asm.MainModule.GetType("LevelPlayerWeaponManager");
             var handleWeapon = lpwmType?.Methods.FirstOrDefault(m => m.Name == "HandleWeaponFiring");
             if (handleWeapon != null && handleWeapon.HasBody)
@@ -364,6 +388,8 @@ class Program
             var hudType = modAsm.MainModule.GetType("Celeste.Mod.StratGraph.StratGraphHudEntity");
             var attachRef = asm.MainModule.ImportReference(hudType.Methods.First(m => m.Name == "AttachToLevel"));
             var beforePlRef = asm.MainModule.ImportReference(hudType.Methods.First(m => m.Name == "BeforePlayerUpdate"));
+            var filterBtnRef = asm.MainModule.ImportReference(hudType.Methods.First(m => m.Name == "FilterButtonCheck"));
+            var filterGrabRef = asm.MainModule.ImportReference(hudType.Methods.First(m => m.Name == "FilterGrabCheck"));
 
             var lvlType = asm.MainModule.GetType("Celeste.Level");
             var begin = lvlType.Methods.First(m => m.Name == "Begin");
@@ -380,6 +406,41 @@ class Program
                 var first = plUpdate.Body.Instructions[0];
                 ilPl.InsertBefore(first, ilPl.Create(OpCodes.Ldarg_0));
                 ilPl.InsertBefore(first, ilPl.Create(OpCodes.Call, beforePlRef));
+            }
+
+            var vbType = asm.MainModule.GetType("Monocle.VirtualButton");
+            var vbCheck = vbType?.Methods.FirstOrDefault(m => m.Name == "get_Check");
+            if (vbCheck != null && vbCheck.HasBody)
+            {
+                var ilVb = vbCheck.Body.GetILProcessor();
+                var rets = vbCheck.Body.Instructions.Where(i => i.OpCode == OpCodes.Ret).ToList();
+                foreach (var r in rets)
+                {
+                    var loadThis = ilVb.Create(OpCodes.Ldarg_0);
+                    ilVb.InsertBefore(r, loadThis);
+                    ilVb.InsertBefore(r, ilVb.Create(OpCodes.Call, filterBtnRef));
+                    foreach (var instr in vbCheck.Body.Instructions)
+                    {
+                        if (instr.Operand == r) instr.Operand = loadThis;
+                    }
+                }
+            }
+
+            var inputType = asm.MainModule.GetType("Celeste.Input");
+            var grabCheck = inputType?.Methods.FirstOrDefault(m => m.Name == "get_GrabCheck");
+            if (grabCheck != null && grabCheck.HasBody)
+            {
+                var ilGrab = grabCheck.Body.GetILProcessor();
+                var rets = grabCheck.Body.Instructions.Where(i => i.OpCode == OpCodes.Ret).ToList();
+                foreach (var r in rets)
+                {
+                    var callFilter = ilGrab.Create(OpCodes.Call, filterGrabRef);
+                    ilGrab.InsertBefore(r, callFilter);
+                    foreach (var instr in grabCheck.Body.Instructions)
+                    {
+                        if (instr.Operand == r) instr.Operand = callFilter;
+                    }
+                }
             }
         }
 
@@ -476,11 +537,18 @@ def main() -> int:
         action="store_true",
         help="Restaura os binários originais de Celeste e Cuphead na Steam.",
     )
+    parser.add_argument(
+        "--calibrate",
+        action="store_true",
+        help="Força recalibragem completa da física e regeneração dos datasets antes de compilar.",
+    )
     args = parser.parse_args()
 
     if args.uninstall_games:
         uninstall_mods_from_steam_games()
         return 0
+
+    run_calibration(force=args.calibrate)
 
     routes_json = export_mod_routes_json()
     print(f"Rotas ótimas para mods exportadas em: {routes_json} ({routes_json.stat().st_size} bytes)")

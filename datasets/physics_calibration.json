@@ -1,0 +1,37 @@
+{
+  "calibrated": true,
+  "calibrated_at_utc": "2026-11-12T00:09:36.023975+00:00",
+  "sources_detected": {
+    "celeste_assembly": "D:\\SteamLibrary\\steamapps\\common\\Celeste\\Celeste.exe.stratgraph.bak",
+    "cuphead_assembly": "D:\\SteamLibrary\\steamapps\\common\\Cuphead\\Cuphead_Data\\Managed\\Assembly-CSharp.dll.stratgraph.bak"
+  },
+  "celeste_physics": {
+    "tile_px": 8.0,
+    "max_run_px_s": 90.0,
+    "jump_speed_px_s": 105.0,
+    "gravity_px_s2": 900.0,
+    "max_fall_px_s": 160.0,
+    "dash_speed_px_s": 240.0,
+    "dash_time_s": 0.15,
+    "max_dashes": 1.0,
+    "climb_max_stamina": 110.0,
+    "max_jump_tiles": 6.0,
+    "single_dash_tiles": 6.0,
+    "climb_reach_tiles": 8.0
+  },
+  "cuphead_physics": {
+    "move_speed_px_s": 490.0,
+    "max_jump_reach_px": 380.0,
+    "dash_reach_px": 280.0,
+    "parry_enabled": 1.0
+  },
+  "celeste_audit": {
+    "chapters_calibrated": 8,
+    "total_tas_segments": 1960,
+    "zero_death_safe_segments": 1867,
+    "zero_death_compliance_pct": 95.26
+  },
+  "cuphead_audit": {
+    "levels_calibrated": 6
+  }
+}

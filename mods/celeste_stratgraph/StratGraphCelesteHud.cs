@@ -64,8 +64,10 @@ namespace Celeste.Mod.StratGraph
         private string _lastChapterSlug = "";
         private float _dashCooldown;
         private float _jumpCooldown;
-        private float _stuckTimer;
-        private Vector2 _lastPlayerPos;
+        private float _holdJumpTimer;
+        private bool _holdGrab;
+        private int _lastWaypointRoomCount;
+        private string _lastRoomName = "";
 
         public StratGraphHudEntity(string routesJsonPath)
         {
@@ -81,6 +83,76 @@ namespace Celeste.Mod.StratGraph
             {
                 _activeInstance.DrivePlayerInputs(player);
             }
+        }
+
+        public static bool FilterButtonCheck(bool orig, VirtualButton btn)
+        {
+            if (_activeInstance != null && _activeInstance._tasBotActive && btn == global::Celeste.Input.Jump)
+            {
+                if (_activeInstance._holdJumpTimer > 0f)
+                {
+                    return true;
+                }
+            }
+            return orig;
+        }
+
+        public static bool FilterGrabCheck(bool orig)
+        {
+            if (_activeInstance != null && _activeInstance._tasBotActive && _activeInstance._holdGrab)
+            {
+                return true;
+            }
+            return orig;
+        }
+
+        private static string ExtractJsonObjectBlock(string raw, string key)
+        {
+            int idx = raw.IndexOf(key, StringComparison.Ordinal);
+            if (idx < 0)
+            {
+                return "";
+            }
+            int openBrace = raw.IndexOf('{', idx);
+            if (openBrace < 0)
+            {
+                return "";
+            }
+            int depth = 0;
+            bool inStr = false;
+            bool escaped = false;
+            for (int i = openBrace; i < raw.Length; i++)
+            {
+                char ch = raw[i];
+                if (escaped)
+                {
+                    escaped = false;
+                    continue;
+                }
+                if (ch == '\\' && inStr)
+                {
+                    escaped = true;
+                    continue;
+                }
+                if (ch == '"')
+                {
+                    inStr = !inStr;
+                    continue;
+                }
+                if (!inStr)
+                {
+                    if (ch == '{') depth++;
+                    else if (ch == '}')
+                    {
+                        depth--;
+                        if (depth == 0)
+                        {
+                            return raw.Substring(openBrace, i - openBrace + 1);
+                        }
+                    }
+                }
+            }
+            return raw.Substring(openBrace);
         }
 
         public static void AttachToLevel(Level level)
@@ -116,13 +188,11 @@ namespace Celeste.Mod.StratGraph
             {
                 string slug = kv.Value;
                 string key = "\"celeste_" + slug + "\"";
-                int idx = raw.IndexOf(key, StringComparison.Ordinal);
-                if (idx < 0)
+                string block = ExtractJsonObjectBlock(raw, key);
+                if (string.IsNullOrEmpty(block))
                 {
                     continue;
                 }
-
-                string block = raw.Substring(idx, Math.Min(28000, raw.Length - idx));
 
                 Match wMatch = Regex.Match(block, "\"weapon_room\"\\s*:\\s*\"([^\"]+)\"");
                 if (wMatch.Success)
@@ -207,7 +277,8 @@ namespace Celeste.Mod.StratGraph
             {
                 _tasBotActive = !_tasBotActive;
                 _currentWaypointIndex = -1;
-                _stuckTimer = 0f;
+                _holdJumpTimer = 0f;
+                _holdGrab = false;
                 if (!_tasBotActive && Scene is Level)
                 {
                     Player pl = (Scene as Level).Tracker.GetEntity<Player>();
@@ -221,7 +292,8 @@ namespace Celeste.Mod.StratGraph
             {
                 _useBfsRoute = !_useBfsRoute;
                 _currentWaypointIndex = -1;
-                _stuckTimer = 0f;
+                _holdJumpTimer = 0f;
+                _holdGrab = false;
             }
 
             Level level = Scene as Level;
@@ -234,21 +306,35 @@ namespace Celeste.Mod.StratGraph
             string slug;
             if (!_areaToSlug.TryGetValue(areaId, out slug))
             {
-                slug = "1_forsaken_city";
+                return;
             }
 
             if (_lastChapterSlug != slug)
             {
                 _lastChapterSlug = slug;
                 _armedLayerActive = false;
-                _currentWaypointIndex = 0;
+                _currentWaypointIndex = -1;
             }
         }
 
         private void DrivePlayerInputs(Player player)
         {
-            if (!_tasBotActive || player == null || player.Dead)
+            if (player == null)
             {
+                return;
+            }
+            if (player.Dead)
+            {
+                // Respeita morte real e reinicia no waypoint mais próximo após o respawn
+                _currentWaypointIndex = -1;
+                _holdJumpTimer = 0f;
+                _holdGrab = false;
+                return;
+            }
+            if (!_tasBotActive)
+            {
+                _holdJumpTimer = 0f;
+                _holdGrab = false;
                 return;
             }
 
@@ -262,7 +348,14 @@ namespace Celeste.Mod.StratGraph
             string slug;
             if (!_areaToSlug.TryGetValue(areaId, out slug))
             {
-                slug = "1_forsaken_city";
+                return;
+            }
+
+            string curRoom = level.Session.Level ?? "";
+            if (_lastRoomName != curRoom)
+            {
+                _lastRoomName = curRoom;
+                _currentWaypointIndex = -1;
             }
 
             Dictionary<string, List<Vector2>> activeDict = _useBfsRoute
@@ -275,8 +368,7 @@ namespace Celeste.Mod.StratGraph
                 return;
             }
 
-            // Regras reais do jogo: sem invencibilidade, sem stamina infinita, 1 dash (padrão).
-            // Desfaz qualquer assist que versões anteriores do mod tenham gravado no save.
+            // Regras 100% reais: sem invencibilidade, sem stamina infinita, 1 dash padrão.
             if (SaveData.Instance != null)
             {
                 SaveData.Instance.Assists.Invincible = false;
@@ -286,10 +378,16 @@ namespace Celeste.Mod.StratGraph
 
             if (_currentWaypointIndex < 0 || _currentWaypointIndex >= waypoints.Count)
             {
-                int bestIdx = 0;
+                Rectangle roomBox = level.Bounds;
+                roomBox.Inflate(24, 24);
+                int bestIdx = -1;
                 float bestDist = float.MaxValue;
                 for (int i = 0; i < waypoints.Count; i++)
                 {
+                    if (!roomBox.Contains((int)waypoints[i].X, (int)waypoints[i].Y))
+                    {
+                        continue;
+                    }
                     float d = Vector2.DistanceSquared(player.Position, waypoints[i]);
                     if (d < bestDist)
                     {
@@ -297,28 +395,78 @@ namespace Celeste.Mod.StratGraph
                         bestIdx = i;
                     }
                 }
+                if (bestIdx < 0)
+                {
+                    bestDist = float.MaxValue;
+                    for (int i = 0; i < waypoints.Count; i++)
+                    {
+                        float d = Vector2.DistanceSquared(player.Position, waypoints[i]);
+                        if (d < bestDist)
+                        {
+                            bestDist = d;
+                            bestIdx = i;
+                        }
+                    }
+                    bestIdx = Math.Max(0, bestIdx);
+                }
                 _currentWaypointIndex = bestIdx;
             }
 
-            // Avançar waypoints já alcançados pela física real do player
-            while (_currentWaypointIndex < waypoints.Count - 1 &&
-                   Vector2.Distance(player.Position, waypoints[_currentWaypointIndex]) <= 14f)
+            // Avançar waypoints já alcançados ou superados dentro da sala atual
+            while (_currentWaypointIndex < waypoints.Count - 1)
             {
-                _currentWaypointIndex++;
-                _stuckTimer = 0f;
+                float curDist = Vector2.Distance(player.Position, waypoints[_currentWaypointIndex]);
+                if (curDist <= 16f)
+                {
+                    _currentWaypointIndex++;
+                    continue;
+                }
+                bool skippedAhead = false;
+                int lookMax = Math.Min(waypoints.Count - 1, _currentWaypointIndex + 3);
+                for (int j = _currentWaypointIndex + 1; j <= lookMax; j++)
+                {
+                    if (Vector2.Distance(player.Position, waypoints[j]) <= 18f)
+                    {
+                        _currentWaypointIndex = j + (j < waypoints.Count - 1 ? 1 : 0);
+                        skippedAhead = true;
+                        break;
+                    }
+                }
+                if (!skippedAhead)
+                {
+                    break;
+                }
             }
 
             Vector2 target = waypoints[_currentWaypointIndex];
             Vector2 delta = target - player.Position;
-            float dist = delta.Length();
-
             float dt = Engine.DeltaTime;
+
             if (_dashCooldown > 0f) _dashCooldown -= dt;
             if (_jumpCooldown > 0f) _jumpCooldown -= dt;
+            if (_holdJumpTimer > 0f) _holdJumpTimer -= dt;
 
-            // 1. Direcional real (MoveX / MoveY), lido pela própria máquina de estados do Player
+            // 1. Direcional real (MoveX / MoveY) lido por NormalUpdate/ClimbUpdate
             int moveX = Math.Abs(delta.X) > 3f ? Math.Sign(delta.X) : 0;
             int moveY = Math.Abs(delta.Y) > 3f ? Math.Sign(delta.Y) : 0;
+
+            bool onGround = player.OnGround(1);
+            bool touchingLeftWall = player.CollideCheck<Solid>(player.Position + new Vector2(-3f, 0f));
+            bool touchingRightWall = player.CollideCheck<Solid>(player.Position + new Vector2(3f, 0f));
+            bool touchingWall = touchingLeftWall || touchingRightWall;
+            bool inNormalState = player.StateMachine.State == Player.StNormal;
+            bool inClimbState = player.StateMachine.State == Player.StClimb;
+
+            // 2. Detecção de beira de abismo e espinhos à frente usando colisores reais da cena
+            bool wantCrossWall = (touchingLeftWall && delta.X > 16f) || (touchingRightWall && delta.X < -16f);
+            bool climbSameWall = touchingWall && !wantCrossWall && delta.Y < -6f && player.Stamina > 14f;
+            _holdGrab = climbSameWall;
+            if (climbSameWall && inClimbState)
+            {
+                moveX = 0;
+                moveY = -1;
+            }
+
             if (global::Celeste.Input.MoveX != null)
             {
                 global::Celeste.Input.MoveX.Value = moveX;
@@ -328,20 +476,37 @@ namespace Celeste.Mod.StratGraph
                 global::Celeste.Input.MoveY.Value = moveY;
             }
 
-            bool onGround = player.OnGround(1);
-            bool inNormalState = player.StateMachine.State == Player.StNormal;
-
-            // 2. Pulo: somente com os pés no chão (sem pulo no ar)
-            if (inNormalState && onGround && _jumpCooldown <= 0f && delta.Y < -8f)
+            bool floorAhead = true;
+            bool spikeAhead = false;
+            if (onGround && moveX != 0)
             {
-                player.Jump(true, true);
-                _jumpCooldown = 0.22f;
+                floorAhead = player.CollideCheck<Solid>(player.Position + new Vector2(moveX * 10f, 3f));
+                spikeAhead = level.CollideCheck<Spikes>(
+                    new Rectangle((int)(player.Position.X + moveX * 10f - 4), (int)(player.Position.Y - 12f), 8, 14));
             }
 
-            // 3. Dash: somente se o jogo disser que há dash disponível (player.CanDash).
-            //    StartDash() consome o dash pelas regras do jogo; recarga só ao tocar o chão/refill real.
-            if (inNormalState && !onGround && _dashCooldown <= 0f && player.CanDash &&
-                (delta.Y < -24f || Math.Abs(delta.X) > 40f))
+            // 3. Pulo real com duração segurada (FilterButtonCheck mantém Jump.Check = true)
+            bool ledgeJump = onGround && moveX != 0 && ((!floorAhead && delta.Y <= 8f) || spikeAhead);
+            bool wallJumpNeeded = (touchingWall && wantCrossWall && delta.Y < 10f) ||
+                                  (touchingWall && moveX != 0 && delta.Y <= 0f);
+            bool climbHopUp = inClimbState && !wantCrossWall && delta.Y < -20f && Math.Abs(delta.X) < 18f && player.Stamina > 35f;
+            bool verticalJumpNeeded = delta.Y < -8f;
+
+            if (_jumpCooldown <= 0f &&
+                ((inNormalState && onGround && (verticalJumpNeeded || wallJumpNeeded || ledgeJump)) ||
+                 (inClimbState && (climbHopUp || wantCrossWall))))
+            {
+                player.Jump(true, true);
+                _holdJumpTimer = delta.Y < -28f ? 0.24f : 0.18f;
+                _jumpCooldown = 0.24f;
+            }
+
+            // 4. Dash único real no ápice/queda do pulo ou emergência (sem desperdiçar no arranque)
+            bool nearApexOrFalling = player.Speed.Y >= -32f;
+            bool needDash = (delta.Y < -44f && player.Speed.Y > -65f) ||
+                            (nearApexOrFalling && (delta.Y < -14f || Math.Abs(delta.X) > 46f)) ||
+                            (delta.Y < -6f && player.Speed.Y > 45f);
+            if (inNormalState && !onGround && _dashCooldown <= 0f && player.CanDash && needDash)
             {
                 Vector2 snappedDir = new Vector2(
                     Math.Abs(delta.X) > 6f ? Math.Sign(delta.X) : 0f,
@@ -352,9 +517,15 @@ namespace Celeste.Mod.StratGraph
                     snappedDir = new Vector2(moveX != 0 ? moveX : 1f, 0f);
                 }
                 snappedDir.Normalize();
-                player.OverrideDashDirection = snappedDir;
-                player.StateMachine.State = player.StartDash();
-                _dashCooldown = 0.3f;
+
+                bool spikeInDash = level.CollideCheck<Spikes>(
+                    new Rectangle((int)(player.Position.X + snappedDir.X * 18f - 4), (int)(player.Position.Y + snappedDir.Y * 18f - 10), 8, 12));
+                if (!spikeInDash)
+                {
+                    player.OverrideDashDirection = snappedDir;
+                    player.StateMachine.State = player.StartDash();
+                    _dashCooldown = 0.35f;
+                }
             }
         }
 
@@ -372,7 +543,17 @@ namespace Celeste.Mod.StratGraph
             string slug;
             if (!_areaToSlug.TryGetValue(areaId, out slug))
             {
-                slug = "1_forsaken_city";
+                Draw.Rect(24f, 24f, 680f, 54f, new Color(11, 15, 25, 210));
+                ActiveFont.DrawOutline(
+                    "[StratGraph TAS] Entre em um Cap. do benchmark (1..7 ou 9) para ver a rota.",
+                    new Vector2(40f, 38f),
+                    Vector2.Zero,
+                    new Vector2(0.45f, 0.45f),
+                    Color.White,
+                    2f,
+                    Color.Black
+                );
+                return;
             }
 
             string rawRoom = level.Session.Level ?? "";

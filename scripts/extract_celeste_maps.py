@@ -57,6 +57,8 @@ HAZARD_WEIGHTS = {
     "spinner": 1.5,
     "rotateSpinner": 2.5,
     "trackSpinner": 2.5,
+    "lightning": 3.0,
+    "fireBarrier": 3.0,
     "fallingBlock": 2.0,
     "crushBlock": 3.0,
     "MoveBlock": 2.0,
@@ -69,6 +71,46 @@ HAZARD_WEIGHTS = {
     "iceBlock": 2.5,
     "bounceBlock": 2.0,
     "dreamBlock": 1.5,
+}
+
+LETHAL_HAZARDS = {
+    "spikesUp",
+    "spikesDown",
+    "spikesLeft",
+    "spikesRight",
+    "triggerSpikesUp",
+    "triggerSpikesDown",
+    "triggerSpikesLeft",
+    "triggerSpikesRight",
+    "spinner",
+    "rotateSpinner",
+    "trackSpinner",
+    "lightning",
+    "fireBarrier",
+    "seeker",
+}
+
+REFILL_ENTITIES = {
+    "refill",
+    "spring",
+    "wallSpringLeft",
+    "wallSpringRight",
+    "booster",
+}
+
+DEFAULT_CELESTE_PHYSICS: dict[str, float] = {
+    "tile_px": 8.0,
+    "max_run_px_s": 90.0,
+    "jump_speed_px_s": 105.0,
+    "gravity_px_s2": 900.0,
+    "max_fall_px_s": 160.0,
+    "dash_speed_px_s": 240.0,
+    "dash_time_s": 0.15,
+    "max_dashes": 1.0,
+    "climb_max_stamina": 110.0,
+    "max_jump_tiles": 6.0,
+    "single_dash_tiles": 6.0,
+    "climb_reach_tiles": 8.0,
 }
 
 COLLECTIBLE_ENTITIES = {
@@ -199,18 +241,12 @@ def _build_room_navigation_maps(
     entities: list[tuple[str, dict]],
     wt: int,
     ht: int,
-) -> tuple[list[list[float]], list[list[float]], list[tuple[int, int]], list[tuple[int, int]]]:
-    """Constrói mapas de custo de locomoção e risco tile-a-tile (8x8) para o player na sala.
-
-    Retorna:
-        - `step_cost[r][c]`: custo de movimento do player no tile (considerando plataformas,
-          escalada em parede, gravidade e blocos móveis);
-        - `hazard_map[r][c]`: risco local de espinhos/spinners naquele tile;
-        - `collectible_tiles`: lista de coordenadas `(r, c)` dos coletáveis na sala;
-        - `spawn_tiles`: lista de coordenadas `(r, c)` de pontos `player` na sala.
-    """
+) -> dict[str, object]:
+    """Constrói mapas físicos calibrados da sala (colisão, apoios, recargas e perigos letais)."""
     jumpthru = [[False] * wt for _ in range(ht)]
     assist = [[False] * wt for _ in range(ht)]
+    refill_map = [[False] * wt for _ in range(ht)]
+    lethal_map = [[False] * wt for _ in range(ht)]
     hazard_map = [[0.0] * wt for _ in range(ht)]
     collectible_tiles: list[tuple[int, int]] = []
     spawn_tiles: list[tuple[int, int]] = []
@@ -226,16 +262,32 @@ def _build_room_navigation_maps(
         r1 = max(r0, min(ht - 1, int((ey + eh - 1) // 8)))
 
         if ename == "player":
-            spawn_tiles.append((r0, c0))
+            # Player sprite tem origem nos pés; normaliza no tile livre
+            sr = r0 if grid[r0][c0] else max(0, r0 - 1)
+            spawn_tiles.append((sr, c0))
         elif ename in COLLECTIBLE_ENTITIES:
-            collectible_tiles.append((r0, c0))
+            cr = r0
+            if not grid[cr][c0]:
+                for dr in (-1, 1, -2, 2):
+                    if 0 <= cr + dr < ht and grid[cr + dr][c0]:
+                        cr = cr + dr
+                        break
+            collectible_tiles.append((cr, c0))
         elif ename == "jumpThru":
             for cc in range(c0, c1 + 1):
                 jumpthru[r0][cc] = True
         elif ename in ASSIST_ENTITIES:
+            is_refill = ename in REFILL_ENTITIES
             for rr in range(max(0, r0 - 2), min(ht, r1 + 3)):
                 for cc in range(max(0, c0 - 2), min(wt, c1 + 3)):
                     assist[rr][cc] = True
+                    if is_refill and abs(rr - r0) <= 1 and abs(cc - c0) <= 1:
+                        refill_map[rr][cc] = True
+
+        if ename in LETHAL_HAZARDS:
+            for rr in range(r0, r1 + 1):
+                for cc in range(c0, c1 + 1):
+                    lethal_map[rr][cc] = True
 
         if ename in HAZARD_WEIGHTS:
             hw = HAZARD_WEIGHTS[ename]
@@ -244,14 +296,23 @@ def _build_room_navigation_maps(
                     dist = abs(rr - r0) + abs(cc - c0)
                     hazard_map[rr][cc] += hw * (1.0 if dist == 0 else 0.45)
 
-    # Calcular apoio físico (chão abaixo a até 4 tiles, parede lateral a até 2 tiles ou assist)
+    ground_map = [[False] * wt for _ in range(ht)]
+    wall_map = [[False] * wt for _ in range(ht)]
     step_cost = [[1.0] * wt for _ in range(ht)]
     for r in range(ht):
         for c in range(wt):
             if not grid[r][c]:
-                # Bloco sólido: muito caro atravessar (só permite se for bloco destrutível/dashBlock sem alternativa)
-                step_cost[r][c] = 45.0
+                step_cost[r][c] = 999.0
                 continue
+
+            on_ground = (
+                r == ht - 1
+                or (r + 1 < ht and (not grid[r + 1][c] or jumpthru[r + 1][c]))
+            )
+            ground_map[r][c] = on_ground
+
+            near_wall = (c > 0 and not grid[r][c - 1]) or (c + 1 < wt and not grid[r][c + 1])
+            wall_map[r][c] = near_wall
 
             near_floor = False
             for dr in range(1, 5):
@@ -260,23 +321,25 @@ def _build_room_navigation_maps(
                     near_floor = True
                     break
 
-            near_wall = False
-            for dc in (-2, -1, 1, 2):
-                cc = c + dc
-                if 0 <= cc < wt and not grid[r][cc]:
-                    near_wall = True
-                    break
-
             if assist[r][c]:
                 step_cost[r][c] = 0.75
-            elif near_floor or jumpthru[r][c]:
+            elif on_ground or near_floor or jumpthru[r][c]:
                 step_cost[r][c] = 1.0
             elif near_wall:
-                step_cost[r][c] = 1.25  # escalada / walljump
+                step_cost[r][c] = 1.3  # escalada / walljump
             else:
                 step_cost[r][c] = 1.65  # arco aéreo / dash
 
-    return step_cost, hazard_map, collectible_tiles, spawn_tiles
+    return {
+        "step_cost": step_cost,
+        "hazard_map": hazard_map,
+        "lethal_map": lethal_map,
+        "refill_map": refill_map,
+        "ground_map": ground_map,
+        "wall_map": wall_map,
+        "coll_tiles": collectible_tiles,
+        "spawn_tiles": spawn_tiles,
+    }
 
 
 def _astar_tile_path(
@@ -285,84 +348,168 @@ def _astar_tile_path(
     hazard_map: list[list[float]],
     start_rc: tuple[int, int],
     goal_rc: tuple[int, int],
+    *,
+    lethal_map: list[list[bool]] | None = None,
+    ground_map: list[list[bool]] | None = None,
+    wall_map: list[list[bool]] | None = None,
+    refill_map: list[list[bool]] | None = None,
+    physics: dict[str, float] | None = None,
 ) -> tuple[list[tuple[int, int]], float, float, bool]:
-    """Executa A* físico no grid 8x8 da sala entre `start_rc` e `goal_rc`.
+    """Executa A* no espaço de estados físico `(r, c, air_budget, dash_avail)` estilo TAS.
 
-    Retorna `(tiles_path, walk_tiles_dist, hazard_exposure, pierced_solid)`.
+    Respeita:
+    1. Blocos sólidos (`<solids>`) são intransponíveis (nunca atravessa parede nem quinas).
+    2. Espinhos e spinners (`lethal_map`) são evitados estritamente (passo 1 não-letal;
+       passo 2 apenas se não existir caminho seguro algum).
+    3. Gravidade, arco de pulo (`max_jump_tiles`) e regra estrita de 1 dash (`dash_avail`),
+       que só recarrega ao pisar em chão firme, plataforma ou cristal/mola/booster.
     """
     ht = len(grid)
     wt = len(grid[0]) if ht else 0
-    sr, sc = max(0, min(ht - 1, start_rc[0])), max(0, min(wt - 1, start_rc[1]))
-    gr, gc = max(0, min(ht - 1, goal_rc[0])), max(0, min(wt - 1, goal_rc[1]))
+    sr = max(0, min(ht - 1, start_rc[0]))
+    sc = max(0, min(wt - 1, start_rc[1]))
+    gr = max(0, min(ht - 1, goal_rc[0]))
+    gc = max(0, min(wt - 1, goal_rc[1]))
 
     if (sr, sc) == (gr, gc):
         return [(sr, sc)], 1.0, hazard_map[sr][sc], False
 
-    INF = float("inf")
-    dist = [[INF] * wt for _ in range(ht)]
-    parent: dict[tuple[int, int], tuple[int, int]] = {}
-    dist[sr][sc] = 0.0
+    phys = physics or DEFAULT_CELESTE_PHYSICS
+    max_air = int(round(phys.get("max_jump_tiles", 6.0)))
+    dash_boost = int(round(phys.get("single_dash_tiles", 6.0)))
 
-    # 8 direções (horizontal, vertical e diagonal de pulo/dash)
+    def is_lethal(rr: int, cc: int) -> bool:
+        return bool(lethal_map is not None and lethal_map[rr][cc])
+
+    def is_grounded(rr: int, cc: int) -> bool:
+        return bool(ground_map is not None and ground_map[rr][cc])
+
+    def is_wall(rr: int, cc: int) -> bool:
+        return bool(wall_map is not None and wall_map[rr][cc])
+
+    def is_refill(rr: int, cc: int) -> bool:
+        return bool(refill_map is not None and refill_map[rr][cc])
+
     dirs = [
         (0, 1, 1.0),
         (0, -1, 1.0),
-        (1, 0, 0.9),   # queda a favor da gravidade é mais rápida
-        (-1, 0, 1.35), # subida exige pulo/escalada/dash
+        (1, 0, 0.9),
+        (-1, 0, 1.35),
         (1, 1, 1.3),
         (1, -1, 1.3),
         (-1, 1, 1.55),
         (-1, -1, 1.55),
     ]
 
-    pq: list[tuple[float, int, int]] = [(0.0, sr, sc)]
-    while pq:
-        _f, r, c = heapq.heappop(pq)
-        if (r, c) == (gr, gc):
-            break
-        cur_g = dist[r][c]
-        for dr, dc, move_mult in dirs:
-            nr, nc = r + dr, c + dc
-            if not (0 <= nr < ht and 0 <= nc < wt):
-                continue
-            # Blocos sólidos `<solids>` são intransponíveis: o player real não atravessa paredes
-            if not grid[nr][nc]:
-                continue
-            # Diagonal não pode "cortar" quina de bloco sólido
-            if dr != 0 and dc != 0 and (not grid[r + dr][c] or not grid[r][c + dc]):
-                continue
-            # Custo combina distância física, suporte de plataforma e desvio de espinhos
-            tile_c = step_cost[nr][nc] * move_mult + hazard_map[nr][nc] * 0.35
-            ng = cur_g + tile_c
-            if ng < dist[nr][nc]:
-                dist[nr][nc] = ng
-                parent[(nr, nc)] = (r, c)
-                heur = math.hypot(gr - nr, gc - nc) * 0.85
-                heapq.heappush(pq, (ng + heur, nr, nc))
+    def run_search(allow_lethal: bool) -> list[tuple[int, int]] | None:
+        init_air = max_air
+        init_state = (sr, sc, init_air, 1)
+        dist: dict[tuple[int, int, int, int], float] = {init_state: 0.0}
+        parent: dict[tuple[int, int, int, int], tuple[int, int, int, int]] = {}
+        pq: list[tuple[float, float, int, int, int, int]] = [
+            (math.hypot(gr - sr, gc - sc), 0.0, sr, sc, init_air, 1)
+        ]
+        goal_state: tuple[int, int, int, int] | None = None
+        expansions = 0
+        max_expansions = max(12000, wt * ht * 10)
 
-    # Reconstruir caminho tile a tile
-    path: list[tuple[int, int]] = []
-    curr: tuple[int, int] | None = (gr, gc)
-    if curr not in parent and curr != (sr, sc):
-        return [(sr, sc), (gr, gc)], math.hypot(gr - sr, gc - sc), 4.0, True
+        while pq and expansions < max_expansions:
+            _f, cur_g, r, c, air, dash = heapq.heappop(pq)
+            st = (r, c, air, dash)
+            if cur_g > dist.get(st, float("inf")) + 1e-9:
+                continue
+            if (r, c) == (gr, gc):
+                goal_state = st
+                break
+            expansions += 1
 
-    while curr is not None:
-        path.append(curr)
-        curr = parent.get(curr)
-    path.reverse()
+            for dr, dc, move_mult in dirs:
+                nr, nc = r + dr, c + dc
+                if not (0 <= nr < ht and 0 <= nc < wt):
+                    continue
+                if not grid[nr][nc] and (nr, nc) != (gr, gc):
+                    continue
+                if dr != 0 and dc != 0 and (not grid[r + dr][c] or not grid[r][c + dc]):
+                    continue
+                lethal_hit = is_lethal(nr, nc) and (nr, nc) != (gr, gc)
+                if lethal_hit and not allow_lethal:
+                    continue
+
+                grounded_next = is_grounded(nr, nc)
+                wall_next = is_wall(nr, nc)
+                refill_next = is_refill(nr, nc)
+
+                next_air = air
+                next_dash = dash
+                dash_used_penalty = 0.0
+
+                if grounded_next or refill_next:
+                    next_air = max_air
+                    next_dash = 1
+                elif wall_next:
+                    next_air = max(air - (1 if dr < 0 else 0), 3)
+                else:
+                    # Movimento aéreo sem chão/parede consome altura de pulo ou o único dash
+                    air_cost = 1 if dr <= 0 else 0
+                    if next_air >= air_cost:
+                        next_air -= air_cost
+                    elif next_dash == 1:
+                        next_dash = 0
+                        next_air = max(0, dash_boost - 1)
+                        dash_used_penalty = 0.8
+                    elif dr < 0:
+                        # Sem pulo nem dash disponíveis: gravidade impede subir no ar
+                        continue
+                    else:
+                        next_air = 0
+
+                lethal_pen = 5000.0 if lethal_hit else 0.0
+                tile_c = (
+                    step_cost[nr][nc] * move_mult
+                    + hazard_map[nr][nc] * 0.45
+                    + dash_used_penalty
+                    + lethal_pen
+                )
+                ng = cur_g + tile_c
+                nxt_st = (nr, nc, next_air, next_dash)
+                if ng < dist.get(nxt_st, float("inf")) - 1e-9:
+                    dist[nxt_st] = ng
+                    parent[nxt_st] = st
+                    heur = math.hypot(gr - nr, gc - nc) * 0.85
+                    heapq.heappush(pq, (ng + heur, ng, nr, nc, next_air, next_dash))
+
+        if goal_state is None:
+            return None
+        raw_path: list[tuple[int, int]] = []
+        cur: tuple[int, int, int, int] | None = goal_state
+        while cur is not None:
+            raw_path.append((cur[0], cur[1]))
+            cur = parent.get(cur)
+        raw_path.reverse()
+        return raw_path
+
+    # Tentativa 1: 100% não-letal respeitando gravidade e regra de 1 dash
+    path = run_search(allow_lethal=False)
+    # Tentativa 2 (fallback caso coletável/porta encoste em hitbox): penalidade letal máxima
+    if path is None:
+        path = run_search(allow_lethal=True)
+    if path is None:
+        return [(sr, sc), (gr, gc)], math.hypot(gr - sr, gc - sc), 10.0, True
 
     walk_dist = 0.0
     hazard_sum = 0.0
-    pierced_solid = False
+    lethal_hit = False
     for i, (r, c) in enumerate(path):
         if not grid[r][c] and i not in (0, len(path) - 1):
-            pierced_solid = True
+            lethal_hit = True
+        if is_lethal(r, c) and i not in (0, len(path) - 1):
+            lethal_hit = True
         hazard_sum += hazard_map[r][c]
         if i > 0:
             pr, pc = path[i - 1]
             walk_dist += math.hypot(r - pr, c - pc) * step_cost[r][c]
 
-    return path, max(1.0, walk_dist), hazard_sum, pierced_solid
+    return path, max(1.0, walk_dist), hazard_sum, lethal_hit
 
 
 def _simplify_tile_path_to_world_waypoints(
@@ -421,7 +568,11 @@ def _can_reach_all(
     return required_nodes.issubset(can_reach_goal)
 
 
-def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
+def extract_chapter_to_csv(
+    bin_path: Path,
+    out_dir: Path,
+    physics: dict[str, float] | None = None,
+) -> dict[str, object]:
     """Extrai um capítulo `.bin` do Celeste simulando o trajeto real do player em cada sala."""
     pkg, root = parse_celeste_bin(bin_path)
     levels = [c for c in root[2] if c[0] == "levels"][0][2]
@@ -446,20 +597,28 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
                     raw_entities.append((e[0], e[1]))
 
         grid = _get_solids_grid(lvl, wt, ht)
-        step_cost, hazard_map, coll_tiles, spawn_tiles = _build_room_navigation_maps(
-            grid, raw_entities, wt, ht
-        )
+        nav_info = _build_room_navigation_maps(grid, raw_entities, wt, ht)
+        spawn_tiles: list[tuple[int, int]] = nav_info["spawn_tiles"]  # type: ignore[assignment]
+        ground_map: list[list[bool]] = nav_info["ground_map"]  # type: ignore[assignment]
+        lethal_map: list[list[bool]] = nav_info["lethal_map"]  # type: ignore[assignment]
 
-        # Ponto âncora interno da sala (spawn principal do player ou centro livre mais próximo)
+        # Ponto âncora interno da sala: pousar spawn sobre o chão firme mais próximo (não no meio do ar!)
         anchor_rc = spawn_tiles[0] if spawn_tiles else (ht // 2, wt // 2)
-        if not grid[anchor_rc[0]][anchor_rc[1]]:
-            # Buscar tile livre mais próximo do centro
+        if grid[anchor_rc[0]][anchor_rc[1]]:
+            ar, ac = anchor_rc
+            while ar + 1 < ht and grid[ar + 1][ac] and not ground_map[ar][ac]:
+                ar += 1
+            if ground_map[ar][ac] and not lethal_map[ar][ac]:
+                anchor_rc = (ar, ac)
+
+        if not grid[anchor_rc[0]][anchor_rc[1]] or lethal_map[anchor_rc[0]][anchor_rc[1]]:
             best_rc = anchor_rc
             best_d = 999999
             for rr in range(ht):
                 for cc in range(wt):
-                    if grid[rr][cc]:
-                        d = abs(rr - ht // 2) + abs(cc - wt // 2)
+                    if grid[rr][cc] and not lethal_map[rr][cc]:
+                        bonus = 0 if ground_map[rr][cc] else 20
+                        d = abs(rr - ht // 2) + abs(cc - wt // 2) + bonus
                         if d < best_d:
                             best_d = d
                             best_rc = (rr, cc)
@@ -477,13 +636,8 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
             "raw_entities": raw_entities,
         }
         grids[name] = grid
-        nav_maps[name] = {
-            "step_cost": step_cost,
-            "hazard_map": hazard_map,
-            "coll_tiles": coll_tiles,
-            "spawn_tiles": spawn_tiles,
-            "anchor_rc": anchor_rc,
-        }
+        nav_info["anchor_rc"] = anchor_rc
+        nav_maps[name] = nav_info
 
     # 1. Construir adjacência geométrica + encontrar as coordenadas exatas das portas (door_tiles)
     open_adj: dict[str, set[str]] = defaultdict(set)
@@ -718,6 +872,9 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
             }
         )
 
+    phys_cfg = physics or DEFAULT_CELESTE_PHYSICS
+    segment_audit = {"total": 0, "safe": 0, "lethal_fallback": 0}
+
     def simulate_player_transition(u: str, v: str) -> tuple[float, float, float, list[list[float]]]:
         """Simula o player saindo da âncora de `u` -> porta `(u,v)` -> (itens de `v`) -> âncora de `v`."""
         ru, rv = rooms[u], rooms[v]
@@ -725,14 +882,24 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
         door_u = door_tile_in_room.get((u, v), nu["anchor_rc"])  # type: ignore[arg-type]
         door_v = door_tile_in_room.get((v, u), nv["anchor_rc"])  # type: ignore[arg-type]
 
-        # Parte 1: na sala de origem u, do ponto âncora até a porta de saída para v
-        path_u, dist_u, haz_u, _p1 = _astar_tile_path(
+        # Parte 1: na sala de origem u, do ponto âncora até a porta de saída para v (A* físico com estado)
+        path_u, dist_u, haz_u, p1_lethal = _astar_tile_path(
             grids[u],
             nu["step_cost"],  # type: ignore[arg-type]
             nu["hazard_map"],  # type: ignore[arg-type]
             nu["anchor_rc"],  # type: ignore[arg-type]
             door_u,  # type: ignore[arg-type]
+            lethal_map=nu["lethal_map"],  # type: ignore[arg-type]
+            ground_map=nu["ground_map"],  # type: ignore[arg-type]
+            wall_map=nu["wall_map"],  # type: ignore[arg-type]
+            refill_map=nu["refill_map"],  # type: ignore[arg-type]
+            physics=phys_cfg,
         )
+        segment_audit["total"] += 1
+        if p1_lethal:
+            segment_audit["lethal_fallback"] += 1
+        else:
+            segment_audit["safe"] += 1
 
         # Parte 2: na sala de destino v, da porta de entrada passando pelos coletáveis até a âncora de v
         coll_v: list[tuple[int, int]] = list(nv["coll_tiles"])  # type: ignore[arg-type]
@@ -745,13 +912,23 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
         dist_v = 0.0
         haz_v = 0.0
         for k in range(len(waypoints_v_rc) - 1):
-            seg_path, seg_dist, seg_haz, _p2 = _astar_tile_path(
+            seg_path, seg_dist, seg_haz, p2_lethal = _astar_tile_path(
                 grids[v],
                 nv["step_cost"],  # type: ignore[arg-type]
                 nv["hazard_map"],  # type: ignore[arg-type]
                 waypoints_v_rc[k],
                 waypoints_v_rc[k + 1],
+                lethal_map=nv["lethal_map"],  # type: ignore[arg-type]
+                ground_map=nv["ground_map"],  # type: ignore[arg-type]
+                wall_map=nv["wall_map"],  # type: ignore[arg-type]
+                refill_map=nv["refill_map"],  # type: ignore[arg-type]
+                physics=phys_cfg,
             )
+            segment_audit["total"] += 1
+            if p2_lethal:
+                segment_audit["lethal_fallback"] += 1
+            else:
+                segment_audit["safe"] += 1
             if full_tiles_v and seg_path:
                 full_tiles_v.extend(seg_path[1:])
             else:
@@ -895,7 +1072,17 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
         }
 
     (out_dir / "waypoints.json").write_text(
-        json.dumps({"rooms": room_anchors, "edges": edge_waypoints}, ensure_ascii=False, indent=2),
+        json.dumps(
+            {
+                "calibrated": True,
+                "physics": phys_cfg,
+                "segment_audit": segment_audit,
+                "rooms": room_anchors,
+                "edges": edge_waypoints,
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
         encoding="utf-8",
     )
 
@@ -910,12 +1097,14 @@ def extract_chapter_to_csv(bin_path: Path, out_dir: Path) -> dict[str, object]:
         "weapon_room": weapon_room,
         "start_id": start_id,
         "goal_id": goal_id,
+        "segment_audit": segment_audit,
     }
 
 
 def extract_all_celeste_chapters(
     steam_maps_dir: Path = DEFAULT_STEAM_MAPS_DIR,
     output_base_dir: Path = OUTPUT_BASE_DIR,
+    physics: dict[str, float] | None = None,
 ) -> list[dict[str, object]]:
     """Extrai todos os capítulos principais do Celeste para `datasets/celeste/`."""
     summaries: list[dict[str, object]] = []
@@ -924,7 +1113,7 @@ def extract_all_celeste_chapters(
         if not bin_path.is_file():
             raise FileNotFoundError(f"Mapa do Celeste não encontrado: {bin_path}")
         out_dir = output_base_dir / slug
-        info = extract_chapter_to_csv(bin_path, out_dir)
+        info = extract_chapter_to_csv(bin_path, out_dir, physics=physics)
         summaries.append(info)
     return summaries
 

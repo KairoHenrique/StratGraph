@@ -49,6 +49,7 @@ namespace StratGraph.CupheadMod
         private int _tasMoveX;
         private int _tasMoveY;
         private float _tasJumpCooldown;
+        private float _tasHoldJumpTimer;
         private float _tasDashCooldown;
         private float _tasParryCooldown;
         private float _tasStuckTimer;
@@ -88,6 +89,15 @@ namespace StratGraph.CupheadMod
             return originalValue;
         }
 
+        public static bool FilterJumpButtonHeld(bool originalValue)
+        {
+            if (_instance != null && _instance._tasBotActive && _instance._tasHoldJumpTimer > 0f)
+            {
+                return true;
+            }
+            return originalValue;
+        }
+
         public static void BeforeMotorHandleInput(LevelPlayerMotor motor)
         {
             if (_instance != null && motor != null)
@@ -102,6 +112,55 @@ namespace StratGraph.CupheadMod
             {
                 _instance.DriveCupheadWeapons(wm);
             }
+        }
+
+        private static string ExtractJsonObjectBlock(string raw, string key)
+        {
+            int idx = raw.IndexOf(key, StringComparison.Ordinal);
+            if (idx < 0)
+            {
+                return "";
+            }
+            int openBrace = raw.IndexOf('{', idx);
+            if (openBrace < 0)
+            {
+                return "";
+            }
+            int depth = 0;
+            bool inStr = false;
+            bool escaped = false;
+            for (int i = openBrace; i < raw.Length; i++)
+            {
+                char ch = raw[i];
+                if (escaped)
+                {
+                    escaped = false;
+                    continue;
+                }
+                if (ch == '\\' && inStr)
+                {
+                    escaped = true;
+                    continue;
+                }
+                if (ch == '"')
+                {
+                    inStr = !inStr;
+                    continue;
+                }
+                if (!inStr)
+                {
+                    if (ch == '{') depth++;
+                    else if (ch == '}')
+                    {
+                        depth--;
+                        if (depth == 0)
+                        {
+                            return raw.Substring(openBrace, i - openBrace + 1);
+                        }
+                    }
+                }
+            }
+            return raw.Substring(openBrace);
         }
 
         private void Awake()
@@ -132,13 +191,11 @@ namespace StratGraph.CupheadMod
             foreach (string slug in slugs)
             {
                 string key = "\"cuphead_" + slug + "\"";
-                int idx = raw.IndexOf(key, StringComparison.Ordinal);
-                if (idx < 0)
+                string block = ExtractJsonObjectBlock(raw, key);
+                if (string.IsNullOrEmpty(block))
                 {
                     continue;
                 }
-
-                string block = raw.Substring(idx, Math.Min(28000, raw.Length - idx));
 
                 Match sumMatch = Regex.Match(block, "\"hud_summary\"\\s*:\\s*\"([^\"]+)\"");
                 if (sumMatch.Success)
@@ -269,6 +326,7 @@ namespace StratGraph.CupheadMod
         {
             if (!_tasBotActive || motor == null || motor.transform == null)
             {
+                _tasHoldJumpTimer = 0f;
                 return;
             }
 
@@ -286,6 +344,13 @@ namespace StratGraph.CupheadMod
             }
 
             Vector2 current = new Vector2(motor.transform.position.x, motor.transform.position.y);
+            if ((current - _lastPlayerPos).sqrMagnitude > 250000f)
+            {
+                // Respawn ou transição de sala: realinha no waypoint mais próximo
+                _currentWaypointIndex = -1;
+                _tasHoldJumpTimer = 0f;
+            }
+
             if (_currentWaypointIndex < 0 || _currentWaypointIndex >= waypoints.Count)
             {
                 int bestIdx = 0;
@@ -303,8 +368,8 @@ namespace StratGraph.CupheadMod
             }
 
             while (_currentWaypointIndex < waypoints.Count - 1 &&
-                   Mathf.Abs(waypoints[_currentWaypointIndex].x - current.x) <= 55f &&
-                   Mathf.Abs(waypoints[_currentWaypointIndex].y - current.y) <= 130f)
+                   Mathf.Abs(waypoints[_currentWaypointIndex].x - current.x) <= 44f &&
+                   Mathf.Abs(waypoints[_currentWaypointIndex].y - current.y) <= 48f)
             {
                 _currentWaypointIndex++;
                 _tasStuckTimer = 0f;
@@ -315,6 +380,7 @@ namespace StratGraph.CupheadMod
             float dt = Time.fixedDeltaTime > 0f ? Time.fixedDeltaTime : 0.016f;
 
             if (_tasJumpCooldown > 0f) _tasJumpCooldown -= dt;
+            if (_tasHoldJumpTimer > 0f) _tasHoldJumpTimer -= dt;
             if (_tasDashCooldown > 0f) _tasDashCooldown -= dt;
             if (_tasParryCooldown > 0f) _tasParryCooldown -= dt;
 
@@ -329,15 +395,20 @@ namespace StratGraph.CupheadMod
             _lastPlayerPos = current;
 
             // 1. Eixos direcionais reais do controle (lidos por HandleWalking e HandleLooking)
-            _tasMoveX = Mathf.Abs(delta.x) > 12f ? (delta.x >= 0f ? 1 : -1) : 1;
-            _tasMoveY = delta.y > 90f ? 1 : 0;
+            _tasMoveX = Mathf.Abs(delta.x) > 10f ? (delta.x >= 0f ? 1 : -1) : 1;
+            _tasMoveY = delta.y > 70f ? 1 : 0;
 
-            // 2. Pulo real do Cuphead (BufferInput(BufferedInput.Jump = 0))
+            // 2. Pulo real do Cuphead (BufferInput(BufferedInput.Jump = 0) + Hold de Jump via Rewired)
             if (motor.Grounded && _tasJumpCooldown <= 0f &&
-                (delta.y > 22f || _tasStuckTimer > 0.14f || Mathf.Abs(delta.x) > 180f))
+                (delta.y > 18f || _tasStuckTimer > 0.12f || (Mathf.Abs(delta.x) > 155f && delta.y >= -15f)))
             {
                 TriggerBufferedInput(motor, 0);
-                _tasJumpCooldown = 0.28f;
+                _tasJumpCooldown = 0.26f;
+                _tasHoldJumpTimer = delta.y > 55f ? 0.28f : 0.22f;
+            }
+            else if (motor.Grounded && _tasJumpCooldown < 0.16f)
+            {
+                _tasHoldJumpTimer = 0f;
             }
 
             // 3. Parry real no ar (BufferInput(BufferedInput.Jump = 0) quando fora do chão)
@@ -347,12 +418,12 @@ namespace StratGraph.CupheadMod
                 _tasParryCooldown = 0.24f;
             }
 
-            // 4. Dash real no ar ou no chão (BufferInput(BufferedInput.Dash = 1))
+            // 4. Dash real no ar ou em lacunas largas (sem overshoot em plataformas curtas)
             if (!motor.Dashing && _tasDashCooldown <= 0f &&
-                (Mathf.Abs(delta.x) > 140f || (!motor.Grounded && Mathf.Abs(delta.x) > 75f)))
+                (Mathf.Abs(delta.x) > 195f || (!motor.Grounded && Mathf.Abs(delta.x) > 110f && Mathf.Abs(delta.y) < 35f)))
             {
                 TriggerBufferedInput(motor, 1);
-                _tasDashCooldown = 0.48f;
+                _tasDashCooldown = 0.52f;
             }
 
             // Sem impulsos artificiais: se o bot errar, o jogo aplica dano/morte normalmente.

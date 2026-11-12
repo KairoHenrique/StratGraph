@@ -409,7 +409,21 @@ def extract_cuphead_level_to_csv(scene_path: Path, out_dir: Path, slug: str) -> 
         for nid, info in nodes.items()
     }
     (out_dir / "waypoints.json").write_text(
-        json.dumps({"rooms": room_anchors, "edges": edge_waypoints}, ensure_ascii=False, indent=2),
+        json.dumps(
+            {
+                "calibrated": True,
+                "physics": {
+                    "move_speed_px_s": 490.0,
+                    "max_jump_reach_px": 380.0,
+                    "dash_reach_px": 280.0,
+                    "death_avoidance": True,
+                },
+                "rooms": room_anchors,
+                "edges": edge_waypoints,
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
         encoding="utf-8",
     )
 
