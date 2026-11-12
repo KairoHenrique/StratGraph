@@ -392,14 +392,172 @@ def export_dataset_gephi_bundle(dataset_dir: Path, output_dir: Path, alpha: floa
     return [base_file, route_file, layered_file]
 
 
+def export_unified_graph_to_gexf(
+    datasets_root: Path = Path("datasets"),
+    out_path: Path = Path("results/gephi/stratgraph_unified_all.gexf"),
+    alpha: float = 0.05,
+    max_vertices_per_dataset: int | None = None,
+) -> Path:
+    """Agrega todos os datasets em um unico grafo .gexf panoramico organizado em grade de clusters."""
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    ds_dirs = [p.parent for p in sorted(datasets_root.rglob("vertices.csv"))]
+
+    items: list[tuple[Path, GameGraph, list[LayeredNode], dict[str, tuple[float, float]]]] = []
+    for ds_dir in ds_dirs:
+        raw_graph = load_graph_from_csv(ds_dir)
+        if max_vertices_per_dataset is not None and len(raw_graph.vertices) > max_vertices_per_dataset:
+            continue
+        contracted = contract_dead_ends(raw_graph)
+        layered = build_layered_graph(contracted, alpha=alpha)
+        dres = run_dijkstra(layered)
+        pos = _compute_generic_positions(raw_graph, ds_dir)
+        items.append((ds_dir, raw_graph, dres.path, pos))
+
+    cols = max(1, math.ceil(math.sqrt(len(items))))
+    cell_w = 1800.0
+    cell_h = 1100.0
+    stride_x = 2400.0
+    stride_y = 1600.0
+
+    lines: list[str] = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<gexf xmlns="http://www.gexf.net/1.2draft" '
+        'xmlns:viz="http://www.gexf.net/1.2draft/viz" '
+        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+        'xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" '
+        'version="1.2">',
+        '  <meta lastmodifieddate="2026-11-12">',
+        "    <creator>StratGraph Gephi Exporter</creator>",
+        f"    <description>{html.escape(f'Grafo Unificado StratGraph ({len(items)} datasets, alpha={alpha})')}</description>",
+        "  </meta>",
+        '  <graph defaultedgetype="directed" mode="static">',
+        '    <attributes class="node">',
+        '      <attribute id="0" title="dataset" type="string"/>',
+        '      <attribute id="1" title="grupo" type="string"/>',
+        '      <attribute id="2" title="tipo_sala" type="string"/>',
+        '      <attribute id="3" title="valor_coletavel" type="double"/>',
+        '      <attribute id="4" title="tem_arma" type="boolean"/>',
+        '      <attribute id="5" title="na_rota_otima" type="boolean"/>',
+        "    </attributes>",
+        '    <attributes class="edge">',
+        '      <attribute id="e0" title="dataset" type="string"/>',
+        '      <attribute id="e1" title="tempo_base" type="double"/>',
+        '      <attribute id="e2" title="dificuldade_sem_arma" type="double"/>',
+        '      <attribute id="e3" title="dificuldade_com_arma" type="double"/>',
+        '      <attribute id="e4" title="na_rota_otima" type="boolean"/>',
+        "    </attributes>",
+        "    <nodes>",
+    ]
+
+    edge_lines: list[str] = []
+    edge_counter = 0
+
+    for idx, (ds_dir, raw_graph, optimal_path, local_pos) in enumerate(items):
+        ds_name = ds_dir.name
+        grupo = ds_dir.parent.name if ds_dir.parent != datasets_root else "root"
+        col = idx % cols
+        row = idx // cols
+        origin_x = col * stride_x
+        origin_y = -row * stride_y
+
+        # Normaliza coordenadas locais para caberem perfeitamente na celula sem sobrepor outros datasets
+        xs = [p[0] for p in local_pos.values()] or [0.0]
+        ys = [p[1] for p in local_pos.values()] or [0.0]
+        min_x, max_x = min(xs), max(xs)
+        min_y, max_y = min(ys), max(ys)
+        span_x = max(1.0, max_x - min_x)
+        span_y = max(1.0, max_y - min_y)
+
+        route_edges: set[tuple[str, str]] = set()
+        route_rooms: set[str] = set()
+        for i in range(len(optimal_path) - 1):
+            u = optimal_path[i].room_id
+            v = optimal_path[i + 1].room_id
+            if u != v:
+                route_edges.add((u, v))
+            route_rooms.add(u)
+        if optimal_path:
+            route_rooms.add(optimal_path[-1].room_id)
+
+        for rid, room in sorted(raw_graph.vertices.items()):
+            gid = f"{ds_name}::{rid}"
+            lx, ly = local_pos.get(rid, (0.0, 0.0))
+            nx = origin_x + ((lx - min_x) / span_x) * cell_w
+            ny = origin_y + ((ly - min_y) / span_y) * cell_h
+            in_route = rid in route_rooms
+
+            if in_route and room.room_type not in (RoomType.INICIO, RoomType.FIM, RoomType.ARMA):
+                rgb = COLOR_PALETTE["ROUTE"]
+            else:
+                rgb = COLOR_PALETTE.get(room.room_type.value, COLOR_PALETTE[RoomType.COMUM.value])
+
+            size = 24.0 if room.room_type in (RoomType.INICIO, RoomType.FIM, RoomType.ARMA) else (16.0 if in_route else 10.0)
+            label = f"{ds_name}:{rid}"
+
+            lines.append(f'      <node id="{html.escape(gid)}" label="{html.escape(label)}">')
+            lines.append(f'        <viz:color r="{rgb[0]}" g="{rgb[1]}" b="{rgb[2]}" a="1.0"/>')
+            lines.append(f'        <viz:position x="{nx:.2f}" y="{ny:.2f}" z="0.0"/>')
+            lines.append(f'        <viz:size value="{size:.1f}"/>')
+            lines.append("        <attvalues>")
+            lines.append(f'          <attvalue for="0" value="{html.escape(ds_name)}"/>')
+            lines.append(f'          <attvalue for="1" value="{html.escape(grupo)}"/>')
+            lines.append(f'          <attvalue for="2" value="{html.escape(room.room_type.value)}"/>')
+            lines.append(f'          <attvalue for="3" value="{room.collectible_value:.2f}"/>')
+            lines.append(f'          <attvalue for="4" value="{str(room.has_weapon).lower()}"/>')
+            lines.append(f'          <attvalue for="5" value="{str(in_route).lower()}"/>')
+            lines.append("        </attvalues>")
+            lines.append("      </node>")
+
+        for u, edges in raw_graph.adjacency.items():
+            for e in edges:
+                in_rt = (u, e.destination) in route_edges
+                weight = 4.0 if in_rt else 1.0
+                rgb = COLOR_PALETTE["ROUTE"] if in_rt else (160, 170, 175)
+                alpha_col = "1.0" if in_rt else "0.25"
+                su = f"{ds_name}::{u}"
+                sv = f"{ds_name}::{e.destination}"
+                edge_lines.append(
+                    f'      <edge id="{edge_counter}" source="{html.escape(su)}" target="{html.escape(sv)}" weight="{weight:.1f}">'
+                )
+                edge_lines.append(
+                    f'        <viz:color r="{rgb[0]}" g="{rgb[1]}" b="{rgb[2]}" a="{alpha_col}"/>'
+                )
+                edge_lines.append(f'        <viz:thickness value="{weight:.1f}"/>')
+                edge_lines.append("        <attvalues>")
+                edge_lines.append(f'          <attvalue for="e0" value="{html.escape(ds_name)}"/>')
+                edge_lines.append(f'          <attvalue for="e1" value="{e.base_time:.2f}"/>')
+                edge_lines.append(f'          <attvalue for="e2" value="{e.difficulty_no_weapon:.2f}"/>')
+                edge_lines.append(f'          <attvalue for="e3" value="{e.difficulty_with_weapon:.2f}"/>')
+                edge_lines.append(f'          <attvalue for="e4" value="{str(in_rt).lower()}"/>')
+                edge_lines.append("        </attvalues>")
+                edge_lines.append("      </edge>")
+                edge_counter += 1
+
+    lines.append("    </nodes>")
+    lines.append("    <edges>")
+    lines.extend(edge_lines)
+    lines.append("    </edges>")
+    lines.append("  </graph>")
+    lines.append("</gexf>")
+
+    out_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"  [Gephi Unificado] {out_path.name} ({len(items)} datasets, {edge_counter} arestas)")
+    return out_path
+
+
 def export_all_datasets(datasets_root: Path = Path("datasets"), output_root: Path = Path("results/gephi")) -> list[Path]:
-    """Varre todos os datasets e gera os arquivos .gexf para visualizacao no Gephi."""
+    """Varre todos os datasets e gera os arquivos .gexf (individuais e unificados) para visualizacao no Gephi."""
     exported: list[Path] = []
     print(f"\n=== Exportando Grafos Gephi (.gexf) para {output_root} ===")
     for vert_path in sorted(datasets_root.rglob("vertices.csv")):
         ds_dir = vert_path.parent
         files = export_dataset_gephi_bundle(ds_dir, output_root)
         exported.extend(files)
+    unified_all = export_unified_graph_to_gexf(
+        datasets_root,
+        output_root / "stratgraph_unified_all.gexf",
+    )
+    exported.append(unified_all)
     print(f"Total de arquivos .gexf gerados: {len(exported)}")
     return exported
 
@@ -419,8 +577,13 @@ def main() -> int:
         help="Diretorio de destino para os arquivos .gexf (padrao: results/gephi)",
     )
     parser.add_argument("--alpha", type=float, default=0.05, help="Parametro alpha do StratGraph")
-    parser.add_argument("--all", action="store_true", default=False, help="Exporta todos os datasets")
+    parser.add_argument("--all", action="store_true", default=False, help="Exporta todos os datasets + grafo unificado")
+    parser.add_argument("--unified", action="store_true", default=False, help="Gera apenas o grafo unificado em um unico .gexf")
     args = parser.parse_args()
+
+    if args.unified:
+        export_unified_graph_to_gexf(Path("datasets"), args.out_dir / "stratgraph_unified_all.gexf", alpha=args.alpha)
+        return 0
 
     if args.dataset:
         export_dataset_gephi_bundle(args.dataset, args.out_dir, alpha=args.alpha)

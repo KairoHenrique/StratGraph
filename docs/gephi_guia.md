@@ -26,6 +26,11 @@ Para cada instância presente em `datasets/` (instâncias didáticas, benchmarks
    - **Camada 1 ($L_1$):** Estado após aquisição da arma / *power-up* (nós em âmbar/dourado, $z = 150$, com deslocamento no eixo Y).
    - **Transições Intercamadas:** Arestas douradas com espessura destacada que conectam o vértice `ARMA` de $L_0$ para os seus destinos na camada $L_1$.
 
+4. **`results/gephi/stratgraph_unified_all.gexf` (Grafo Unificado Panorâmico — Tudo em Um Só):**
+   - Reúne **todos os 22 datasets** de `datasets/` em um único grafo `.gexf` (`7.842` vértices e `16.419` arestas), organizados em uma grade de *clusters* sem sobreposição.
+   - Cada vértice carrega os atributos `dataset`, `grupo`, `tipo_sala`, `valor_coletavel`, `tem_arma` e `na_rota_otima`, com todas as rotas ótimas destacadas em laranja simultaneamente.
+   - Pode ser gerado isoladamente via `python -m scripts.export_gephi --unified`.
+
 ---
 
 ## 2. Paleta de Cores Padronizada

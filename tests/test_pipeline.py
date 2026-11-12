@@ -365,7 +365,7 @@ def test_stratgraph_chapter1_walk_and_live_tas_artifact() -> None:
 def test_gephi_gexf_export(tmp_path: Path) -> None:
     """Valida a exportacao de grafos no formato padrao Gephi (.gexf) com suporte visual."""
     import xml.etree.ElementTree as ET
-    from scripts.export_gephi import export_dataset_gephi_bundle
+    from scripts.export_gephi import export_dataset_gephi_bundle, export_unified_graph_to_gexf
 
     toy_dir = Path("datasets/sample_toy")
     out_dir = tmp_path / "gephi_toy"
@@ -415,6 +415,14 @@ def test_gephi_gexf_export(tmp_path: Path) -> None:
     assert graph_layered is not None
     nodes_l = graph_layered.findall("g:nodes/g:node", ns)
     assert len(nodes_l) > len(nodes)  # Camada 0 + Camada 1 expandida
+
+    # Valida grafo unificado panoramico (todos os datasets juntos em um unico .gexf)
+    unified_out = tmp_path / "stratgraph_unified_test.gexf"
+    export_unified_graph_to_gexf(Path("datasets"), unified_out, max_vertices_per_dataset=100)
+    assert unified_out.is_file()
+    tree_u = ET.parse(unified_out)
+    nodes_u = tree_u.getroot().findall("g:graph/g:nodes/g:node", ns)
+    assert len(nodes_u) > 500
 
 
 
