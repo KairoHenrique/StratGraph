@@ -17,7 +17,7 @@ Otimização de rotas estratégicas em mapas de jogos digitais modelados como **
 ├── scripts/              # Extratores A* físicos, benchmarks, gráficos, simulador 2D, exportador TAS e mods
 ├── tas/                  # Scripts CelesteTAS (.tas, 60 FPS) por capítulo para validação no Everest / Celeste Studio
 ├── mods/                 # Mods C# opcionais de HUD visual (F5/F6) — foco em guia visual manual (Cuphead / legado)
-├── tests/                # Testes unitários e de integração (12 testes automatizados)
+├── tests/                # Testes unitários e de integração automatizados (execução integralmente offline)
 ├── results/              # Resultados experimentais (CSV/JSON), simulador HTML5 e pacotes .zip
 └── article/              # Artigo científico LaTeX (IEEE Conference Template), referências e figuras
 ```
@@ -46,9 +46,14 @@ python -m src.main --dataset datasets/celeste/1_forsaken_city --alpha 0.05
   python -m scripts.simulate_route --open
   ```
 * **Exportação CelesteTAS 60 FPS ([`scripts/export_celeste_tas.py`](scripts/export_celeste_tas.py) → [`tas/celeste/`](tas/celeste/README_CELESTETAS.md)):**
-  Converte as rotas ótimas (`stratgraph` vs `bfs`) dos 8 capítulos de *Celeste* em arquivos `.tas` (60 FPS) validados sintaticamente para uso no **Everest + CelesteTAS (`CelesteStudio.exe`)**, utilizando rótulos `#lvl_<sala>` e âncoras `console load <id> <sala>` (`Unsafe`) por segmento de sala (enquanto *playthrough* contínua *single-segment* sem cortes requer sintonia subpixel dentro do próprio *Celeste Studio*):
+  Converte as rotas ótimas (`stratgraph` vs `bfs`) dos 8 capítulos de *Celeste* em arquivos `.tas` (60 FPS) validados sintaticamente para uso no **Everest + CelesteTAS (`CelesteStudio.exe`)**, utilizando rótulos `#lvl_<sala>` e âncoras `console load <id> <sala>` (`Unsafe`) por segmento de sala:
   ```bash
   python -m scripts.export_celeste_tas
+  ```
+* **Sintetizador Closed-Loop Ao Vivo para Capítulo 1 ([`scripts/solve_live_celeste_tas.py`](scripts/solve_live_celeste_tas.py) + [`scripts/celeste_sim.py`](scripts/celeste_sim.py)):**
+  Executa a rota do **StratGraph** passo a passo contra o **Everest + CelesteTAS DebugRC** (`http://localhost:32270/`) com horizonte deslizante a 60 FPS, `SaveState`/`ClearState` rolantes, regra real de 1 *dash* (incluindo proibição em morangos alados), colisão real e poda imediata de mortes. No teste completo do Capítulo 1 (`1_forsaken_city` → [`tas/celeste/1_forsaken_city_stratgraph.tas`](tas/celeste/1_forsaken_city_stratgraph.tas)), percorreu todas as **51 visitas de sala** até `lvl_end` em **16.492 quadros** com **0 mortes**, **26 transições contínuas**, **24 retomadas limpas via `console load`** e **4 morangos confirmados no motor**:
+  ```bash
+  python -m scripts.solve_live_celeste_tas --chapter 1_forsaken_city --alpha 0.05
   ```
 * **Mod Opcional de Guia Visual HUD *In-Game* (Steam / Windows — foco *Cuphead*):**
   Como *Cuphead* não possui ferramenta equivalente ao *CelesteTAS*, [`mods/cuphead_stratgraph/`](mods/cuphead_stratgraph/StratGraphCupheadHud.cs) oferece desenho passivo da rota na tela (`F5` exibe/oculta HUD e `F6` alterna `StratGraph` vs `BFS`). Para *Celeste*, mantenha o binário vanilla restaurado ao usar **Everest + CelesteTAS**:

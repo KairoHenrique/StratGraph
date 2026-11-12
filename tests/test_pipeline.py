@@ -256,3 +256,98 @@ def test_celeste_tas_export(tmp_path: Path) -> None:
         assert sg_rep.eff_cost < bfs_rep.eff_cost, f"{chapter} StratGraph não reduziu custo efetivo"
 
 
+def test_celeste_sim_60hz_rules_and_planner() -> None:
+    """Valida regras reais 60Hz (1 dash, espinhos letais) e busca A* em sala sintética."""
+    from scripts.celeste_sim import (
+        Rect,
+        RoomModel60Hz,
+        SimPlayer,
+        plan_to_goal_60hz,
+        step_celeste_60hz,
+    )
+
+    wt, ht = 20, 12  # 160x96 px
+    solids = [[False] * wt for _ in range(ht)]
+    for c in range(wt):
+        solids[11][c] = True  # piso em y=88
+    for r in range(9, 12):
+        for c in range(13, wt):
+            solids[r][c] = True  # degrau elevado em x>=104, y=72
+
+    spike_box = Rect(56.0, 82.0, 32.0, 6.0)
+    room = RoomModel60Hz(
+        bx=0,
+        by=0,
+        bw=160,
+        bh=96,
+        solids=solids,
+        jump_thrus=[],
+        spikes=[(spike_box, 0)],  # spikesUp sobre y=88
+        spinners=[],
+    )
+
+    # Regra de 1 único dash no ar
+    p = SimPlayer(x=24.0, y=60.0, on_ground=False, dashes=1, coyote_timer=0)
+    p, pj, pd = step_celeste_60hz(room, p, ("R", "U", "X"), prev_jump=False, prev_dash=False)
+    assert p.dashes == 0
+    # Tentar segundo dash ainda no ar (após soltar X) não deve reiniciar dash
+    for _ in range(16):
+        p, pj, pd = step_celeste_60hz(room, p, ("R",), prev_jump=pj, prev_dash=pd)
+    p_retry, _, _ = step_celeste_60hz(room, p, ("R", "X"), prev_jump=pj, prev_dash=False)
+    assert p_retry.dashes == 0
+
+    # Espinhos letais matam imediatamente ao tocar
+    p_spike = SimPlayer(x=70.0, y=88.0, vy=20.0, on_ground=True, dashes=1)
+    p_spike, _, _ = step_celeste_60hz(room, p_spike, (), prev_jump=False, prev_dash=False)
+    assert p_spike.dead
+
+    # Planejador A* deve alcançar o degrau elevado desviando dos espinhos
+    start = SimPlayer(x=24.0, y=88.0, on_ground=True, dashes=1)
+    goal = Rect(112.0, 56.0, 24.0, 16.0)
+    plans = plan_to_goal_60hz(room, start, goal, max_expansions=2500, max_frames=220)
+    assert len(plans) >= 1
+    cur = start
+    pj = pd = False
+    for n_fr, toks in plans[0]:
+        for _ in range(n_fr):
+            cur, pj, pd = step_celeste_60hz(room, cur, toks, pj, pd)
+            assert not cur.dead
+    assert goal.overlaps(cur.x - 4.0, cur.y - 11.0, 8.0, 11.0)
+
+    # forbid_dash=True nunca pode emitir 'X'
+    no_dash_plans = plan_to_goal_60hz(
+        room,
+        SimPlayer(x=16.0, y=88.0, on_ground=True, dashes=1),
+        Rect(40.0, 72.0, 16.0, 16.0),
+        forbid_dash=True,
+    )
+    assert len(no_dash_plans) >= 1
+    assert all("X" not in toks for _, toks in no_dash_plans[0])
+
+
+def test_stratgraph_chapter1_walk_and_live_tas_artifact() -> None:
+    """Valida offline o walk expandido do Capítulo 1 e a sintaxe de 1_forsaken_city_stratgraph.tas."""
+    from scripts.export_celeste_tas import validate_celestetas_script
+    from scripts.solve_live_celeste_tas import expand_stratgraph_room_walk
+
+    raw = load_graph_from_csv("datasets/celeste/1_forsaken_city")
+    contracted = contract_dead_ends(raw)
+    layered = build_layered_graph(contracted, alpha=0.05)
+    dres = run_dijkstra(layered)
+
+    walk = expand_stratgraph_room_walk(raw, contracted, dres.path)
+    assert walk[0] == "lvl_1"
+    assert walk[-1] == "lvl_end"
+    assert len(walk) >= len(dres.path)
+
+    tas_file = Path("tas/celeste/1_forsaken_city_stratgraph.tas")
+    assert tas_file.is_file()
+    content = tas_file.read_text(encoding="utf-8")
+    ok, issues, parsed_frames = validate_celestetas_script(content)
+    assert ok, f"Erros de sintaxe em {tas_file}: {issues}"
+    assert parsed_frames > 1000
+    assert "console load 1 1" in content
+    assert "#lvl_1" in content
+
+
+

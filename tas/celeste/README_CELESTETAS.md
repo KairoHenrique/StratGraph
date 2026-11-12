@@ -10,7 +10,11 @@ diretamente das rotas resolvidas em `src/` para **StratGraph ($L_0 \to L_1$)** e
    ou copie o conteúdo para o arquivo ativo do CelesteTAS e pressione o atalho de reprodução (`RightControl`).
 3. Pressione o atalho de salto de capítulo/debug caso queira inspecionar qualquer bloco `#lvl_<sala>` individual.
 
-## Comparativo dos Arquivos Gerados (`alpha = 0.05`, 100% Coleta)
+## Síntese Closed-Loop Ao Vivo (Capítulo 1 Validado no Motor)
+
+O arquivo [`1_forsaken_city_stratgraph.tas`](1_forsaken_city_stratgraph.tas) foi atualizado via [`scripts/solve_live_celeste_tas.py`](../../scripts/solve_live_celeste_tas.py) em malha fechada contra o **Everest + CelesteTAS DebugRC**: **51 visitas de sala** (`lvl_1` → `lvl_end`), **16.492 quadros** (274,87 s a 60 FPS), **0 mortes reais**, **26 transições contínuas**, **24 retomadas por checkpoint (`console load`)** e **4 morangos confirmados** no jogo. Os demais arquivos abaixo permanecem como exportações estruturais *offline* de [`scripts/export_celeste_tas.py`](../../scripts/export_celeste_tas.py).
+
+## Comparativo dos Arquivos Exportados *Offline* (`alpha = 0.05`, 100% Coleta)
 
 | Capítulo | Algoritmo | Salas | Itens | Custo Efetivo | Quadros TAS (60 FPS) | Duração Est. | Arquivo |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
