@@ -16,6 +16,7 @@ results/*.html
 datasets/**/waypoints.json
 mods/dist/
 !results/.gitkeep
+!results/live_celeste_ch1_validation.json
 
 # LaTeX temporários (caso compile artigo localmente)
 article/*.aux

@@ -559,6 +559,7 @@ def solve_chapter_live(
     max_rooms: int | None = None,
     area_id: int = 1,
     allow_room_checkpoints: bool = True,
+    report_path: Path | None = None,
 ) -> dict:
     """Executa o sintetizador closed-loop StratGraph <-> Celeste ao vivo."""
     raw_graph = load_graph_from_csv(dataset_dir)
@@ -994,8 +995,12 @@ def solve_chapter_live(
         "live_deaths": total_live_deaths,
         "syntax_valid": ok_syntax,
         "syntax_issues": issues,
-        "out_path": str(out_path),
+        "final_room": _canonical_room(str((final_gs or {}).get("RoomName", ""))),
+        "out_path": out_path.as_posix(),
     }
+    if report_path is not None:
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print("\n=== Resumo Closed-Loop Live CelesteTAS ===")
     print(json.dumps(summary, indent=2, ensure_ascii=False))
     return summary
@@ -1007,8 +1012,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--alpha", type=float, default=0.05, help="Alpha do StratGraph (padrao: 0.05)")
     parser.add_argument(
         "--out",
-        default="tas/celeste/1_forsaken_city_stratgraph.tas",
-        help="Caminho de saida do arquivo .tas",
+        default="tas/celeste/1_forsaken_city_live.tas",
+        help="Caminho de saida do arquivo .tas validado ao vivo",
+    )
+    parser.add_argument(
+        "--report-json",
+        default="results/live_celeste_ch1_validation.json",
+        help="Caminho opcional para salvar o resumo JSON da validacao ao vivo",
     )
     parser.add_argument(
         "--install-to",
@@ -1037,6 +1047,7 @@ def main(argv: list[str] | None = None) -> int:
         max_rooms=args.max_rooms,
         area_id=area_id,
         allow_room_checkpoints=args.allow_room_checkpoints,
+        report_path=Path(args.report_json) if args.report_json else None,
     )
     return 0
 

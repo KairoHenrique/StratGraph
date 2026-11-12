@@ -10,9 +10,10 @@ diretamente das rotas resolvidas em `src/` para **StratGraph ($L_0 \to L_1$)** e
    ou copie o conteúdo para o arquivo ativo do CelesteTAS e pressione o atalho de reprodução (`RightControl`).
 3. Pressione o atalho de salto de capítulo/debug caso queira inspecionar qualquer bloco `#lvl_<sala>` individual.
 
-## Síntese Closed-Loop Ao Vivo (Capítulo 1 Validado no Motor)
+## Separação: Exportações *Offline* vs. Artefato Validado Ao Vivo
 
-O arquivo [`1_forsaken_city_stratgraph.tas`](1_forsaken_city_stratgraph.tas) foi atualizado via [`scripts/solve_live_celeste_tas.py`](../../scripts/solve_live_celeste_tas.py) em malha fechada contra o **Everest + CelesteTAS DebugRC**: **51 visitas de sala** (`lvl_1` → `lvl_end`), **16.492 quadros** (274,87 s a 60 FPS), **0 mortes reais**, **26 transições contínuas**, **24 retomadas por checkpoint (`console load`)** e **4 morangos confirmados** no jogo. Os demais arquivos abaixo permanecem como exportações estruturais *offline* de [`scripts/export_celeste_tas.py`](../../scripts/export_celeste_tas.py).
+* **Arquivos `*_{bfs,stratgraph}.tas` (abaixo):** exportações determinísticas e 100% *offline* a partir dos grafos CSV e `waypoints.json` (`python -m scripts.export_celeste_tas`).
+* **Capítulo 1 ao vivo (`1_forsaken_city_live.tas`):** síntese em malha fechada contra o *Celeste* + DebugRC (`python -m scripts.solve_live_celeste_tas --chapter 1_forsaken_city`), preservada em arquivo separado e sumarizada em `results/live_celeste_ch1_validation.json`.
 
 ## Comparativo dos Arquivos Exportados *Offline* (`alpha = 0.05`, 100% Coleta)
 

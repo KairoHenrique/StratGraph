@@ -44,9 +44,25 @@ python -m scripts.build_mods
 python -m scripts.build_mods --uninstall-celeste
 ```
 
-## 3. Dependências Opcionais (Gráficos do Artigo e Testes)
+## 3. Divisão de Validação: Professor (*Offline*) vs. Motor Real (*CelesteTAS* Ao Vivo)
 
-Tanto no Linux quanto no Windows, para rodar os 12 testes automatizados e regerar os gráficos do artigo (`scripts/`):
+* **Parte A — Reprodução 100% *Offline* (Professor / Avaliador, Linux Ubuntu 24.04 ou Windows):**
+  Não requer jogos, Everest ou dependências externas para o núcleo (`src/`):
+  * `python -m src.main --dataset datasets/celeste/1_forsaken_city --alpha 0.05` (resolução nos grafos CSV)
+  * `python -m scripts.run_experiments` (regera `results/benchmark_summary.*` e `results/alpha_sensitivity.*`)
+  * `python -m scripts.simulate_route --open` (simulador visual 2D HTML5 em `results/stratgraph_simulator.html`)
+  * `python -m scripts.export_celeste_tas` (exporta e valida sintaticamente os 16 `.tas` estruturais `*_{bfs,stratgraph}.tas` sem sobrescrever `tas/celeste/1_forsaken_city_live.tas`)
+  * `python -m pytest -v` (**14 testes automatizados 100% *offline***, validando algoritmos, benchmarks, exportador TAS, simulador 60 Hz sintético, sintaxe do `.tas` ao vivo e o relatório em `results/live_celeste_ch1_validation.json`).
+
+* **Parte B — Validação Empírica Ao Vivo (*Celeste* + Everest + CelesteTAS DebugRC — Windows):**
+  Utilizada pelos autores para gerar/auditar o artefato real [`tas/celeste/1_forsaken_city_live.tas`](../tas/celeste/1_forsaken_city_live.tas) e [`results/live_celeste_ch1_validation.json`](../results/live_celeste_ch1_validation.json) com o jogo aberto em `http://localhost:32270/`:
+  ```powershell
+  python -m scripts.solve_live_celeste_tas --chapter 1_forsaken_city --alpha 0.05
+  ```
+
+## 4. Dependências Opcionais (Gráficos do Artigo e Testes)
+
+Tanto no Linux quanto no Windows, para rodar os 14 testes automatizados e regerar os gráficos do artigo (`scripts/`):
 
 ```bash
 pip install -r requirements-dev.txt

@@ -326,7 +326,8 @@ def test_celeste_sim_60hz_rules_and_planner() -> None:
 
 
 def test_stratgraph_chapter1_walk_and_live_tas_artifact() -> None:
-    """Valida offline o walk expandido do Capítulo 1 e a sintaxe de 1_forsaken_city_stratgraph.tas."""
+    """Valida offline o walk expandido do Capítulo 1, 1_forsaken_city_live.tas e seu relatório JSON."""
+    import json
     from scripts.export_celeste_tas import validate_celestetas_script
     from scripts.solve_live_celeste_tas import expand_stratgraph_room_walk
 
@@ -340,14 +341,25 @@ def test_stratgraph_chapter1_walk_and_live_tas_artifact() -> None:
     assert walk[-1] == "lvl_end"
     assert len(walk) >= len(dres.path)
 
-    tas_file = Path("tas/celeste/1_forsaken_city_stratgraph.tas")
+    tas_file = Path("tas/celeste/1_forsaken_city_live.tas")
     assert tas_file.is_file()
     content = tas_file.read_text(encoding="utf-8")
     ok, issues, parsed_frames = validate_celestetas_script(content)
     assert ok, f"Erros de sintaxe em {tas_file}: {issues}"
-    assert parsed_frames > 1000
+    assert parsed_frames == 16492
     assert "console load 1 1" in content
     assert "#lvl_1" in content
+
+    report_file = Path("results/live_celeste_ch1_validation.json")
+    assert report_file.is_file()
+    report = json.loads(report_file.read_text(encoding="utf-8"))
+    assert report["chapter"] == "1_forsaken_city"
+    assert report["planned_walk_rooms"] == len(walk)
+    assert report["total_frames"] == parsed_frames
+    assert report["live_deaths"] == 0
+    assert report["syntax_valid"] is True
+    assert report["final_room"] == "lvl_end"
+    assert report["out_path"] == "tas/celeste/1_forsaken_city_live.tas"
 
 
 
