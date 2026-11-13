@@ -8,7 +8,7 @@ def contract_dead_ends(graph: GameGraph) -> GameGraph:
 
     Uma sala C é considerada um beco sem saída elegível para contração na sala B se:
     1. C não é INICIO nem FIM, não possui arma e possui valor_coletavel > 0;
-    2. B não é INICIO, FIM nem sala de ARMA;
+    2. B não é sala de ARMA (podendo ser INICIO ou FIM, preservando conectividade e auditoria);
     3. Todas as arestas que entram em C vêm exclusivamente de B e todas as arestas
        que saem de C vão exclusivamente para B (garantindo ida e volta B <-> C).
 
@@ -64,13 +64,21 @@ def contract_dead_ends(graph: GameGraph) -> GameGraph:
                 changed = True
                 break
 
-            # Escolhe a menor aresta de entrada (B -> C) e de saída (C -> B)
-            best_in = min(in_edges, key=lambda e: e.base_time + e.difficulty_no_weapon)
-            best_out = min(out_edges, key=lambda e: e.base_time + e.difficulty_no_weapon)
+            # Escolhe a menor aresta de entrada (B -> C) e de saída (C -> B) por camada
+            best_in_0 = min(in_edges, key=lambda e: e.base_time + e.difficulty_no_weapon)
+            best_out_0 = min(out_edges, key=lambda e: e.base_time + e.difficulty_no_weapon)
+            best_in_1 = min(in_edges, key=lambda e: e.base_time + e.difficulty_with_weapon)
+            best_out_1 = min(out_edges, key=lambda e: e.base_time + e.difficulty_with_weapon)
 
-            rt_time = best_in.base_time + best_out.base_time
-            rt_diff0 = best_in.difficulty_no_weapon + best_out.difficulty_no_weapon
-            rt_diff1 = best_in.difficulty_with_weapon + best_out.difficulty_with_weapon
+            rt_time = best_in_0.base_time + best_out_0.base_time
+            rt_diff0 = best_in_0.difficulty_no_weapon + best_out_0.difficulty_no_weapon
+            rt_real_1 = (
+                best_in_1.base_time
+                + best_in_1.difficulty_with_weapon
+                + best_out_1.base_time
+                + best_out_1.difficulty_with_weapon
+            )
+            rt_diff1 = max(0.0, rt_real_1 - rt_time)
 
             vertices[parent_id] = Vertex(
                 room_id=parent_v.room_id,

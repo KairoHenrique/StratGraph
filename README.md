@@ -17,13 +17,13 @@ Otimização de rotas estratégicas em mapas de jogos digitais modelados como **
 ├── scripts/              # Extratores A* físicos, benchmarks, gráficos, simulador 2D, exportador TAS e mods
 ├── tas/                  # Scripts CelesteTAS (.tas, 60 FPS) por capítulo para validação no Everest / Celeste Studio
 ├── mods/                 # Mods C# opcionais de HUD visual (F5/F6) — foco em guia visual manual (Cuphead / legado)
-├── tests/                # Testes unitários e de integração automatizados (15 testes 100% offline)
+├── tests/                # Testes unitários e de integração automatizados (17 testes 100% offline)
 ├── results/              # Resultados experimentais (CSV/JSON), simulador HTML5, pacotes .zip e Gephi
 │   └── gephi/            # 66 grafos GEXF + grafos unificados (Celeste, Cuphead e Geral)
 └── article/              # Artigo científico LaTeX (IEEE Conference Template), referências e figuras
 ```
 
-Consulte [docs/plano_implementacao.md](docs/plano_implementacao.md) para ver o plano completo do projeto, [docs/INDICE.md](docs/INDICE.md) para a lista de documentos, [docs/arquitetura_e_modelagem.md](docs/arquitetura_e_modelagem.md) para a modelagem matemática, [docs/gephi_guia.md](docs/gephi_guia.md) para o guia do Gephi e [docs/execucao_linux_windows.md](docs/execucao_linux_windows.md) para o guia completo de execução.
+Consulte [docs/plano_implementacao.md](docs/plano_implementacao.md) para o plano completo, [docs/INDICE.md](docs/INDICE.md) para o índice de documentos, [docs/arquitetura_e_modelagem.md](docs/arquitetura_e_modelagem.md) para a modelagem matemática, [docs/gephi_guia.md](docs/gephi_guia.md) para o guia do Gephi, [docs/roteiro_defesa_pitch.md](docs/roteiro_defesa_pitch.md) para o roteiro da apresentação oral de 10 min e [docs/execucao_linux_windows.md](docs/execucao_linux_windows.md) para o guia de execução.
 
 ## Execução Multiplataforma (Linux Ubuntu 24.04 e Windows)
 
@@ -90,29 +90,29 @@ Consulte o [Guia de Visualização no Gephi](docs/gephi_guia.md) para instruçõ
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -v    # 15 testes automatizados (100% offline, tempo ~5.5s)
+python -m pytest -v    # 17 testes automatizados (100% offline; gera results/ se ausente em clone limpo)
 ```
 
-## Resultados Experimentais (Coleta 100% — *All Collectibles TAS*, $\alpha = 0{,}05$)
+## Resultados Experimentais (14 Fases Reais, $\alpha = 0{,}05$)
 
-Graças à **contração topológica iterativa de becos sem saída** (`contract_dead_ends`), **BFS**, **DFS *Branch-and-Bound*** e **StratGraph (Dijkstra em Camadas $L_0 \to L_1$)** coletam **literalmente 100% de todos os coletáveis** em cada mapa (enquanto a ablação `--no-contract` perde os itens das ramificações laterais), permitindo uma comparação estritamente justa sob o mesmo objetivo de 100% de coleta:
+Graças à **contração topológica iterativa de becos sem saída** (`contract_dead_ends`), **BFS**, **DFS *Branch-and-Bound*** e **StratGraph (Dijkstra em Camadas $L_0 \to L_1$)** capturam **100% dos coletáveis nas 14 fases reais** (onde os itens opcionais ficam em alcovas terminais ou sobre o eixo percorrido; em grafos sintéticos com ciclos paralelos, garante-se cobertura integral apenas das folhas terminais associadas aos vértices visitados). Mesmo comparando pelo **Custo Real** bruto (sem ponderação por $\alpha$), o StratGraph reduz expressivamente o custo de travessia frente ao BFS:
 
-| Instância (*Celeste* / *Cuphead*) | $\|V\| \to \|V'\|$ | BFS ($L_0$) Efetivo | StratGraph ($L_0 \to L_1$) Efetivo | Redução $w$ (%) | Coletáveis (`BFS / DFS / StratGraph / --no-contract`) | Tempo Dijkstra |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| *Celeste* `1_forsaken_city` | $38 \to 21$ | 533,11 | **466,51** | **-12,5%** | **21 / 21 / 21** / 9 (100%) | 0,055 ms |
-| *Celeste* `2_old_site` | $33 \to 9$ | 845,38 | **472,96** | **-44,1%** | **18 / 18 / 18** / 1 (100%) | 0,026 ms |
-| *Celeste* `3_celestial_resort` | $65 \to 23$ | 989,27 | **545,49** | **-44,9%** | **24 / 24 / 24** / 7 (100%) | 0,054 ms |
-| *Celeste* `4_golden_ridge` | $49 \to 35$ | 936,94 | **557,80** | **-40,5%** | **29 / 29 / 29** / 16 (100%) | 0,089 ms |
-| *Celeste* `5_mirror_temple` | $45 \to 15$ | 742,08 | **442,91** | **-40,3%** | **22 / 22 / 22** / 1 (100%) | 0,051 ms |
-| *Celeste* `6_reflection` | $63 \to 48$ | 882,59 | **419,39** | **-52,5%** | **2 / 2 / 2** / 0 (100%) | 0,112 ms |
-| *Celeste* `7_summit` | $97 \to 63$ | 2395,30 | **1229,26** | **-48,7%** | **41 / 41 / 41** / 19 (100%) | 0,163 ms |
-| *Celeste* `9_core` | $39 \to 30$ | 651,12 | **343,94** | **-47,2%** | **7 / 7 / 7** / 2 (100%) | 0,097 ms |
-| *Cuphead* `1_1f_forest_follies` | $26 \to 21$ | 490,90 | **210,04** | **-57,2%** | **5 / 5 / 5** / 0 (100%) | 0,063 ms |
-| *Cuphead* `1_2f_treetop_trouble` | $26 \to 21$ | 1252,62 | **402,21** | **-67,9%** | **5 / 5 / 5** / 0 (100%) | 0,087 ms |
-| *Cuphead* `2_1f_funfair_fever` | $26 \to 21$ | 461,91 | **205,22** | **-55,6%** | **5 / 5 / 5** / 0 (100%) | 0,073 ms |
-| *Cuphead* `2_2f_funhouse_frazzle` | $26 \to 21$ | 1662,24 | **532,88** | **-67,9%** | **5 / 5 / 5** / 0 (100%) | 0,059 ms |
-| *Cuphead* `3_1f_perilous_piers` | $22 \to 17$ | 968,22 | **320,71** | **-66,9%** | **5 / 5 / 5** / 0 (100%) | 0,038 ms |
-| *Cuphead* `3_2f_rugged_ridge` | $26 \to 21$ | 1059,72 | **429,17** | **-59,5%** | **5 / 5 / 5** / 0 (100%) | 0,072 ms |
+| Instância (*Celeste* / *Cuphead*) | $\|V\| \to \|V'\|$ | BFS Real | StratGraph Real (Red. Real) | BFS Efetivo | StratGraph Efetivo (Red. $w$) | Itens (`B/D/--no-contract`) | Tempo Dijkstra |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| *Celeste* `1_forsaken_city` | $38 \to 21$ | 746,7 | **664,1** (**-11,1%**) | 533,11 | **466,51** (-12,5%) | **21 / 21** / 9 | 0,045 ms |
+| *Celeste* `2_old_site` | $33 \to 9$ | 2.440,5 | **1.385,2** (**-43,2%**) | 845,38 | **472,96** (-44,1%) | **18 / 18** / 1 | 0,022 ms |
+| *Celeste* `3_celestial_resort` | $65 \to 23$ | 2.540,4 | **1.456,2** (**-42,7%**) | 989,27 | **545,49** (-44,9%) | **24 / 24** / 7 | 0,056 ms |
+| *Celeste* `4_golden_ridge` | $49 \to 35$ | 1.549,2 | **1.019,0** (**-34,2%**) | 936,94 | **557,80** (-40,5%) | **29 / 29** / 16 | 0,089 ms |
+| *Celeste* `5_mirror_temple` | $45 \to 15$ | 1.981,7 | **1.234,0** (**-37,7%**) | 742,08 | **442,91** (-40,3%) | **22 / 22** / 1 | 0,041 ms |
+| *Celeste* `6_reflection` | $63 \to 48$ | 910,5 | **447,3** (**-50,9%**) | 882,59 | **419,39** (-52,5%) | **2 / 2** / 0 | 0,117 ms |
+| *Celeste* `7_summit` | $97 \to 63$ | 3.308,3 | **1.715,6** (**-48,1%**) | 2.395,30 | **1.229,26** (-48,7%) | **41 / 41** / 19 | 0,174 ms |
+| *Celeste* `9_core` | $39 \to 30$ | 835,3 | **497,4** (**-40,4%**) | 651,12 | **343,94** (-47,2%) | **7 / 7** / 2 | 0,081 ms |
+| *Cuphead* `1_1f_forest_follies` | $26 \to 21$ | 611,5 | **267,7** (**-56,2%**) | 490,90 | **210,04** (-57,2%) | **5 / 5** / 0 | 0,064 ms |
+| *Cuphead* `1_2f_treetop_trouble` | $26 \to 21$ | 1.478,5 | **497,2** (**-66,4%**) | 1.252,62 | **402,21** (-67,9%) | **5 / 5** / 0 | 0,063 ms |
+| *Cuphead* `2_1f_funfair_fever` | $26 \to 21$ | 577,9 | **257,8** (**-55,4%**) | 461,91 | **205,22** (-55,6%) | **5 / 5** / 0 | 0,073 ms |
+| *Cuphead* `2_2f_funhouse_frazzle` | $26 \to 21$ | 2.100,5 | **666,9** (**-68,3%**) | 1.662,24 | **532,88** (-67,9%) | **5 / 5** / 0 | 0,061 ms |
+| *Cuphead* `3_1f_perilous_piers` | $22 \to 17$ | 1.246,4 | **411,3** (**-67,0%**) | 968,22 | **320,71** (-66,9%) | **5 / 5** / 0 | 0,038 ms |
+| *Cuphead* `3_2f_rugged_ridge` | $26 \to 21$ | 1.268,1 | **540,5** (**-57,4%**) | 1.059,72 | **429,17** (-59,5%) | **5 / 5** / 0 | 0,060 ms |
 
 ## Licença
 

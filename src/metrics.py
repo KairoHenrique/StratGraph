@@ -10,7 +10,11 @@ from src.models import RouteResult
 def summarize_results(results: list[RouteResult]) -> list[dict[str, object]]:
     """Formata métricas comparativas entre algoritmos para tabela, CSV ou JSON."""
     bnb_ref = next(
-        (r for r in results if r.algorithm == "DFS Branch-and-Bound" and r.found),
+        (
+            r
+            for r in results
+            if r.algorithm == "DFS Branch-and-Bound" and r.found and not r.timed_out
+        ),
         None,
     )
     ref_eff = bnb_ref.effective_cost if bnb_ref is not None else None
@@ -18,9 +22,9 @@ def summarize_results(results: list[RouteResult]) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for res in results:
         if res.found and ref_eff is not None and ref_eff > 0.0:
-            gap_pct = ((res.effective_cost - ref_eff) / ref_eff) * 100.0
+            gap_pct: float | None = ((res.effective_cost - ref_eff) / ref_eff) * 100.0
         else:
-            gap_pct = 0.0
+            gap_pct = None
 
         rows.append(
             {
@@ -28,7 +32,9 @@ def summarize_results(results: list[RouteResult]) -> list[dict[str, object]]:
                 "found": res.found,
                 "real_cost": round(res.real_cost, 4) if res.found else None,
                 "effective_cost": round(res.effective_cost, 4) if res.found else None,
-                "optimality_gap_pct": round(gap_pct, 4) if res.found else None,
+                "optimality_gap_pct": (
+                    round(gap_pct, 4) if res.found and gap_pct is not None else None
+                ),
                 "collectibles_count": res.collectibles_count,
                 "collectibles_total_value": round(res.collectibles_total_value, 4),
                 "collected_rooms": ",".join(sorted(res.collected_room_ids)),

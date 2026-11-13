@@ -1,0 +1,74 @@
+[
+  {
+    "label": "1-Forsaken City (Base)",
+    "nodes": 38,
+    "edges": 74,
+    "avg_degree": 3.89,
+    "communities": 6,
+    "modularity_q": 0.6984,
+    "density": 0.0526
+  },
+  {
+    "label": "1-Forsaken City (Camadas)",
+    "nodes": 42,
+    "edges": 81,
+    "avg_degree": 3.86,
+    "communities": 7,
+    "modularity_q": 0.714,
+    "density": 0.047
+  },
+  {
+    "label": "7-The Summit (Base)",
+    "nodes": 97,
+    "edges": 190,
+    "avg_degree": 3.92,
+    "communities": 10,
+    "modularity_q": 0.8027,
+    "density": 0.0204
+  },
+  {
+    "label": "7-The Summit (Camadas)",
+    "nodes": 126,
+    "edges": 245,
+    "avg_degree": 3.89,
+    "communities": 13,
+    "modularity_q": 0.841,
+    "density": 0.0156
+  },
+  {
+    "label": "2-2F Funhouse (Base)",
+    "nodes": 26,
+    "edges": 52,
+    "avg_degree": 4.0,
+    "communities": 5,
+    "modularity_q": 0.5889,
+    "density": 0.08
+  },
+  {
+    "label": "2-2F Funhouse (Camadas)",
+    "nodes": 42,
+    "edges": 85,
+    "avg_degree": 4.05,
+    "communities": 5,
+    "modularity_q": 0.6312,
+    "density": 0.0494
+  },
+  {
+    "label": "Celeste Unificado",
+    "nodes": 429,
+    "edges": 827,
+    "avg_degree": 3.86,
+    "communities": 25,
+    "modularity_q": 0.9288,
+    "density": 0.0045
+  },
+  {
+    "label": "Cuphead Unificado",
+    "nodes": 152,
+    "edges": 300,
+    "avg_degree": 3.95,
+    "communities": 15,
+    "modularity_q": 0.8927,
+    "density": 0.0131
+  }
+]

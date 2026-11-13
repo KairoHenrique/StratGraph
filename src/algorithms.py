@@ -160,7 +160,13 @@ def run_bfs(layered_graph: LayeredGraph) -> RouteResult:
 
 
 def run_dijkstra(layered_graph: LayeredGraph) -> RouteResult:
-    """Solução principal O((V + E) log V) com Min-Heap sobre o grafo em camadas."""
+    """Solução principal O((V + E) log V) com Min-Heap sobre o grafo em camadas.
+
+    Otimiza a soma estática de `effective_weight` nas arestas de `G_L` (relaxação
+    markoviana polinomial sem máscara de coletáveis visitados no estado). Em seguida,
+    `evaluate_path` reporta o custo real e o custo efetivo sem duplicar o desconto caso
+    uma mesma sala apareça nas camadas 0 e 1.
+    """
     t0 = time.perf_counter()
     start = layered_graph.start_node
     goal_room = layered_graph.goal_room_id

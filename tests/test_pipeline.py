@@ -193,20 +193,85 @@ def test_synthetic_scalability_benchmarks() -> None:
 
 
 def test_results_and_figures_exist() -> None:
-    """Garante que o resumo experimental, sensibilidade e todas as figuras do artigo IEEE foram gerados."""
-    assert Path("results/benchmark_summary.csv").is_file()
-    assert Path("results/benchmark_summary.json").is_file()
-    assert Path("results/alpha_sensitivity.csv").is_file()
-    assert Path("results/alpha_sensitivity.json").is_file()
+    """Garante que resumo experimental, sensibilidade e figuras do artigo existem (gerando se ausentes)."""
+    required_results = (
+        Path("results/benchmark_summary.csv"),
+        Path("results/benchmark_summary.json"),
+        Path("results/alpha_sensitivity.csv"),
+        Path("results/alpha_sensitivity.json"),
+    )
+    if not all(p.is_file() for p in required_results):
+        from scripts.run_experiments import main as run_experiments_main
+
+        assert run_experiments_main() == 0
+
+    for path in required_results:
+        assert path.is_file(), f"Arquivo de resultado ausente: {path}"
+
     for fig_name in (
         "fluxograma_proposta",
         "comparacao_custos",
         "escalabilidade_tempo",
         "contracao_becos",
         "sensibilidade_alpha",
+        "gephi_camadas_macro",
+        "gephi_rota_comparativa",
     ):
         assert Path(f"article/figures/{fig_name}.pdf").is_file()
         assert Path(f"article/figures/{fig_name}.png").is_file()
+
+
+def test_metrics_gap_is_none_when_bnb_timed_out() -> None:
+    """Garante que `optimality_gap_pct` é None quando DFS Branch-and-Bound estoura timeout."""
+    from src.metrics import summarize_results
+    from src.models import RouteResult
+
+    dijk = RouteResult(
+        algorithm="Dijkstra",
+        found=True,
+        real_cost=100.0,
+        effective_cost=90.0,
+    )
+    bnb_timed_out = RouteResult(
+        algorithm="DFS Branch-and-Bound",
+        found=True,
+        real_cost=120.0,
+        effective_cost=110.0,
+        timed_out=True,
+    )
+    rows = summarize_results([dijk, bnb_timed_out])
+    assert rows[0]["optimality_gap_pct"] is None
+    assert rows[1]["optimality_gap_pct"] is None
+
+
+def test_contract_dead_ends_parallel_edges_layer1_cost(tmp_path: Path) -> None:
+    """Garante escolha independente da menor aresta por camada em arestas paralelas de becos."""
+    v_csv = tmp_path / "vertices.csv"
+    e_csv = tmp_path / "arestas.csv"
+    v_csv.write_text(
+        "id_sala,tipo_sala,valor_coletavel,possui_arma\n"
+        "S0,INICIO,0,0\n"
+        "S1,COMUM,0,0\n"
+        "S2,COLETAVEL,5,0\n"
+        "S3,FIM,0,0\n",
+        encoding="utf-8",
+    )
+    # Duas arestas paralelas S1<->S2: uma barata na camada 0, outra barata na camada 1.
+    e_csv.write_text(
+        "origem,destino,mao_dupla,tempo_base,dificuldade_sem_arma,dificuldade_com_arma\n"
+        "S0,S1,0,10,0,0\n"
+        "S1,S2,1,5,1,20\n"
+        "S1,S2,1,5,25,0\n"
+        "S1,S3,0,10,0,0\n",
+        encoding="utf-8",
+    )
+    raw = load_graph_from_csv(tmp_path)
+    contracted = contract_dead_ends(raw)
+    assert "S2" not in contracted.vertices
+    edge_s0_s1 = contracted.adjacency["S0"][0]
+    # Camada 0 deve incorporar (5+1)*2 = 12; Camada 1 deve incorporar (5+0)*2 = 10.
+    assert edge_s0_s1.base_time + edge_s0_s1.difficulty_no_weapon == pytest.approx(22.0)
+    assert edge_s0_s1.base_time + edge_s0_s1.difficulty_with_weapon == pytest.approx(20.0)
 
 
 def test_simulator_and_mods_export() -> None:
