@@ -56,7 +56,7 @@ O restante deste artigo est\'a organizado da seguinte forma. A Se\c{c}\~ao~\ref{
 
 O problema de caminho m\'inimo de fonte \'unica em d\'igrafos com pesos n\~ao negativos possui solu\c{c}\~ao cl\'assica pelo algoritmo guloso de Dijkstra~\cite{dijkstra1959}. Empregando fila de prioridade bin\'aria (\textit{min-heap}), sua complexidade de tempo \'e limitada por $O((V + E)\log V)$, enquanto a Busca em Largura (BFS) executa em $O(V + E)$, por\'em minimiza apenas a cardinalidade de arestas em grafos n\~ao ponderados~\cite{cormen2022}.
 
-Em planejamentos nos quais o custo ou a viabilidade de transi\c{c}\~oes depende do estado de invent\'ario do agente, configura-se o problema de \textit{Inventory-Aware Pathfinding}. Aversa et al.~\cite{aversa2016} demonstram que incorporar vari\'aveis de invent\'ario ao v\'ertice preserva a propriedade de Markov sobre um grafo de estados expandido, evitando rec\'alculos din\^amicos por aresta, mas destacam que t\'ecnicas pr\'evias de poda e redu\c{c}\~ao topol\'ogica s\~ao essenciais para conter o crescimento do grafo expandido.
+Em planejamentos nos quais o custo ou a viabilidade de transi\c{c}\~oes depende do estado de invent\'ario do agente, configura-se o problema de \textit{Inventory-Aware Pathfinding}. Aversa et al.~\cite{aversa2016} demonstram que incorporar vari\'aveis de invent\'ario ao v\'ertice preserva a propriedade de Markov sobre um grafo de estados expandido, evitando rec\'alculos din\^amicos por aresta, mas destacam que t\'ecnicas pr\'evias de poda e redu\c{c}\~ao topol\'ogica --- an\'alogas \`as hierarquias de contra\c{c}\~ao de v\'ertices com preserva\c{c}\~ao de custos propostas por Geisberger et al.~\cite{geisberger2008} --- s\~ao essenciais para conter o crescimento do grafo expandido, enquanto a estimativa f\'isica de transi\c{c}\~oes intra-sala em jogos de plataforma apoia-se tradicionalmente na busca heur\'istica $A^*$~\cite{hart1968} sobre espa\c{c}os de estados cinem\'aticos~\cite{tremblay2014}.
 
 De modo complementar, a inclus\~ao seletiva de v\'ertices opcionais portadores de recompensa relaciona-se diretamente ao \textit{Prize-Collecting Traveling Salesman Problem} (PCTSP) formulado por Balas~\cite{balas1989} e ao \textit{Orienteering Problem} revisado por Vansteenwegen et al.~\cite{vansteenwegen2011}, ambos NP-dif\'iceis em grafos gerais. No \textit{StratGraph}, adota-se uma relaxa\c{c}\~ao markoviana polinomial de estado \'unico bin\'ario ($k \in \{0,1\}$) combinada \`a contra\c{c}\~ao pr\'evia de alcovas sem sa\'ida e \`a explora\c{c}\~ao visual de comunidades e graus ponderados via Gephi~\cite{bastian2009}.
 
@@ -77,13 +77,13 @@ A Figura~\ref{fig:fluxograma} sintetiza as cinco etapas do pipeline modular impl
 \subsection{Arquitetura Modular e Ingest\~ao dos Benchmarks}
 O n\'ucleo em \texttt{src/} \'e totalmente desacoplado de motores espec\'ificos e organiza-se em cinco m\'odulos principais: \texttt{src/models.py} (estruturas de dados \texttt{Vertex}, \texttt{Edge}, \texttt{GameGraph}, \texttt{LayeredNode} e \texttt{RouteResult}), \texttt{src/loader.py} (valida\c{c}\~ao e leitura dos arquivos CSV), \texttt{src/preprocessing.py} (contra\c{c}\~ao topol\'ogica iterativa), \texttt{src/layered\_graph.py} (expans\~ao em camadas e pondera\c{c}\~ao heur\'istica) e \texttt{src/algorithms.py}/\texttt{src/metrics.py} (executores de busca e c\'alculo de m\'etricas). Como benchmarks emp\'iricos externos ao n\'ucleo, utilizaram-se tr\^es fam\'ilias de grafos documentadas em~\cite{dataset_zenodo}:
 \begin{itemize}
-    \item \textbf{\textit{Celeste} (8 cap\'itulos oficiais):} Extrator dedicado decodifica o formato bin\'ario \texttt{BinaryPacker} (\texttt{.bin}) da \textit{engine} Monocle dos cap\'itulos 1 (\textit{Forsaken City}) a 9 (\textit{Core}), utilizando busca $A^*$ no grid de colis\~ao $8\times 8$ (\texttt{solids}) para estimar custos intra-sala entre portas e colet\'aveis (\texttt{strawberry}, \texttt{cassette}, \texttt{blackGem}). Os experimentos consomem exclusivamente os CSVs pr\'e-processados.
+    \item \textbf{\textit{Celeste} (8 cap\'itulos oficiais):} Extrator dedicado decodifica o formato bin\'ario \texttt{BinaryPacker} (\texttt{.bin}) da \textit{engine} Monocle dos cap\'itulos 1 (\textit{Forsaken City}) a 9 (\textit{Core}), utilizando busca $A^*$~\cite{hart1968,tremblay2014} no grid de colis\~ao $8\times 8$ (\texttt{solids}) para estimar custos intra-sala entre portas e colet\'aveis (\texttt{strawberry}, \texttt{cassette}, \texttt{blackGem}). Os experimentos consomem exclusivamente os CSVs pr\'e-processados.
     \item \textbf{\textit{Cuphead} (6 fases \textit{Run-and-Gun}):} Extrator sobre os bin\'arios \texttt{SerializedFile} v17 (\texttt{level41} a \texttt{level46}) da Unity obt\'em coordenadas de plataformas, as 5 moedas douradas (\texttt{Level\_Coin}) e exposi\c{c}\~ao a \textit{spawners} de inimigos com e sem melhoria de ataque (\textit{parry/arma}).
     \item \textbf{Benchmarks Sint\'eticos:} Gerador determin\'istico para $|V| \in \{15, 30, 60, 150, 500, 1500, 5000\}$, contendo 20\% de alcovas colet\'aveis em beco sem sa\'ida e atalhos com ciclos paralelos para avalia\c{c}\~ao de escalabilidade.
 \end{itemize}
 
 \subsection{Contra\c{c}\~ao de Becos e Expans\~ao Markoviana em Camadas}
-Seja $G = (V, E)$ o d\'igrafo de entrada. No m\'odulo \texttt{src/preprocessing.py} (\texttt{contract\_dead\_ends}), uma sala $c \in V \setminus \{v_{\text{ini}}, v_{\text{fim}}\}$ sem arma e conectada bidirecionalmente a um \'unico vizinho $b$ (desde que $b$ n\~ao seja sala de arma, podendo inclusive ser $v_{\text{ini}}$ ou $v_{\text{fim}}$) \'e contra\'ida iterativamente em $b$: folhas vazias s\~ao podadas e alcovas com $\text{ValorColetavel}(c) > 0$ transferem seu valor para $b$, somando o menor custo de ida e volta $(b \to c \to b)$ de forma independente para as camadas sem arma e com arma nas arestas incidentes em $b$, registrando a auditoria em \texttt{contracted\_into[$b$]}. Assumiu-se explicitamente esta contra\c{c}\~ao como decis\~ao de projeto alinhada \`a meta \textit{All Collectibles} nas ramifica\c{c}\~oes terminais, obrigando qualquer rota que atravesse o n\'o pai $b$ a capturar suas folhas associadas.
+Seja $G = (V, E)$ o d\'igrafo de entrada. No m\'odulo \texttt{src/preprocessing.py} (\texttt{contract\_dead\_ends}), inspirado em redu\c{c}\~ao hier\'arquica por contra\c{c}\~ao de v\'ertices~\cite{geisberger2008}, uma sala $c \in V \setminus \{v_{\text{ini}}, v_{\text{fim}}\}$ sem arma e conectada bidirecionalmente a um \'unico vizinho $b$ (desde que $b$ n\~ao seja sala de arma, podendo inclusive ser $v_{\text{ini}}$ ou $v_{\text{fim}}$) \'e contra\'ida iterativamente em $b$: folhas vazias s\~ao podadas e alcovas com $\text{ValorColetavel}(c) > 0$ transferem seu valor para $b$, somando o menor custo de ida e volta $(b \to c \to b)$ de forma independente para as camadas sem arma e com arma nas arestas incidentes em $b$, registrando a auditoria em \texttt{contracted\_into[$b$]}. Assumiu-se explicitamente esta contra\c{c}\~ao como decis\~ao de projeto alinhada \`a meta \textit{All Collectibles} nas ramifica\c{c}\~oes terminais, obrigando qualquer rota que atravesse o n\'o pai $b$ a capturar suas folhas associadas.
 
 Sobre o grafo reduzido $G' = (V', E')$, o m\'odulo \texttt{src/layered\_graph.py} (\texttt{build\_layered\_graph}) constr\'oi o d\'igrafo expandido $G_L = (V_L, E_L)$ com $V_L = V' \times \{0, 1\}$: $k=0$ representa o estado inicial sem equipamento ($\text{DificuldadeSemArma}$) e $k=1$ o estado com equipamento ($\text{DificuldadeComArma}$). Para cada v\'ertice $u_{\text{arma}}$, adiciona-se a transi\c{c}\~ao $(u_{\text{arma}}, 0) \to (u_{\text{arma}}, 1)$ de custo real zero e peso zero.
 
@@ -206,12 +206,13 @@ Mesmo sob a m\'etrica f\'isica n\~ao descontada (\textbf{Custo Real}), o Dijkstr
 \end{tabular}
 \end{table*}
 
-\begin{figure*}[htbp]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/comparacao_custos.pdf}
-\caption{Compara\c{c}\~ao do Peso Efetivo Total entre o \textit{baseline} BFS (Camada $L_0$) e o Dijkstra no Grafo Expandido em Camadas ($L_0 \to L_1$) nos 8 cap\'itulos de \textit{Celeste} e nas 6 fases de \textit{Cuphead}.}
+\includegraphics[trim=0bp 0bp 256bp 0bp, clip, width=0.95\columnwidth]{figures/comparacao_custos.pdf}\\[4pt]
+\includegraphics[trim=262bp 0bp 0bp 0bp, clip, width=0.95\columnwidth]{figures/comparacao_custos.pdf}
+\caption{Compara\c{c}\~ao do Peso Efetivo Total entre o \textit{baseline} BFS (Camada $L_0$) e o Dijkstra no Grafo Expandido em Camadas ($L_0 \to L_1$) nos 8 cap\'itulos de \textit{Celeste} (acima) e nas 6 fases de \textit{Cuphead} (abaixo).}
 \label{fig:custos}
-\end{figure*}
+\end{figure}
 
 A Figura~\ref{fig:gephi_rota} evidencia por filtragem visual de subgrafo em \textit{2-2F Funhouse Frazzle} a razão dessa economia real de 68,3\%: enquanto o BFS atravessa toda a espinha na camada $L_0$ sob alta dificuldade acumulada (Fig.~\ref{fig:gephi_rota}a), o Dijkstra em camadas desvia no in\'icio do mapa at\'e a sala de melhoria \textit{Parry Shrine}, salta para $L_1$, aproveita a rota elevada subsequente e reduz o custo real total de $2.100{,}5$ para $666{,}9$.
 
@@ -241,10 +242,11 @@ Para avaliar o comportamento assint\'otico sob crescimento da entrada, a Tabela~
 \label{tab:sinteticos}
 \centering
 \scriptsize
-\setlength{\tabcolsep}{2.8pt}
+\setlength{\tabcolsep}{3.4pt}
 \begin{tabular}{rrrrrrr}
 \toprule
-$|V|$ \textbf{Orig.} & $|V'|$ \textbf{Contr.} & \textbf{BFS (ms)} & \textbf{Dijk. (ms)} & \textbf{DFS B\&B (ms)} & \textbf{Est. Dijk.} & \textbf{Est. DFS} \\
+$|V|$ & $|V'|$ & \textbf{BFS} & \textbf{Dijk.} & \textbf{DFS B\&B} & \textbf{Estados} & \textbf{Estados} \\
+\textbf{Orig.} & \textbf{Contr.} & \textbf{(ms)} & \textbf{(ms)} & \textbf{(ms)} & \textbf{Dijk.} & \textbf{DFS} \\
 \midrule
   15 &   12 &  0,02 &  0,04 &   0,21 &    19 &     84 \\
   30 &   24 &  0,05 &  0,08 &   2,30 &    32 &    943 \\
@@ -266,19 +268,23 @@ $|V|$ \textbf{Orig.} & $|V'|$ \textbf{Contr.} & \textbf{BFS (ms)} & \textbf{Dijk
 \end{figure}
 
 % ============================================================================
-\section{Conclus\~ao e Pr\'oximas Etapas}
+\section{Conclus\~ao e Trabalhos Futuros}
 \label{sec:conclusao}
 % ============================================================================
 
-Este trabalho apresentou o \textit{StratGraph}, demonstrando que a combina\c{c}\~ao entre contra\c{c}\~ao topol\'ogica de becos sem sa\'ida e expans\~ao markoviana em duas camadas ($L_0 \to L_1$) soluciona em tempo polinomial $O((V+E)\log V)$ o objetivo substitutivo estrat\'egico de desvio por equipamento e captura de alcovas colet\'aveis. Validado em 14 mapas reais e 7 redes sint\'eticas --- al\'em de an\'alise modular no Gephi ($Q$ entre $0{,}59$ e $0{,}93$) ---, o m\'etodo reduziu em at\'e 50,9\% o custo real em \textit{Celeste} e at\'e 68,3\% em \textit{Cuphead} frente ao BFS com id\^entica cobertura de 100\% dos itens, superando de forma decisiva o gargalo exponencial do \textit{Branch-and-Bound} a partir de $|V|=60$.
+Este trabalho prop\^os, implementou e avaliou o \textit{StratGraph}, uma arquitetura baseada em grafos para otimiza\c{c}\~ao de rotas estrat\'egicas em jogos digitais, cujo objetivo central foi conciliar desvios t\'aticos por \textit{power-ups}, coleta de itens opcionais e minimiza\c{c}\~ao de risco sem recorrer a pesos negativos ou buscas exponenciais. Diante da limita\c{c}\~ao dos algoritmos cl\'assicos sobre grafos est\'aticos frente a custos dependentes de invent\'ario, a solu\c{c}\~ao desenvolvida demonstra que a expans\~ao estrutural de estados resolve o problema de forma \'otima sobre o grafo em camadas e em tempo polinomial $O((V+E)\log V)$.
 
-Como limita\c{c}\~oes claras da arquitetura atual e dire\c{c}\~oes para trabalhos futuros, destacam-se quatro frentes:
-\begin{enumerate}
-    \item \textbf{Relaxa\c{c}\~ao sem bitmask de colet\'aveis:} Embora mantenha a complexidade polinomial $O(2|V|)$, o grafo em camadas est\'atico permite desconto duplo caso uma sala colet\'avel intermedi\'aria ou n\'o contra\'ido seja cruzado em $L_0$ e depois em $L_1$, justificando investigar algoritmos rotulados (\textit{label-setting}) restritos apenas aos n\'os articuladores de passagem dupla.
-    \item \textbf{Extens\~ao para m\'ultiplas ferramentas ($k$ camadas):} Jogos ou redes log\'isticas com $k$ equipamentos independentes exigem $2^k|V|$ estados, motivando o uso de heur\'isticas admiss\'iveis com busca $A^*$ informada.
-    \item \textbf{Abstra\c{c}\~ao topol\'ogica discreta por sala:} Os pesos sintetizam o custo de travessia em escalares por sala/plataforma; integrar modelos din\^amicos de cinem\'atica cont\'inua refinaria as estimativas de tempo.
-    \item \textbf{S\'intese procedural balanceada:} Aplicar as m\'etricas de modularidade do Gephi e a raz\~ao entre rotas $L_0$ e $L_1$ como fun\c{c}\~ao objetivo na gera\c{c}\~ao procedural de fases com desvios t\'aticos bem calibrados.
-\end{enumerate}
+A principal contribui\c{c}\~ao deste artigo reside na integra\c{c}\~ao de tr\^es pilares fundamentais: a contra\c{c}\~ao topol\'ogica iterativa de becos sem sa\'ida, o d\'igrafo ponderado expandido em camadas ($L_0 \to L_1$) e o algoritmo de Dijkstra acoplado a uma fun\c{c}\~ao racional de peso efetivo estritamente positiva, complementados pela caracteriza\c{c}\~ao modular e de comunidades no Gephi ($Q$ entre $0{,}59$ e $0{,}93$). A valida\c{c}\~ao emp\'irica sobre mapas extra\'idos diretamente dos bin\'arios oficiais de \textit{Celeste} e \textit{Cuphead} comprovou redu\c{c}\~oes de custo real de at\'e 50,9\% e 68,3\% (e de custo efetivo de at\'e 52,5\% e 67,9\%), respectivamente, frente \`a Busca em Largura sob a mesma meta de 100\% de coleta, enquanto os testes sint\'eticos evidenciaram a escalabilidade assint\'otica da proposta at\'e 5.000 salas frente \`a explos\~ao combinat\'oria do \textit{Branch-and-Bound}.
+
+\subsection{Limita\c{c}\~oes e Trabalhos Futuros}
+
+Apesar dos resultados expressivos, a modelagem apresentada possui limita\c{c}\~oes te\'oricas e pr\'aticas que abrem caminho para pesquisas futuras. Primeiramente, o espa\c{c}o de estados do grafo em camadas $V_L = V' \times \{0, 1\}$ rastreia a posse do equipamento, mas n\~ao armazena na tupla do v\'ertice o hist\'orico individual de colet\'aveis j\'a consumidos. Essa decis\~ao de projeto \'e essencial para evitar a explos\~ao exponencial de $2^{|C|}$ camadas t\'ipica do \textit{Prize-Collecting TSP}~\cite{balas1989,vansteenwegen2011}, mantendo o algoritmo em tempo polinomial; contudo, como os pesos das arestas permanecem est\'aticos em cada camada, rotas em grafos gerais com ciclos que revisitem uma mesma sala ap\'os a transi\c{c}\~ao $L_0 \to L_1$ podem observar novamente a atratividade est\'atica da aresta durante o relaxamento, ainda que a auditoria final contabilize cada item uma \'unica vez. Uma evolu\c{c}\~ao natural seria investigar algoritmos rotulados (\textit{label-setting}) ou poda local restrita aos n\'os articuladores adjacentes a salas de arma~\cite{aversa2016}.
+
+Em segundo lugar, a contra\c{c}\~ao topol\'ogica de becos sem sa\'ida incorpora integralmente o custo de ida e volta das alcovas \`as arestas da sala adjacente. Embora essa propriedade seja ideal para a modalidade de coleta completa (\textit{All Collectibles}) nas topologias em \'arvore de \textit{Celeste} e \textit{Cuphead}, ela torna compuls\'oria a visita \`as alcovas contra\'idas. Trabalhos futuros podem estender o pr\'e-processamento mantendo arestas paralelas de decis\~ao --- uma representando a passagem direta e outra a excurs\~ao de coleta ---, permitindo que o pr\'oprio algoritmo selecione alcovas opcionais sob restri\c{c}\~oes severas de tempo.
+
+Terceiro, a fidelidade f\'isica do modelo depende da discretiza\c{c}\~ao topol\'ogica por salas e plataformas, n\~ao capturando varia\c{c}\~oes de momento sub-pixel cont\'inuo entre transi\c{c}\~oes, al\'em de o n\'umero de camadas crescer na ordem de $2^k \cdot |V|$ caso o jogo possua $k$ armas independentes acumul\'aveis simultaneamente. Finalmente, a escolha do hiperpar\^ametro de atratividade $\alpha$ na equa\c{c}\~ao de peso efetivo foi realizada de forma emp\'irica; a aplica\c{c}\~ao de t\'ecnicas de ajuste automatizado de hiperpar\^ametros, aliada ao uso do algoritmo $A^*$~\cite{hart1968} com heur\'isticas admiss\'iveis sobre m\'ultiplas camadas e ao uso das m\'etricas de modularidade do Gephi~\cite{bastian2009} na gera\c{c}\~ao procedural de fases balanceadas, representa uma dire\c{c}\~ao promissora para expandir a aplicabilidade da ferramenta.
+
+Em resumo, este trabalho demonstra a viabilidade e o rigor matem\'atico de uma abordagem centrada em teoria dos grafos e estruturas de dados cl\'assicas para o problema de roteamento estrat\'egico em jogos digitais. Ao transformar depend\^encias din\^amicas de estado em camadas topol\'ogicas trat\'aveis, o \textit{StratGraph} consolida-se como uma solu\c{c}\~ao eficiente, reprodut\'ivel e escal\'avel para an\'alise automatizada de \textit{level design} e planejamento de trajet\'orias.
 
 % ============================================================================
 \section{Algoritmo e Base de Dados}
@@ -286,6 +292,12 @@ Como limita\c{c}\~oes claras da arquitetura atual e dire\c{c}\~oes para trabalho
 % ============================================================================
 
 Em conformidade com os crit\'erios de reprodutibilidade aberta e execu\c{c}\~ao nativa via terminal em ambiente Linux (Ubuntu~24.04), o c\'odigo-fonte modular em Python~3.12 (biblioteca padr\~ao em \texttt{src/}), os scripts de experimentos e exporta\c{c}\~ao GEXF e a su\'ite de testes automatizados encontram-se publicamente dispon\'iveis no reposit\'orio GitHub em~\cite{repo_codigo}. Todos os 22 grafos estruturados em CSV (\textit{Celeste}, \textit{Cuphead}, \textit{benchmarks} sint\'eticos e \textit{sample\_toy}), acompanhados dos resumos experimentais e documenta\c{c}\~ao do esquema, est\~ao preservados com identificador persistente DOI no reposit\'orio Zenodo em~\cite{dataset_zenodo}.
+
+% ============================================================================
+\section*{Declara\c{c}\~ao de Uso de Intelig\^encia Artificial}
+% ============================================================================
+
+Em conformidade com as diretrizes editoriais da IEEE (\textit{IEEE Publication Services and Products Board Operations Manual}, Se\c{c}\~ao 8.2.1.B.9) sobre a transpar\^encia no uso de sistemas de intelig\^encia artificial generativa, os autores declaram que ferramentas baseadas em modelos de linguagem de grande escala (LLMs) foram utilizadas ao longo de todo o desenvolvimento deste projeto. O aux\'ilio abrangeu a estrutura\c{c}\~ao da modelagem e arquitetura de software, a implementa\c{c}\~ao dos m\'odulos de extra\c{c}\~ao bin\'aria, algoritmos de busca, scripts de automa\c{c}\~ao, testes e visualiza\c{c}\~ao, bem como a elabora\c{c}\~ao, revis\~ao textual e formata\c{c}\~ao tipogr\'afica deste manuscrito em \LaTeX. Todos os artefatos de c\'odigo, formula\c{c}\~oes matem\'aticas, conjuntos de dados gerados e resultados experimentais reportados foram integralmente inspecionados, executados e validados pelos autores, que assumem plena responsabilidade pela exatid\~ao t\'ecnica, integridade cient\'ifica e conformidade \'etica do trabalho apresentado.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
