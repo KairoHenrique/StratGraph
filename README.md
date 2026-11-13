@@ -17,24 +17,47 @@ Otimização de rotas estratégicas em mapas de jogos digitais modelados como **
 ├── scripts/              # Extratores A* físicos, benchmarks, gráficos, simulador 2D, exportador TAS e mods
 ├── tas/                  # Scripts CelesteTAS (.tas, 60 FPS) por capítulo para validação no Everest / Celeste Studio
 ├── mods/                 # Mods C# opcionais de HUD visual (F5/F6) — foco em guia visual manual (Cuphead / legado)
-├── tests/                # Testes unitários e de integração automatizados (execução integralmente offline)
-├── results/              # Resultados experimentais (CSV/JSON), simulador HTML5 e pacotes .zip
+├── tests/                # Testes unitários e de integração automatizados (15 testes 100% offline)
+├── results/              # Resultados experimentais (CSV/JSON), simulador HTML5, pacotes .zip e Gephi
+│   └── gephi/            # 66 grafos GEXF + grafos unificados (Celeste, Cuphead e Geral)
 └── article/              # Artigo científico LaTeX (IEEE Conference Template), referências e figuras
 ```
 
-Consulte [docs/plano_implementacao.md](docs/plano_implementacao.md) para ver o plano completo do projeto, [docs/INDICE.md](docs/INDICE.md) para a lista de documentos, [docs/arquitetura_e_modelagem.md](docs/arquitetura_e_modelagem.md) para a modelagem matemática e [docs/execucao_linux_windows.md](docs/execucao_linux_windows.md) para o guia completo de execução.
+Consulte [docs/plano_implementacao.md](docs/plano_implementacao.md) para ver o plano completo do projeto, [docs/INDICE.md](docs/INDICE.md) para a lista de documentos, [docs/arquitetura_e_modelagem.md](docs/arquitetura_e_modelagem.md) para a modelagem matemática, [docs/gephi_guia.md](docs/gephi_guia.md) para o guia do Gephi e [docs/execucao_linux_windows.md](docs/execucao_linux_windows.md) para o guia completo de execução.
 
 ## Execução Multiplataforma (Linux Ubuntu 24.04 e Windows)
 
-O núcleo do **StratGraph** (`src/`) utiliza **exclusivamente a biblioteca padrão do Python 3.12**, funcionando tanto no **Linux (Ubuntu 24.04)** quanto no **Windows** sem compilação ou dependências externas:
+O núcleo do **StratGraph** (`src/`) é **100% genérico, agnóstico a jogos ou engines** e utiliza **exclusivamente a biblioteca padrão do Python 3.12**, funcionando tanto no **Linux (Ubuntu 24.04)** quanto no **Windows** sem compilação ou dependências externas sobre qualquer dataset no formato `vertices.csv` e `arestas.csv`:
 
 ```bash
 # Linux (Ubuntu 24.04)
+python3 -m src.main --dataset datasets/sample_toy --alpha 0.5
 python3 -m src.main --dataset datasets/celeste/1_forsaken_city --alpha 0.05
+python3 -m src.main --dataset datasets/cuphead/1_1f_forest_follies --alpha 0.05
 
 # Windows (PowerShell / CMD)
+python -m src.main --dataset datasets/sample_toy --alpha 0.5
 python -m src.main --dataset datasets/celeste/1_forsaken_city --alpha 0.05
+python -m src.main --dataset datasets/cuphead/1_1f_forest_follies --alpha 0.05
 ```
+
+## Visualização de Grafos no Gephi (.gexf)
+
+O StratGraph exporta automaticamente os dígrafos ponderados em camadas para o formato padrão **GEXF 1.2** ([`scripts/export_gephi.py`](scripts/export_gephi.py)), 100% compatível com **Gephi 0.9.x e 0.10.x**, com nós coloridos por papel funcional (`INICIO`, `FIM`, `ARMA`, `COLETAVEL`, `COMUM`), layout 2D topológico sem sobreposição e arestas da rota ótima destacadas em laranja:
+
+* **Grafos Unificados por Jogo:**
+  * [`results/gephi/stratgraph_celeste_all.gexf`](results/gephi/stratgraph_celeste_all.gexf): os **8 capítulos de *Celeste*** reunidos em grade (429 nós, 827 arestas).
+  * [`results/gephi/stratgraph_cuphead_all.gexf`](results/gephi/stratgraph_cuphead_all.gexf): as **6 fases *Run-and-Gun* de *Cuphead*** reunidas em grade (152 nós, 300 arestas).
+  * [`results/gephi/stratgraph_unified_all.gexf`](results/gephi/stratgraph_unified_all.gexf): todos os 22 datasets reunidos em grade panorâmica geral.
+* **Trio por Fase/Instância Individual (66 arquivos):** para cada dataset em `datasets/`, gera `<instancia>_base.gexf`, `<instancia>_optimal_route.gexf` e `<instancia>_layered.gexf` (espaço em camadas $L_0 \to L_1$ com transição intercamadas).
+* **Comandos CLI para Exportação:**
+  ```bash
+  python -m scripts.export_gephi --all       # Exporta todos os 66 grafos individuais + unificados
+  python -m scripts.export_gephi --celeste   # Exporta apenas Celeste unificado
+  python -m scripts.export_gephi --cuphead   # Exporta apenas Cuphead unificado
+  python -m scripts.export_gephi --unified   # Exporta todos os grafos unificados
+  ```
+Consulte o [Guia de Visualização no Gephi](docs/gephi_guia.md) para instruções passo a passo de como abrir, configurar e apresentar na banca.
 
 ## Simulador Visual 2D, Exportação CelesteTAS e Guia HUD (*Celeste* & *Cuphead*)
 
@@ -67,7 +90,7 @@ python -m src.main --dataset datasets/celeste/1_forsaken_city --alpha 0.05
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -v
+python -m pytest -v    # 15 testes automatizados (100% offline, tempo ~5.5s)
 ```
 
 ## Resultados Experimentais (Coleta 100% — *All Collectibles TAS*, $\alpha = 0{,}05$)

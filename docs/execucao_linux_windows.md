@@ -21,6 +21,11 @@ python3 -m src.main --dataset datasets/cuphead/1_1f_forest_follies --alpha 0.05
 # Gerar e abrir o Simulador Visual 2D TAS no navegador
 python3 -m scripts.simulate_route --open
 
+# Exportar grafos para Gephi (.gexf) individuais e unificados
+python3 -m scripts.export_gephi --all
+python3 -m scripts.export_gephi --celeste
+python3 -m scripts.export_gephi --cuphead
+
 # Exportar os 16 scripts CelesteTAS (.tas, 60 FPS) para tas/celeste/
 python3 -m scripts.export_celeste_tas
 ```
@@ -32,6 +37,11 @@ Com Python 3.12 instalado e adicionado ao `PATH`:
 ```powershell
 # Executar um cenário via terminal
 python -m src.main --dataset datasets\celeste\1_forsaken_city --alpha 0.05
+
+# Exportar grafos para visualização no Gephi (.gexf)
+python -m scripts.export_gephi --all
+python -m scripts.export_gephi --celeste
+python -m scripts.export_gephi --cuphead
 
 # Abrir o Simulador Visual 2D TAS (HTML5 Canvas)
 python -m scripts.simulate_route --open
@@ -52,7 +62,7 @@ python -m scripts.build_mods --uninstall-celeste
   * `python -m scripts.run_experiments` (regera `results/benchmark_summary.*` e `results/alpha_sensitivity.*`)
   * `python -m scripts.simulate_route --open` (simulador visual 2D HTML5 em `results/stratgraph_simulator.html`)
   * `python -m scripts.export_celeste_tas` (exporta e valida sintaticamente os 16 `.tas` estruturais `*_{bfs,stratgraph}.tas` sem sobrescrever `tas/celeste/1_forsaken_city_live.tas`)
-  * `python -m pytest -v` (**14 testes automatizados 100% *offline***, validando algoritmos, benchmarks, exportador TAS, simulador 60 Hz sintético, sintaxe do `.tas` ao vivo e o relatório em `results/live_celeste_ch1_validation.json`).
+  * `python -m pytest -v` (**15 testes automatizados 100% *offline***, validando algoritmos, benchmarks, exportador TAS, simulador 60 Hz sintético, exportador Gephi XML e atributos, sintaxe do `.tas` ao vivo e o relatório em `results/live_celeste_ch1_validation.json`).
 
 * **Parte B — Validação Empírica Ao Vivo (*Celeste* + Everest + CelesteTAS DebugRC — Windows):**
   Utilizada pelos autores para gerar/auditar o artefato real [`tas/celeste/1_forsaken_city_live.tas`](../tas/celeste/1_forsaken_city_live.tas) e [`results/live_celeste_ch1_validation.json`](../results/live_celeste_ch1_validation.json) com o jogo aberto em `http://localhost:32270/`:
@@ -62,7 +72,7 @@ python -m scripts.build_mods --uninstall-celeste
 
 ## 4. Dependências Opcionais (Gráficos do Artigo e Testes)
 
-Tanto no Linux quanto no Windows, para rodar os 14 testes automatizados e regerar os gráficos do artigo (`scripts/`):
+Tanto no Linux quanto no Windows, para rodar os 15 testes automatizados e regerar os gráficos do artigo (`scripts/`):
 
 ```bash
 pip install -r requirements-dev.txt
