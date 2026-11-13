@@ -26,10 +26,14 @@ Para cada instância presente em `datasets/` (instâncias didáticas, benchmarks
    - **Camada 1 ($L_1$):** Estado após aquisição da arma / *power-up* (nós em âmbar/dourado, $z = 150$, com deslocamento no eixo Y).
    - **Transições Intercamadas:** Arestas douradas com espessura destacada que conectam o vértice `ARMA` de $L_0$ para os seus destinos na camada $L_1$.
 
-4. **`results/gephi/stratgraph_unified_all.gexf` (Grafo Unificado Panorâmico — Tudo em Um Só):**
-   - Reúne **todos os 22 datasets** de `datasets/` em um único grafo `.gexf` (`7.842` vértices e `16.419` arestas), organizados em uma grade de *clusters* sem sobreposição.
-   - Cada vértice carrega os atributos `dataset`, `grupo`, `tipo_sala`, `valor_coletavel`, `tem_arma` e `na_rota_otima`, com todas as rotas ótimas destacadas em laranja simultaneamente.
-   - Pode ser gerado isoladamente via `python -m scripts.export_gephi --unified`.
+4. **Grafos Unificados por Jogo (Visão Panorâmica Separada):**
+   - **`results/gephi/stratgraph_celeste_all.gexf`:** Reúne os **8 capítulos de Celeste** lado a lado em uma grade limpa (`429` vértices, `827` arestas). Ideal para inspecionar a progressão completa das montanhas sem misturar com outros jogos.
+   - **`results/gephi/stratgraph_cuphead_all.gexf`:** Reúne as **6 fases Run-and-Gun de Cuphead** lado a lado (`152` vértices, `300` arestas). Extremamente leve e nítido para demonstrar os corredores e plataformas lineares.
+   - **`results/gephi/stratgraph_unified_all.gexf`:** Reúne todos os 22 datasets (jogos e benchmarks sintéticos) em um único arquivo de referência geral.
+   - Podem ser gerados via:
+     - `python -m scripts.export_gephi --celeste` (apenas Celeste)
+     - `python -m scripts.export_gephi --cuphead` (apenas Cuphead)
+     - `python -m scripts.export_gephi --unified` (todos os unificados)
 
 ---
 

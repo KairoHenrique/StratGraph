@@ -416,13 +416,20 @@ def test_gephi_gexf_export(tmp_path: Path) -> None:
     nodes_l = graph_layered.findall("g:nodes/g:node", ns)
     assert len(nodes_l) > len(nodes)  # Camada 0 + Camada 1 expandida
 
-    # Valida grafo unificado panoramico (todos os datasets juntos em um unico .gexf)
-    unified_out = tmp_path / "stratgraph_unified_test.gexf"
-    export_unified_graph_to_gexf(Path("datasets"), unified_out, max_vertices_per_dataset=100)
-    assert unified_out.is_file()
-    tree_u = ET.parse(unified_out)
-    nodes_u = tree_u.getroot().findall("g:graph/g:nodes/g:node", ns)
-    assert len(nodes_u) > 500
+    # Valida grafos unificados dedicados por jogo (Celeste e Cuphead separados)
+    celeste_out = tmp_path / "stratgraph_celeste_test.gexf"
+    export_unified_graph_to_gexf(Path("datasets/celeste"), celeste_out)
+    assert celeste_out.is_file()
+    tree_c = ET.parse(celeste_out)
+    nodes_c = tree_c.getroot().findall("g:graph/g:nodes/g:node", ns)
+    assert len(nodes_c) >= 300
+
+    cuphead_out = tmp_path / "stratgraph_cuphead_test.gexf"
+    export_unified_graph_to_gexf(Path("datasets/cuphead"), cuphead_out)
+    assert cuphead_out.is_file()
+    tree_cp = ET.parse(cuphead_out)
+    nodes_cp = tree_cp.getroot().findall("g:graph/g:nodes/g:node", ns)
+    assert len(nodes_cp) >= 100
 
 
 

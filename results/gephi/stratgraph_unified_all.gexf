@@ -2,7 +2,7 @@
 <gexf xmlns="http://www.gexf.net/1.2draft" xmlns:viz="http://www.gexf.net/1.2draft/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
   <meta lastmodifieddate="2026-11-12">
     <creator>StratGraph Gephi Exporter</creator>
-    <description>Grafo Unificado StratGraph (22 datasets, alpha=0.05)</description>
+    <description>StratGraph: Todos os 22 Datasets Reunidos</description>
   </meta>
   <graph defaultedgetype="directed" mode="static">
     <attributes class="node">

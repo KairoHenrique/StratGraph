@@ -397,8 +397,9 @@ def export_unified_graph_to_gexf(
     out_path: Path = Path("results/gephi/stratgraph_unified_all.gexf"),
     alpha: float = 0.05,
     max_vertices_per_dataset: int | None = None,
+    title: str | None = None,
 ) -> Path:
-    """Agrega todos os datasets em um unico grafo .gexf panoramico organizado em grade de clusters."""
+    """Agrega os datasets encontrados sob datasets_root em um unico grafo .gexf organizado em grade de clusters."""
     out_path.parent.mkdir(parents=True, exist_ok=True)
     ds_dirs = [p.parent for p in sorted(datasets_root.rglob("vertices.csv"))]
 
@@ -413,11 +414,17 @@ def export_unified_graph_to_gexf(
         pos = _compute_generic_positions(raw_graph, ds_dir)
         items.append((ds_dir, raw_graph, dres.path, pos))
 
+    if not items:
+        print(f"  [Aviso] Nenhum dataset encontrado em {datasets_root}")
+        return out_path
+
     cols = max(1, math.ceil(math.sqrt(len(items))))
     cell_w = 1800.0
     cell_h = 1100.0
     stride_x = 2400.0
     stride_y = 1600.0
+
+    graph_title = title or f"Grafo Unificado: {datasets_root.name} ({len(items)} cenarios, alpha={alpha})"
 
     lines: list[str] = [
         '<?xml version="1.0" encoding="UTF-8"?>',
@@ -428,7 +435,7 @@ def export_unified_graph_to_gexf(
         'version="1.2">',
         '  <meta lastmodifieddate="2026-11-12">',
         "    <creator>StratGraph Gephi Exporter</creator>",
-        f"    <description>{html.escape(f'Grafo Unificado StratGraph ({len(items)} datasets, alpha={alpha})')}</description>",
+        f"    <description>{html.escape(graph_title)}</description>",
         "  </meta>",
         '  <graph defaultedgetype="directed" mode="static">',
         '    <attributes class="node">',
@@ -553,9 +560,30 @@ def export_all_datasets(datasets_root: Path = Path("datasets"), output_root: Pat
         ds_dir = vert_path.parent
         files = export_dataset_gephi_bundle(ds_dir, output_root)
         exported.extend(files)
+
+    # Exporta grafos unificados dedicados por conjunto de interesse
+    celeste_dir = datasets_root / "celeste"
+    if celeste_dir.is_dir():
+        u_celeste = export_unified_graph_to_gexf(
+            celeste_dir,
+            output_root / "stratgraph_celeste_all.gexf",
+            title="StratGraph: Celeste (8 Capitulos Reunidos)",
+        )
+        exported.append(u_celeste)
+
+    cuphead_dir = datasets_root / "cuphead"
+    if cuphead_dir.is_dir():
+        u_cuphead = export_unified_graph_to_gexf(
+            cuphead_dir,
+            output_root / "stratgraph_cuphead_all.gexf",
+            title="StratGraph: Cuphead (6 Fases Run-and-Gun Reunidas)",
+        )
+        exported.append(u_cuphead)
+
     unified_all = export_unified_graph_to_gexf(
         datasets_root,
         output_root / "stratgraph_unified_all.gexf",
+        title="StratGraph: Todos os 22 Datasets Reunidos",
     )
     exported.append(unified_all)
     print(f"Total de arquivos .gexf gerados: {len(exported)}")
@@ -577,12 +605,51 @@ def main() -> int:
         help="Diretorio de destino para os arquivos .gexf (padrao: results/gephi)",
     )
     parser.add_argument("--alpha", type=float, default=0.05, help="Parametro alpha do StratGraph")
-    parser.add_argument("--all", action="store_true", default=False, help="Exporta todos os datasets + grafo unificado")
-    parser.add_argument("--unified", action="store_true", default=False, help="Gera apenas o grafo unificado em um unico .gexf")
+    parser.add_argument("--all", action="store_true", default=False, help="Exporta todos os datasets + grafos unificados")
+    parser.add_argument("--unified", action="store_true", default=False, help="Gera os grafos unificados (Celeste, Cuphead e Geral)")
+    parser.add_argument("--celeste", action="store_true", default=False, help="Gera o grafo unificado apenas de Celeste")
+    parser.add_argument("--cuphead", action="store_true", default=False, help="Gera o grafo unificado apenas de Cuphead")
     args = parser.parse_args()
 
+    if args.celeste:
+        export_unified_graph_to_gexf(
+            Path("datasets/celeste"),
+            args.out_dir / "stratgraph_celeste_all.gexf",
+            alpha=args.alpha,
+            title="StratGraph: Celeste (8 Capitulos Reunidos)",
+        )
+        return 0
+
+    if args.cuphead:
+        export_unified_graph_to_gexf(
+            Path("datasets/cuphead"),
+            args.out_dir / "stratgraph_cuphead_all.gexf",
+            alpha=args.alpha,
+            title="StratGraph: Cuphead (6 Fases Run-and-Gun Reunidas)",
+        )
+        return 0
+
     if args.unified:
-        export_unified_graph_to_gexf(Path("datasets"), args.out_dir / "stratgraph_unified_all.gexf", alpha=args.alpha)
+        if (Path("datasets/celeste")).is_dir():
+            export_unified_graph_to_gexf(
+                Path("datasets/celeste"),
+                args.out_dir / "stratgraph_celeste_all.gexf",
+                alpha=args.alpha,
+                title="StratGraph: Celeste (8 Capitulos Reunidos)",
+            )
+        if (Path("datasets/cuphead")).is_dir():
+            export_unified_graph_to_gexf(
+                Path("datasets/cuphead"),
+                args.out_dir / "stratgraph_cuphead_all.gexf",
+                alpha=args.alpha,
+                title="StratGraph: Cuphead (6 Fases Run-and-Gun Reunidas)",
+            )
+        export_unified_graph_to_gexf(
+            Path("datasets"),
+            args.out_dir / "stratgraph_unified_all.gexf",
+            alpha=args.alpha,
+            title="StratGraph: Todos os 22 Datasets Reunidos",
+        )
         return 0
 
     if args.dataset:
