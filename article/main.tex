@@ -85,7 +85,7 @@ O problema de caminho m\'inimo de fonte \'unica em d\'igrafos com pesos n\~ao ne
 
 Entretanto, essas abordagens cl\'assicas t\^em limita\c{c}\~oes importantes quando aplicadas diretamente sobre um grafo est\'atico de jogo. Em primeiro lugar, a BFS ignora completamente os pesos das arestas, tratando uma sala curta e segura da mesma forma que uma sala longa repleta de inimigos e espinhos. Em segundo lugar, o algoritmo de Dijkstra cl\'assico assume que o peso de cada aresta \'e fixo; contudo, quando o jogador coleta uma arma ou \textit{power-up}, o custo de atravessar todas as salas seguintes cai drasticamente, o que exigiria alterar os pesos do grafo dinamicamente durante a busca. Em terceiro lugar, tentar representar a recompensa de um item colet\'avel subtraindo um valor fixo do peso da aresta gera arestas de peso negativo; como as salas de um jogo geralmente permitem conex\~ao de m\~ao dupla (ida e volta), uma aresta negativa pode formar um ciclo de custo negativo, e o algoritmo de Dijkstra deixa de garantir resultados corretos~\cite{cormen2022}.
 
-No contexto de jogos eletr\^onicos, quando a exist\^encia ou o custo das transi\c{c}\~oes depende de itens coletados ao longo do percurso, surge o problema de \textit{Inventory-Aware Pathfinding}. Aversa et al.~\cite{aversa2016} mostram que, ao guardar o invent\'ario junto com a posi\c{c}\~ao em um grafo expandido, o estado atual j\'a cont\'em tudo o que importa, sem depender do hist\'orico, e o agente n\~ao precisa recalcular pesos durante a busca. Contudo, os autores ressaltam a import\^ancia de t\'ecnicas que simplificam o mapa original, de modo parecido com as hierarquias de contra\c{c}\~ao de v\'ertices de Geisberger et al.~\cite{geisberger2008}, para evitar que o espa\c{c}o de busca cres\c{c}a demais. J\'a o custo de movimento dentro de cada sala, em jogos de plataforma, costuma ser calculado com a busca heur\'istica $A^*$~\cite{hart1968} sobre as posi\c{c}\~oes e movimentos poss\'iveis do personagem~\cite{tremblay2014}.
+No contexto de jogos eletr\^onicos, quando a exist\^encia ou o custo das transi\c{c}\~oes depende de itens coletados ao longo do percurso, surge o problema de \textit{Inventory-Aware Pathfinding}. Aversa et al.~\cite{aversa2016} mostram que, ao guardar o invent\'ario junto com a posi\c{c}\~ao em um grafo expandido, o estado atual j\'a cont\'em tudo o que importa, sem depender do hist\'orico, e o agente n\~ao precisa recalcular pesos durante a busca. Contudo, os autores ressaltam a import\^ancia de t\'ecnicas que simplificam o mapa original, de modo parecido com as hierarquias de contra\c{c}\~ao de v\'ertices de Geisberger et al.~\cite{geisberger2008}, para evitar que o espa\c{c}o de busca cres\c{c}a demais. J\'a o custo de movimento dentro de cada sala, em jogos de plataforma, costuma ser calculado com a busca heur\'istica $A^*$~\cite{hart1968} sobre as posi\c{c}\~oes e movimentos poss\'iveis do personagem~\cite{tremblay2014}, pois a geometria espacial da sala permite usar uma heur\'istica admiss\'ivel de dist\^ancia at\'e o destino para guiar a busca, explorando menos estados e ainda assim encontrando o trajeto de menor custo.
 
 Paralelamente, a decis\~ao de visitar salas opcionais que d\~ao recompensas \'e parecida com o \textit{Prize-Collecting Traveling Salesman Problem} (PCTSP) introduzido por Balas~\cite{balas1989} e com o \textit{Orienteering Problem} revisado por Vansteenwegen et al.~\cite{vansteenwegen2011}, ambos NP-dif\'iceis em sua forma geral. Neste trabalho, combinamos a efici\^encia em tempo polinomial do grafo em camadas com o incentivo \`a coleta de itens, por meio de uma contra\c{c}\~ao pr\'evia de salas sem sa\'ida e de um peso sempre positivo.
 
@@ -135,7 +135,7 @@ A Figura~\ref{fig:fluxograma} ilustra o pipeline completo do \textit{StratGraph}
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.92\columnwidth]{figures/fluxograma_proposta.pdf}
+\includegraphics[width=1.\columnwidth]{figures/fluxograma_proposta.pdf}
 \caption{Fluxograma completo da metodologia proposta no \textit{StratGraph}, desde a extra\c{c}\~ao bin\'aria at\'e a auditoria comparativa das rotas.}
 \label{fig:fluxograma}
 \end{figure}
@@ -148,6 +148,8 @@ A Figura~\ref{fig:fluxograma} ilustra o pipeline completo do \textit{StratGraph}
 Os experimentos foram conduzidos adotando $\alpha = 0{,}05$ e mediana de 5 repeti\c{c}\~oes por inst\^ancia, com limite de tempo (\textit{timeout}) de 150~ms para o DFS \textit{Branch-and-Bound}.
 
 A Figura~\ref{fig:contracao} mostra o efeito da contra\c{c}\~ao de becos sem sa\'ida nas 14 inst\^ancias reais. Em mapas com extensas ramifica\c{c}\~oes de morangos opcionais, como \textit{Old Site} (C2), \textit{Mirror Temple} (C5) e \textit{Celestial Resort} (C3), a contra\c{c}\~ao reduziu em 72,7\% ($33 \to 9$), 66,7\% ($45 \to 15$) e 64,6\% ($65 \to 23$) o n\'umero de salas antes da expans\~ao em camadas, sem perder nenhum colet\'avel, segundo a confer\^encia feita. Isso demonstra que a contra\c{c}\~ao de becos simplifica bastante o mapa antes da busca principal, garantindo a coleta de todos os itens dos becos sem aumentar o n\'umero de estados analisados.
+
+\clearpage
 
 \begin{figure}[!htbp]
 \centering
